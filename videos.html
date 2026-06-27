@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Videos — New Physician</title>
+  <meta name="description" content="Free general-information videos about the federal criminal justice process.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo">New Physician</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/about.html">About</a>
+      <a href="/videos.html" aria-current="page">Free Videos</a>
+      <a href="/writing.html">Writing</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" style="padding-bottom:2rem;">
+    <div class="container">
+      <!-- PLACEHOLDER: Adjust the headline and description as you see fit. -->
+      <h1>Free Videos</h1>
+      <p class="lead" style="margin-top:0.75rem;">
+        General-information videos about the federal criminal justice process.
+        Free to watch. No account needed.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container container--wide">
+      <!--
+        HOW TO ADD A VIDEO:
+        Open /data/videos.js and add an object to the VIDEOS array.
+        Set the "id" field to the YouTube video ID.
+        Save the file. The video appears here automatically.
+        No developer needed.
+      -->
+      <div id="video-library">
+        <!-- Rendered by /js/videos.js from /data/videos.js -->
+        <noscript>
+          <p>Please enable JavaScript to view the video library.</p>
+        </noscript>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMAIL CAPTURE -->
+  <section class="email-section" id="signup">
+    <div class="container">
+      <div class="email-box">
+        <h2>PLACEHOLDER: Get notified when new videos are posted</h2>
+        <p class="offer">
+          PLACEHOLDER: Offer text. Example: "Sign up and I'll let you know when new videos are added."
+        </p>
+        <form id="subscribe-form" novalidate>
+          <div class="form-row">
+            <input type="email" name="email" placeholder="Your email address" required autocomplete="email" aria-label="Email address">
+            <button type="submit" class="btn">Notify me</button>
+          </div>
+          <p class="form-fine-print">No spam. Unsubscribe any time.</p>
+          <div id="subscribe-status" class="form-status" role="alert" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> New Physician. General information only — not legal advice.</span>
+    <span><a href="/about.html">About</a> · <a href="/writing.html">Writing</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<!-- Load the video data, then the renderer -->
+<script src="/data/videos.js"></script>
+<script src="/js/videos.js"></script>
+<script src="/js/subscribe.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Physician — PLACEHOLDER: site tagline</title>
+  <meta name="description" content="PLACEHOLDER: one-sentence description of the site for search engines.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo">New Physician</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/" aria-current="page">Home</a>
+      <a href="/about.html">About</a>
+      <a href="/videos.html">Free Videos</a>
+      <a href="/writing.html">Writing</a>
+      <!-- The course page is NOT linked here until the flag is flipped. -->
+      <!-- <a href="/_draft/course.html">The Course</a> -->
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── HERO ──────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero__layout">
+
+        <div class="hero__text">
+          <span class="eyebrow">General information for people navigating federal court</span>
+
+          <!-- PLACEHOLDER: Replace the headline and sub-headline below. -->
+          <!-- Keep it plain and calm. The visitor is often frightened.   -->
+          <h1>PLACEHOLDER: A plain-language guide to the federal criminal justice process</h1>
+
+          <p class="lead">
+            PLACEHOLDER: One or two sentences — who this is for and what they will find here.
+            For example: "If you or someone you love is facing federal charges, this site offers
+            general information, free videos, and written explanations to help you understand
+            what comes next. Nothing here is legal advice."
+          </p>
+
+          <a href="#free-video" class="btn">Watch the first free video ↓</a>
+        </div>
+
+        <div class="hero__portrait">
+          <!--
+            PLACEHOLDER: Replace the div below with an <img> tag once you have the portrait file.
+            Example:
+              <img src="/assets/portrait.jpg" alt="[Author name]" class="portrait">
+          -->
+          <div class="portrait portrait--placeholder" aria-hidden="true">
+            Portrait<br>goes here<br>
+            <small>/assets/portrait.jpg</small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FREE INTRO VIDEO ──────────────────────────────────────── -->
+  <section class="section" id="free-video">
+    <div class="container">
+      <p class="section__label">Free introduction</p>
+
+      <!-- PLACEHOLDER: Replace the placeholder div inside .video-wrap with an <iframe>
+           when you have the YouTube video ID. Use the unlisted video URL.
+
+           Example iframe:
+             <iframe
+               src="https://www.youtube-nocookie.com/embed/YOUR_VIDEO_ID_HERE"
+               title="Introduction — what this site is and who it is for"
+               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+               allowfullscreen
+             ></iframe>
+
+           Replace YOUR_VIDEO_ID_HERE with the 11-character YouTube video ID.
+      -->
+      <div class="video-wrap">
+        <div class="video-placeholder">
+          <div class="video-placeholder__icon">▶</div>
+          <div>
+            <strong>PLACEHOLDER: Intro video goes here</strong><br>
+            <small>YouTube embed — add the video ID when ready</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLACEHOLDER: Add a title and one-line description for this video. -->
+      <h2 style="margin-top:1rem;">PLACEHOLDER: Video title</h2>
+      <p class="text-soft">PLACEHOLDER: One sentence about what this video covers.</p>
+
+      <p class="mt-1">
+        <a href="/videos.html">See all free videos →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ── EMAIL CAPTURE ─────────────────────────────────────────── -->
+  <section class="email-section" id="signup">
+    <div class="container">
+      <div class="email-box">
+
+        <!-- PLACEHOLDER: Choose what you are offering in exchange for the email.
+             Options: the first free video (already exists), a one-page guide,
+             a chapter summary, a glossary of federal terms, etc.
+             Replace the headline and offer text below. -->
+        <h2>PLACEHOLDER: Get the free [guide / video / resource]</h2>
+        <p class="offer">
+          PLACEHOLDER: One or two sentences describing what the subscriber receives
+          and why it is useful. Keep it specific and calm — no hype.
+          Example: "Sign up to receive the first chapter of the course as a free PDF,
+          plus occasional updates when new videos are posted."
+        </p>
+
+        <form id="subscribe-form" novalidate>
+          <div class="form-row">
+            <input
+              type="email"
+              name="email"
+              placeholder="Your email address"
+              required
+              autocomplete="email"
+              aria-label="Email address"
+            >
+            <button type="submit" class="btn">Send it to me</button>
+          </div>
+          <p class="form-fine-print">
+            No spam. Unsubscribe any time.
+            <!-- PLACEHOLDER: Add a link to your privacy policy when you have one. -->
+          </p>
+          <div id="subscribe-status" class="form-status" role="alert" aria-live="polite"></div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT TEASER ──────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <p class="section__label">About the author</p>
+
+      <!-- PLACEHOLDER: Replace with a 2–3 sentence intro. Credibility, not credentials. -->
+      <p>
+        PLACEHOLDER: A short paragraph about who wrote this material and why.
+        Focus on the experience that makes this general information worth reading,
+        not on credentials that imply professional services.
+      </p>
+
+      <p><a href="/about.html">Read more →</a></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> New Physician. General information only — not legal advice.</span>
+    <span>
+      <a href="/about.html">About</a> ·
+      <a href="/writing.html">Writing</a>
+      <!-- PLACEHOLDER: Add privacy policy link when available. -->
+    </span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/subscribe.js"></script>
+
+</body>
+</html>

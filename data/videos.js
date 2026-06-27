@@ -1,0 +1,34 @@
+/**
+ * FREE VIDEO LIBRARY
+ *
+ * To add a video:
+ *   1. Add an object to the array below.
+ *   2. Save the file. Done.
+ *
+ * Fields:
+ *   id          — YouTube video ID (the part after ?v= in the URL)
+ *                 e.g. for https://www.youtube.com/watch?v=dQw4w9WgXcQ  →  "dQw4w9WgXcQ"
+ *                 Use an unlisted video ID so it is only accessible via this embed.
+ *   title       — Displayed above the video
+ *   description — One or two sentences shown below the title
+ *
+ * Set id to null to show a placeholder instead of an embed (useful while
+ * you are still setting up a video).
+ */
+
+const VIDEOS = [
+  {
+    id: null, // PLACEHOLDER: replace null with your YouTube video ID
+    title: "PLACEHOLDER: Introduction — What This Is and Who It Is For",
+    description: "PLACEHOLDER: A short description of this video goes here. Keep it to one or two plain sentences."
+  },
+  {
+    id: null, // PLACEHOLDER: replace null with your YouTube video ID
+    title: "PLACEHOLDER: How the Federal System Works — A Plain-Language Map",
+    description: "PLACEHOLDER: A short description of this video goes here."
+  }
+  // Add more videos here following the same pattern.
+];
+
+// Export for use by videos.js loader
+if (typeof module !== "undefined") module.exports = VIDEOS;

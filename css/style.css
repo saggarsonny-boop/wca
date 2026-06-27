@@ -1,0 +1,466 @@
+/* =========================================================
+   newphysician.org — main stylesheet
+   Mobile-first. Calm, credible, generous spacing.
+   ========================================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg:        #fafaf8;
+  --bg-alt:    #f0ede8;
+  --text:      #1a1a18;
+  --text-soft: #555550;
+  --accent:    #2c4a7c;
+  --accent-lt: #e8edf5;
+  --border:    #dedad4;
+  --max-w:     720px;
+  --max-w-wide: 960px;
+
+  --font-serif: Georgia, 'Times New Roman', serif;
+  --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+html {
+  font-size: 18px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+}
+
+/* ── Layout ── */
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.container--wide {
+  max-width: var(--max-w-wide);
+}
+
+/* ── Typography ── */
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  line-height: 1.25;
+  color: var(--text);
+}
+
+h1 { font-size: clamp(1.75rem, 5vw, 2.5rem); margin-bottom: 1rem; }
+h2 { font-size: clamp(1.35rem, 4vw, 1.85rem); margin-bottom: 0.75rem; }
+h3 { font-size: clamp(1.1rem, 3vw, 1.35rem); margin-bottom: 0.5rem; }
+
+p { margin-bottom: 1.25rem; }
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+a:hover { opacity: 0.75; }
+
+ul, ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+li { margin-bottom: 0.4rem; }
+
+strong { font-weight: 600; }
+
+/* ── Header / Nav ── */
+.site-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-logo {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: normal;
+  color: var(--text);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.site-nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  color: var(--text-soft);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
+  color: var(--accent);
+  opacity: 1;
+}
+
+/* ── Hero ── */
+.hero {
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero__layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.hero__text .eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: 0.75rem;
+}
+
+.hero__text h1 {
+  margin-bottom: 1.25rem;
+}
+
+.hero__text .lead {
+  font-size: 1.1rem;
+  color: var(--text-soft);
+  margin-bottom: 1.75rem;
+}
+
+.hero__portrait {
+  flex-shrink: 0;
+}
+
+.portrait {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--border);
+  display: block;
+}
+
+.portrait--placeholder {
+  background: var(--bg-alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: var(--text-soft);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+@media (min-width: 600px) {
+  .hero__layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .hero__portrait { order: 2; }
+  .hero__text { order: 1; flex: 1; }
+}
+
+/* ── Sections ── */
+.section {
+  padding: 3rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.section:last-child { border-bottom: none; }
+
+.section__label {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: 0.5rem;
+}
+
+/* ── Video embed ── */
+.video-wrap {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  overflow: hidden;
+  background: var(--bg-alt);
+  border-radius: 4px;
+  margin: 1.25rem 0;
+}
+
+.video-wrap iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: 0;
+}
+
+.video-placeholder {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-soft);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 1rem;
+  border: 2px dashed var(--border);
+  border-radius: 4px;
+}
+
+.video-placeholder__icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.4;
+}
+
+/* ── Video library ── */
+.video-grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.video-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.video-card__embed { /* contains the video-wrap */ }
+
+.video-card__body {
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.video-card__title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  margin-bottom: 0.35rem;
+}
+
+.video-card__desc {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  margin-bottom: 0;
+}
+
+@media (min-width: 640px) {
+  .video-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Email capture form ── */
+.email-section {
+  background: var(--accent-lt);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 3rem 0;
+}
+
+.email-box {
+  max-width: 540px;
+}
+
+.email-box h2 { margin-bottom: 0.5rem; }
+
+.email-box .offer {
+  color: var(--text-soft);
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+@media (min-width: 480px) {
+  .form-row { flex-direction: row; }
+}
+
+.form-row input[type="email"] {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: var(--font-sans);
+  background: #fff;
+  color: var(--text);
+}
+
+.form-row input[type="email"]:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.btn:hover { opacity: 0.85; color: #fff; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+.btn--outline {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+}
+.btn--outline:hover { background: var(--accent-lt); opacity: 1; }
+
+.form-status {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+}
+.form-status--ok   { color: #2a6e3f; }
+.form-status--err  { color: #8b2020; }
+
+.form-fine-print {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  margin-top: 0.75rem;
+}
+
+/* ── Writing / links page ── */
+.link-list {
+  list-style: none;
+  padding: 0;
+}
+
+.link-list li {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+}
+
+.link-list li:first-child { border-top: 1px solid var(--border); }
+
+.link-list .link-title {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  margin-bottom: 0.2rem;
+}
+
+.link-list .link-meta {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+/* ── Author / about ── */
+.about-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 600px) {
+  .about-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .about-layout .portrait-col { flex-shrink: 0; }
+  .about-layout .bio-col { flex: 1; }
+}
+
+/* ── Draft banner (visible only inside _draft/ pages) ── */
+.draft-banner {
+  background: #fef3cd;
+  border-bottom: 2px solid #f0c040;
+  padding: 0.6rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #5c4a00;
+}
+
+/* ── Curriculum list ── */
+.curriculum {
+  list-style: none;
+  padding: 0;
+  counter-reset: chapter;
+}
+
+.curriculum li {
+  counter-increment: chapter;
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  align-items: baseline;
+}
+
+.curriculum li::before {
+  content: counter(chapter, decimal-leading-zero);
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  flex-shrink: 0;
+  width: 2rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Pricing (hidden by default until flag enabled) ── */
+.pricing-section {
+  display: none; /* FEATURE FLAG: change to display:block when ready to go live */
+}
+
+/* ── Footer ── */
+.site-footer {
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+.site-footer .container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (min-width: 600px) {
+  .site-footer .container { flex-direction: row; justify-content: space-between; }
+}
+
+.site-footer a { color: var(--text-soft); }
+
+/* ── Utility ── */
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.text-soft { color: var(--text-soft); }

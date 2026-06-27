@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — New Physician</title>
+  <meta name="description" content="PLACEHOLDER: About the author of newphysician.org.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo">New Physician</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/about.html" aria-current="page">About</a>
+      <a href="/videos.html">Free Videos</a>
+      <a href="/writing.html">Writing</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" style="padding-bottom:2rem;">
+    <div class="container">
+      <h1>About</h1>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="about-layout">
+
+        <div class="portrait-col">
+          <!--
+            PLACEHOLDER: Replace the div below with an <img> once you have the file.
+            Example:
+              <img src="/assets/portrait.jpg" alt="[Author name]" class="portrait" style="width:160px;height:160px;">
+          -->
+          <div class="portrait portrait--placeholder" style="width:160px;height:160px;" aria-hidden="true">
+            Portrait<br><small>/assets/portrait.jpg</small>
+          </div>
+        </div>
+
+        <div class="bio-col">
+
+          <!-- PLACEHOLDER: Replace with author's name and short title line. -->
+          <h2>PLACEHOLDER: Author name</h2>
+          <p class="text-soft" style="margin-bottom:1.25rem;">PLACEHOLDER: Brief role description — e.g., "Writer and researcher focused on the federal justice system"</p>
+
+          <!-- PLACEHOLDER: Replace with the author's story. 3–6 paragraphs.
+               Suggested structure:
+               1. What brought them to this topic (lived experience or close observation).
+               2. What they did with that experience (writing, research, trying to understand).
+               3. Why they built this site (to give other people the map they wish they'd had).
+               4. What this site is and is not (general information, not legal advice or services).
+
+               IMPORTANT: Do not describe or imply any one-to-one help, consulting,
+               or coaching. The framing is: writer, educator, mapmaker.
+          -->
+          <p>
+            PLACEHOLDER: Opening paragraph — the moment or experience that made this topic personal.
+            Keep it human. The reader is often frightened and needs to feel understood before
+            they will trust anything you say.
+          </p>
+
+          <p>
+            PLACEHOLDER: Second paragraph — what the author did to understand the process.
+            Research, writing, living through it.
+          </p>
+
+          <p>
+            PLACEHOLDER: Third paragraph — why this site exists. What was missing.
+            The goal: a plain-language map for people who have no idea where they are.
+          </p>
+
+          <!-- Keep or adapt this paragraph — it sets the important legal/ethical framing. -->
+          <p>
+            Everything on this site is general information. It reflects one person's
+            reading, research, and experience. It is not legal advice and should not
+            be treated as such. If you are facing federal charges, you need a criminal
+            defense attorney — this site can help you understand what your attorney
+            is talking about, but it is not a substitute for one.
+          </p>
+
+          <!-- PLACEHOLDER: Add any published credentials or author's note if desired.
+               e.g., links to SSRN papers, Medium, background in medicine or another field. -->
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMAIL CAPTURE (repeated for discoverability on this page) -->
+  <section class="email-section" id="signup">
+    <div class="container">
+      <div class="email-box">
+        <h2>PLACEHOLDER: Get the free [guide / video / resource]</h2>
+        <p class="offer">
+          PLACEHOLDER: Same offer text as the home page.
+        </p>
+        <form id="subscribe-form" novalidate>
+          <div class="form-row">
+            <input type="email" name="email" placeholder="Your email address" required autocomplete="email" aria-label="Email address">
+            <button type="submit" class="btn">Send it to me</button>
+          </div>
+          <p class="form-fine-print">No spam. Unsubscribe any time.</p>
+          <div id="subscribe-status" class="form-status" role="alert" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> New Physician. General information only — not legal advice.</span>
+    <span><a href="/about.html">About</a> · <a href="/writing.html">Writing</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/subscribe.js"></script>
+
+</body>
+</html>
