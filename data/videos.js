@@ -17,17 +17,12 @@
  */
 
 const VIDEOS = [
-  {
-    id: null, // PLACEHOLDER: replace null with your YouTube video ID
-    title: "PLACEHOLDER: Introduction — What This Is and Who It Is For",
-    description: "PLACEHOLDER: A short description of this video goes here. Keep it to one or two plain sentences."
-  },
-  {
-    id: null, // PLACEHOLDER: replace null with your YouTube video ID
-    title: "PLACEHOLDER: How the Federal System Works — A Plain-Language Map",
-    description: "PLACEHOLDER: A short description of this video goes here."
-  }
-  // Add more videos here following the same pattern.
+  // Add videos here when ready. Example:
+  // {
+  //   id: "dQw4w9WgXcQ",           // YouTube video ID
+  //   title: "The Map Nobody Hands You",
+  //   description: "One or two plain sentences about what this video covers."
+  // },
 ];
 
 // Export for use by videos.js loader

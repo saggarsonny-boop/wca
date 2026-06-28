@@ -7,7 +7,7 @@
   if (!container) return;
 
   if (!VIDEOS || VIDEOS.length === 0) {
-    container.innerHTML = "<p>Videos coming soon.</p>";
+    container.innerHTML = '<p class="text-soft">Videos will appear here as they are published. Sign up below to be notified.</p>';
     return;
   }
 
