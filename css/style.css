@@ -1,5 +1,5 @@
 /* =========================================================
-   newphysician.org — main stylesheet
+   whitecollaracademy.com — main stylesheet
    Mobile-first. Calm, credible, generous spacing.
    ========================================================= */
 
@@ -381,6 +381,31 @@ strong { font-weight: 600; }
 .link-list .link-meta {
   font-size: 0.85rem;
   color: var(--text-soft);
+}
+
+.link-list li.featured {
+  background: var(--accent-lt);
+  border-radius: 4px;
+  padding: 1rem 0.85rem;
+  margin: 0 -0.85rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.link-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: #fff;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  padding: 0.1rem 0.4rem;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 /* ── Author / about ── */
