@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Free Videos — White Collar Academy</title>
-  <meta name="description" content="Free general-information videos about the federal criminal justice process.">
+  <title>Free Chapters — White Collar Academy</title>
+  <meta name="description" content="Free audio and written chapters on the federal criminal justice process, for the people inside it and the families beside them.">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -16,7 +16,7 @@
     <nav class="site-nav" aria-label="Main navigation">
       <a href="/">Home</a>
       <a href="/about.html">About</a>
-      <a href="/chapters.html">Free Chapters</a>
+      <a href="/chapters.html" aria-current="page">Free Chapters</a>
       <a href="/writing.html">Writing</a>
       <a href="/course.html">The Course</a>
     </nav>
@@ -27,28 +27,21 @@
 
   <section class="hero" style="padding-bottom:2rem;">
     <div class="container">
-      <!-- PLACEHOLDER: Adjust the headline and description as you see fit. -->
-      <h1>Free Videos</h1>
+      <h1>Free Chapters</h1>
       <p class="lead" style="margin-top:0.75rem;">
-        General-information videos about the federal criminal justice process.
-        Free to watch. No account needed.
+        Audio and written chapters from <em>Start Here: a calm guide to the federal process</em>,
+        for the people inside it and the families beside them. Free to read and to listen
+        to. No account needed.
       </p>
     </div>
   </section>
 
   <section class="section">
-    <div class="container container--wide">
-      <!--
-        HOW TO ADD A VIDEO:
-        Open /data/videos.js and add an object to the VIDEOS array.
-        Set the "id" field to the YouTube video ID.
-        Save the file. The video appears here automatically.
-        No developer needed.
-      -->
-      <div id="video-library">
-        <!-- Rendered by /js/videos.js from /data/videos.js -->
+    <div class="container">
+      <div id="chapter-library">
+        <!-- Rendered by /js/chapters.js from /data/chapters.js -->
         <noscript>
-          <p>Please enable JavaScript to view the video library.</p>
+          <p>Please enable JavaScript to view the chapter library.</p>
         </noscript>
       </div>
     </div>
@@ -68,7 +61,7 @@
             <input type="email" name="email" placeholder="Your email address" required autocomplete="email" aria-label="Email address">
             <button type="submit" class="btn">Send it to me</button>
           </div>
-          <p class="form-fine-print">No spam. Unsubscribe any time.</p>
+          <p class="form-fine-print">No spam. Unsubscribe any time. <a href="/privacy.html">Privacy policy.</a></p>
           <div id="subscribe-status" class="form-status" role="alert" aria-live="polite"></div>
         </form>
       </div>
@@ -85,9 +78,8 @@
 </footer>
 
 <script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
-<!-- Load the video data, then the renderer -->
-<script src="/data/videos.js"></script>
-<script src="/js/videos.js"></script>
+<script src="/data/chapters.js"></script>
+<script src="/js/chapters.js"></script>
 <script src="/js/subscribe.js"></script>
 
 </body>

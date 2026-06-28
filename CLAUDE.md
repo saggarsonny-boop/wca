@@ -4,10 +4,21 @@ Read this entire file before touching anything.
 
 ## What this site is
 
-whitecollaracademy.com — a front-door static site for a video course about
-navigating the federal criminal justice process. The author is Sonny Saggar,
-a physician (Oxford/Barts, 25 years emergency medicine) who went through the
-federal system himself. He writes, makes videos, and is finishing a book called Ground.
+whitecollaracademy.com — a front-door static site for a book and audio course called
+"Start Here: a calm guide to the federal process, for the people inside it and the
+families beside them" (short: "Start Here: a calm guide to the federal process";
+one-word shelf ref: "Start Here"). The author is Sonny Saggar, a physician
+(Oxford/Barts, 25 years emergency medicine) who went through the federal system himself.
+
+There are TWO books on this site:
+1. START HERE — the practical 15-chapter guide to the federal process. This is the
+   main work. Its serialised chapters are the Free Chapters section.
+2. GROUND — a reflective companion book about losing everything and still having
+   somewhere to stand. It appears ONLY as the email-capture giveaway PDF.
+   Do not attribute the Free Chapters to Ground. Do not call Ground a navigation guide.
+
+Byline for Start Here: "by Sonny Saggar, a physician who went through it"
+(credentials sit behind the title, never above it).
 
 The site builds trust, offers free content, and captures emails.
 It does NOT handle payments or paid video access — that goes to Thinkific (not yet live).
