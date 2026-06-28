@@ -82,44 +82,26 @@ export async function onRequestPost(context) {
     return json({ error: "Could not save your email. Please try again." }, 500);
   }
 
-  // ── Optional: forward to a third-party email provider ──────────────
-  //
-  // ConvertKit / Kit example:
-  //   if (env.EMAIL_PROVIDER_API_KEY && env.EMAIL_LIST_ID) {
-  //     await fetch(`https://api.convertkit.com/v3/forms/${env.EMAIL_LIST_ID}/subscribe`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         api_key: env.EMAIL_PROVIDER_API_KEY,
-  //         email,
-  //       }),
-  //     });
-  //   }
-  //
-  // Mailchimp example:
-  //   if (env.EMAIL_PROVIDER_API_KEY && env.EMAIL_LIST_ID) {
-  //     const dc = env.EMAIL_PROVIDER_API_KEY.split("-").pop(); // e.g. "us21"
-  //     await fetch(`https://${dc}.api.mailchimp.com/3.0/lists/${env.EMAIL_LIST_ID}/members`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Authorization": `Bearer ${env.EMAIL_PROVIDER_API_KEY}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ email_address: email, status: "subscribed" }),
-  //     });
-  //   }
-  //
-  // Beehiiv example:
-  //   if (env.EMAIL_PROVIDER_API_KEY && env.EMAIL_LIST_ID) {
-  //     await fetch(`https://api.beehiiv.com/v2/publications/${env.EMAIL_LIST_ID}/subscriptions`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Authorization": `Bearer ${env.EMAIL_PROVIDER_API_KEY}`,
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ email }),
-  //     });
-  //   }
+  // ── Beehiiv: add subscriber and trigger welcome email ──────────────
+  if (env.BEEHIIV_API_KEY) {
+    try {
+      await fetch("https://api.beehiiv.com/v2/publications/pub_8a8a6dce-c503-4726-9188-df1220e280d7/subscriptions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${env.BEEHIIV_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          reactivate_existing: true,
+          send_welcome_email: true,
+        }),
+      });
+    } catch (err) {
+      console.error("Beehiiv error:", err);
+      // Don't fail the signup if Beehiiv is down — email is already in D1
+    }
+  }
   // ───────────────────────────────────────────────────────────────────
 
   return json({ ok: true }, 200);
