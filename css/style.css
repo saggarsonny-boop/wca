@@ -460,6 +460,63 @@ strong { font-weight: 600; }
   font-variant-numeric: tabular-nums;
 }
 
+/* ── Chapter library ── */
+.chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.chapter-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.25rem 1.5rem;
+  background: #fff;
+}
+
+.chapter-card__header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.chapter-card__num {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-soft);
+  flex-shrink: 0;
+}
+
+.chapter-card__title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+.chapter-card__desc {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  margin-bottom: 1rem;
+}
+
+.chapter-card__audio {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.chapter-card__audio-placeholder {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  margin-bottom: 0.75rem;
+}
+
+.chapter-card__text-link {
+  display: inline-block;
+  font-size: 0.875rem;
+}
+
 /* ── Pricing (hidden by default until flag enabled) ── */
 .pricing-section {
   display: none; /* FEATURE FLAG: change to display:block when ready to go live */
