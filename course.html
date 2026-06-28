@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Course — White Collar Academy</title>
+  <meta name="description" content="Ground: fifteen chapters on the federal criminal justice process, explained plainly by a physician who lived every part of it.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/about.html">About</a>
+      <a href="/videos.html">Free Videos</a>
+      <a href="/writing.html">Writing</a>
+      <a href="/course.html" aria-current="page">The Course</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" style="padding-bottom:2rem;">
+    <div class="container">
+      <span class="eyebrow">A video course</span>
+      <h1>Ground</h1>
+      <p class="lead" style="margin-top:0.75rem;">
+        Fifteen chapters. The federal criminal justice process, explained plainly
+        by a physician who lived every part of it. For the person going through it
+        and for the family standing beside them.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>What the course covers</h2>
+      <p class="text-soft" style="margin-bottom:1.5rem;">
+        Read straight down the list. Each title names something real. Together
+        they map the whole thing, from the moment you find out to what a life
+        looks like on the other side.
+      </p>
+
+      <ol class="curriculum">
+        <li>The Map Nobody Hands You</li>
+        <li>The First Week After You Find Out</li>
+        <li>What Your Lawyer Does and Does Not Do</li>
+        <li>How to Talk to Your Lawyer So You Actually Get Answers</li>
+        <li>The PSR: The Document That Follows You Everywhere</li>
+        <li>How Sentencing Really Works</li>
+        <li>What the Court Does Not Take From You</li>
+        <li>The Stack: What Comes After the Court Is Done</li>
+        <li>The Licensing Board</li>
+        <li>The Federal Exclusion and the Lists That Outlast You</li>
+        <li>Telling Your Family. Telling Your Children.</li>
+        <li>When the Marriage Is Under Strain</li>
+        <li>Staying Steady While You Wait</li>
+        <li>The First Ninety Days After Release</li>
+        <li>What a Life Looks Like After</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--bg-alt);">
+    <div class="container">
+      <h2>About the author</h2>
+      <p>Sonny Saggar is a physician trained at Oxford and Barts who spent twenty-five years in emergency medicine. He went through the federal system himself, studied it, and wrote about it. Ground is the map he built from that experience.</p>
+      <p style="margin-top:1rem;"><a href="/about.html">Read the full story →</a></p>
+    </div>
+  </section>
+
+  <section class="email-section" id="signup">
+    <div class="container">
+      <div class="email-box">
+        <h2>Get a free chapter from Ground</h2>
+        <p class="offer">
+          Sign up and I'll send you a free chapter from Ground before the course launches.
+          Plus occasional updates when new videos are posted.
+        </p>
+        <form id="subscribe-form" novalidate>
+          <div class="form-row">
+            <input type="email" name="email" placeholder="Your email address" required autocomplete="email" aria-label="Email address">
+            <button type="submit" class="btn">Send it to me</button>
+          </div>
+          <p class="form-fine-print">No spam. Unsubscribe any time. <a href="/privacy.html">Privacy policy.</a></p>
+          <div id="subscribe-status" class="form-status" role="alert" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/about.html">About</a> · <a href="/writing.html">Writing</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/subscribe.js"></script>
+
+</body>
+</html>
