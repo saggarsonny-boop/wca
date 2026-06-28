@@ -7,11 +7,11 @@
  * ── SETUP STEPS (one-time, before going live) ──────────────────────────
  *
  * 1. Create the D1 database:
- *      npx wrangler d1 create newphysician-subscribers
+ *      npx wrangler d1 create wca-subscribers
  *    Copy the database_id from the output into wrangler.toml.
  *
  * 2. Create the table:
- *      npx wrangler d1 execute newphysician-subscribers --remote \
+ *      npx wrangler d1 execute wca-subscribers --remote \
  *        --command "CREATE TABLE IF NOT EXISTS subscribers (
  *          id INTEGER PRIMARY KEY AUTOINCREMENT,
  *          email TEXT UNIQUE NOT NULL,
@@ -23,7 +23,7 @@
  *
  * ── TO EXPORT YOUR LIST ────────────────────────────────────────────────
  *
- *    npx wrangler d1 execute newphysician-subscribers --remote \
+ *    npx wrangler d1 execute wca-subscribers --remote \
  *      --command "SELECT email, created_at FROM subscribers ORDER BY created_at DESC;" \
  *      --json > subscribers.json
  *
