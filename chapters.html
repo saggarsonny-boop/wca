@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Course — White Collar Academy</title>
-  <meta name="description" content="Ground: fifteen chapters on the federal criminal justice process, explained plainly by a physician who lived every part of it.">
+  <title>Free Chapters — White Collar Academy</title>
+  <meta name="description" content="Free audio and written chapters from Ground — a plain-language guide to the federal criminal justice process.">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -16,9 +16,9 @@
     <nav class="site-nav" aria-label="Main navigation">
       <a href="/">Home</a>
       <a href="/about.html">About</a>
-      <a href="/chapters.html">Free Chapters</a>
+      <a href="/chapters.html" aria-current="page">Free Chapters</a>
       <a href="/writing.html">Writing</a>
-      <a href="/course.html" aria-current="page">The Course</a>
+      <a href="/course.html">The Course</a>
     </nav>
   </div>
 </header>
@@ -27,60 +27,34 @@
 
   <section class="hero" style="padding-bottom:2rem;">
     <div class="container">
-      <span class="eyebrow">A book and course</span>
-      <h1>Ground</h1>
+      <h1>Free Chapters</h1>
       <p class="lead" style="margin-top:0.75rem;">
-        Fifteen chapters. The federal criminal justice process, explained plainly
-        by a physician who lived every part of it. For the person going through it
-        and for the family standing beside them.
+        Audio and written chapters from <em>Ground</em>, my book on navigating
+        the federal criminal justice process. Free to read and listen to. No account needed.
       </p>
     </div>
   </section>
 
   <section class="section">
     <div class="container">
-      <h2>What the course covers</h2>
-      <p class="text-soft" style="margin-bottom:1.5rem;">
-        Read straight down the list. Each title names something real. Together
-        they map the whole thing, from the moment you find out to what a life
-        looks like on the other side.
-      </p>
-
-      <ol class="curriculum">
-        <li>The Map Nobody Hands You</li>
-        <li>The First Week After You Find Out</li>
-        <li>What Your Lawyer Does and Does Not Do</li>
-        <li>How to Talk to Your Lawyer So You Actually Get Answers</li>
-        <li>The PSR: The Document That Follows You Everywhere</li>
-        <li>How Sentencing Really Works</li>
-        <li>What the Court Does Not Take From You</li>
-        <li>The Stack: What Comes After the Court Is Done</li>
-        <li>The Licensing Board</li>
-        <li>The Federal Exclusion and the Lists That Outlast You</li>
-        <li>Telling Your Family. Telling Your Children.</li>
-        <li>When the Marriage Is Under Strain</li>
-        <li>Staying Steady While You Wait</li>
-        <li>The First Ninety Days After Release</li>
-        <li>What a Life Looks Like After</li>
-      </ol>
+      <div id="chapter-library">
+        <!-- Rendered by /js/chapters.js from /data/chapters.js -->
+        <noscript>
+          <p>Please enable JavaScript to view the chapter library.</p>
+        </noscript>
+      </div>
     </div>
   </section>
 
-  <section class="section" style="background:var(--bg-alt);">
-    <div class="container">
-      <h2>About the author</h2>
-      <p>Sonny Saggar is a physician trained at Oxford and Barts who spent twenty-five years in emergency medicine. He went through the federal system himself, studied it, and wrote about it. Ground is the map he built from that experience.</p>
-      <p style="margin-top:1rem;"><a href="/about.html">Read the full story →</a></p>
-    </div>
-  </section>
-
+  <!-- EMAIL CAPTURE -->
   <section class="email-section" id="signup">
     <div class="container">
       <div class="email-box">
         <h2>Get a free chapter from Ground</h2>
         <p class="offer">
-          Sign up and I'll send you a free chapter from Ground before it publishes.
-          Plus occasional updates when new chapters are posted.
+          Sign up and I'll send you a free chapter from Ground, my forthcoming book
+          on navigating the federal criminal justice system. Plus occasional updates
+          when new chapters are posted.
         </p>
         <form id="subscribe-form" novalidate>
           <div class="form-row">
@@ -104,6 +78,8 @@
 </footer>
 
 <script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/data/chapters.js"></script>
+<script src="/js/chapters.js"></script>
 <script src="/js/subscribe.js"></script>
 
 </body>
