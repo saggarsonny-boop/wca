@@ -19,10 +19,10 @@ export async function onRequestPost({ request, env }) {
       "INSERT INTO organiser_users (email, password_hash, password_salt, subscription_status, created_at) VALUES (?, ?, ?, 'trial', datetime('now')) RETURNING id"
     ).bind(emailLower, hash, salt).first();
 
-    const token = await signJWT({ uid: result.id, email: emailLower }, env.JWT_SECRET);
+    const token = await signJWT({ uid: result.id, email: emailLower }, env.JWT_SECRET || "wca-dev-fallback-secret-set-jwt-secret-in-production");
     return json({ ok: true }, 200, { "Set-Cookie": sessionCookie(token) });
   } catch (e) {
     console.error("register error", e);
-    return err(`DEBUG: ${e?.message || String(e)}`, 500);
+    return err("Registration failed. Please try again.", 500);
   }
 }

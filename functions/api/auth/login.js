@@ -21,7 +21,7 @@ export async function onRequestPost({ request, env }) {
       return err("Your subscription has ended. Please resubscribe to access the organiser.", 403);
     }
 
-    const token = await signJWT({ uid: user.id, email: emailLower, sub: user.subscription_status }, env.JWT_SECRET);
+    const token = await signJWT({ uid: user.id, email: emailLower, sub: user.subscription_status }, env.JWT_SECRET || "wca-dev-fallback-secret-set-jwt-secret-in-production");
     return json({ ok: true }, 200, { "Set-Cookie": sessionCookie(token) });
   } catch (e) {
     console.error("login error", e);

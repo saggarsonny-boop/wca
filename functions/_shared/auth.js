@@ -20,7 +20,8 @@ function decodeB64url(str) {
   return Uint8Array.from(atob(str), c => c.charCodeAt(0));
 }
 
-export async function signJWT(payload, secret, expiresInSeconds = 60 * 60 * 24 * 7) {
+export async function signJWT(payload, secret, expiresInSeconds = 60 * 60 * 24 * 7, env) {
+  secret = secret || "wca-dev-fallback-secret-set-jwt-secret-in-production";
   const header = b64url(new TextEncoder().encode(JSON.stringify({ alg: "HS256", typ: "JWT" })));
   const now = Math.floor(Date.now() / 1000);
   const body = b64url(new TextEncoder().encode(JSON.stringify({ ...payload, iat: now, exp: now + expiresInSeconds })));
@@ -63,10 +64,16 @@ export function getSessionToken(request) {
 }
 
 // Returns user payload or throws a 401 Response
+function getSecret(env) {
+  // JWT_SECRET must be set in Cloudflare Pages → Settings → Environment variables.
+  // A fallback is used so Preview deployments work before the secret is configured.
+  return env.JWT_SECRET || "wca-dev-fallback-secret-set-jwt-secret-in-production";
+}
+
 export async function requireAuth(request, env) {
   const token = getSessionToken(request);
   if (!token) throw unauthorized();
-  const payload = await verifyJWT(token, env.JWT_SECRET);
+  const payload = await verifyJWT(token, getSecret(env));
   if (!payload) throw unauthorized();
   return payload;
 }
