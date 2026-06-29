@@ -1,10 +1,10 @@
-import { requireAuth } from "../../_shared/auth.js";
+import { requireActiveSubscription } from "../../_shared/auth.js";
 import { encrypt, decrypt } from "../../_shared/crypto.js";
 import { json, err } from "../../_shared/response.js";
 
 export async function onRequest({ request, env }) {
   try {
-    const user = await requireAuth(request, env);
+    const user = await requireActiveSubscription(request, env);
     const uid = user.uid;
 
     if (request.method === "GET") {

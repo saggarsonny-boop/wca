@@ -32,6 +32,9 @@
           <label for="password">Password <span style="font-weight:normal;font-size:0.8em;">(at least 8 characters)</span></label>
           <input type="password" id="password" name="password" autocomplete="new-password" required minlength="8">
         </div>
+        <div style="display:none !important;" aria-hidden="true">
+          <input type="text" name="phone_confirm" tabindex="-1" autocomplete="off">
+        </div>
         <button type="submit" class="btn btn-full">Create account</button>
         <div id="auth-status" class="auth-status" role="alert" aria-live="polite"></div>
       </form>
@@ -54,14 +57,57 @@
 (function () {
   const form = document.getElementById("register-form");
   const status = document.getElementById("auth-status");
+  const btn = form.querySelector("button[type=submit]");
+  if (!btn) return;
+
+  // Convert button dynamically
+  if (!btn.querySelector(".btn-hold__text")) {
+    btn.innerHTML = `<span class="btn-hold__progress"></span><span class="btn-hold__text">Press & hold to register</span>`;
+  }
+  btn.classList.add("btn-hold");
+
+  let holdTimer = null;
+  let holdSuccess = false;
+
+  function startHold(e) {
+    if (holdSuccess || btn.disabled) return;
+    btn.classList.add("holding");
+    holdTimer = setTimeout(() => {
+      holdSuccess = true;
+      btn.classList.remove("holding");
+      btn.classList.add("success");
+      btn.querySelector(".btn-hold__text").textContent = "Verified";
+      
+      // Dispatch submit event to trigger form handler
+      form.dispatchEvent(new Event("submit"));
+    }, 1500);
+  }
+
+  function cancelHold() {
+    if (holdSuccess) return;
+    clearTimeout(holdTimer);
+    btn.classList.remove("holding");
+  }
+
+  btn.addEventListener("mousedown", startHold);
+  btn.addEventListener("touchstart", startHold);
+  btn.addEventListener("mouseup", cancelHold);
+  btn.addEventListener("mouseleave", cancelHold);
+  btn.addEventListener("touchend", cancelHold);
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
+
+    if (!holdSuccess) {
+      status.textContent = "Please press and hold the button to submit.";
+      status.className = "auth-status auth-status--err";
+      return;
+    }
+
     status.textContent = "";
     status.className = "auth-status";
-    const btn = form.querySelector("button[type=submit]");
     btn.disabled = true;
-    btn.textContent = "Creating account...";
+    btn.querySelector(".btn-hold__text").textContent = "Creating account...";
 
     try {
       const resp = await fetch("/api/auth/register", {
@@ -69,7 +115,8 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: form.email.value.trim(),
-          password: form.password.value
+          password: form.password.value,
+          phone_confirm: form.phone_confirm.value
         })
       });
       const data = await resp.json();
@@ -78,16 +125,21 @@
       } else {
         status.textContent = data.error || "Registration failed. Please try again.";
         status.className = "auth-status auth-status--err";
-        btn.disabled = false;
-        btn.textContent = "Create account";
+        resetBtn();
       }
     } catch {
       status.textContent = "Network error. Please try again.";
       status.className = "auth-status auth-status--err";
-      btn.disabled = false;
-      btn.textContent = "Create account";
+      resetBtn();
     }
   });
+
+  function resetBtn() {
+    holdSuccess = false;
+    btn.disabled = false;
+    btn.classList.remove("success");
+    btn.querySelector(".btn-hold__text").textContent = "Press & hold to register";
+  }
 })();
 </script>
 

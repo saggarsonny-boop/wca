@@ -4,7 +4,11 @@ import { json, err } from "../../_shared/response.js";
 
 export async function onRequestPost({ request, env }) {
   try {
-    const { email, password } = await request.json();
+    const body = await request.json();
+    const { email, password, phone_confirm } = body;
+    if (phone_confirm) {
+      return json({ ok: true });
+    }
     if (!email || !password) return err("Email and password are required.");
     if (password.length < 8) return err("Password must be at least 8 characters.");
 
@@ -16,7 +20,7 @@ export async function onRequestPost({ request, env }) {
     // For now: open registration; Stripe webhook will update subscription_status
     const { hash, salt } = await hashPassword(password);
     const result = await env.DB.prepare(
-      "INSERT INTO organiser_users (email, password_hash, password_salt, subscription_status, created_at) VALUES (?, ?, ?, 'trial', datetime('now')) RETURNING id"
+      "INSERT INTO organiser_users (email, password_hash, password_salt, subscription_status, trial_ends_at, created_at) VALUES (?, ?, ?, 'trial', datetime('now', '+7 days'), datetime('now')) RETURNING id"
     ).bind(emailLower, hash, salt).first();
 
     const token = await signJWT({ uid: result.id, email: emailLower }, env.JWT_SECRET || "wca-dev-fallback-secret-set-jwt-secret-in-production");

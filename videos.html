@@ -65,6 +65,9 @@
           and still having somewhere to stand. It is the quieter companion to Start Here.
         </p>
         <form id="subscribe-form" novalidate>
+          <div style="display:none !important;" aria-hidden="true">
+            <input type="text" name="phone_confirm" tabindex="-1" autocomplete="off">
+          </div>
           <div class="form-row">
             <input type="email" name="email" placeholder="Your email address" required autocomplete="email" aria-label="Email address">
             <button type="submit" class="btn">Send it to me</button>

@@ -57,7 +57,12 @@ export async function onRequestPost(context) {
     return json({ error: "Invalid request." }, 400);
   }
 
-  const email = (body.email || "").trim().toLowerCase();
+  const { email: rawEmail, phone_confirm } = body;
+  if (phone_confirm) {
+    return json({ ok: true }, 200);
+  }
+
+  const email = (rawEmail || "").trim().toLowerCase();
 
   // Basic email validation
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {

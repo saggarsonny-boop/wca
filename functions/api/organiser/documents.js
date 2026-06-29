@@ -1,11 +1,11 @@
-import { requireAuth } from "../../_shared/auth.js";
+import { requireActiveSubscription } from "../../_shared/auth.js";
 import { json, err } from "../../_shared/response.js";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20 MB
 
 export async function onRequest({ request, env }) {
   try {
-    const user = await requireAuth(request, env);
+    const user = await requireActiveSubscription(request, env);
     const uid = user.uid;
     const url = new URL(request.url);
 

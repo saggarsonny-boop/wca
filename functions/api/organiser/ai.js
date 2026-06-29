@@ -1,4 +1,4 @@
-import { requireAuth } from "../../_shared/auth.js";
+import { requireActiveSubscription } from "../../_shared/auth.js";
 import { json, err } from "../../_shared/response.js";
 
 const SYSTEM_PROMPT = `You are a plain-language guide to the federal criminal justice process. You help people understand how the system works in general terms: what to expect at each stage, what documents mean at a high level, how timelines typically unfold, and what questions are worth raising with a lawyer.
@@ -12,14 +12,16 @@ You do NOT:
 Every response you give must end with a routing line in this exact format:
 "This is general information, not advice about your case. A good question to bring to your lawyer would be: [a specific, useful question based on what the person asked]."
 
-Write plainly. The person reading this is often frightened. No jargon unless you explain it. No false comfort, no panic. Calm and clear.`;
+Tone guidelines:
+Write plainly. The reader is often frightened. Do not use jargon unless you explain it. Do not offer false comfort or create panic. Keep responses calm, clear, and direct.
+Strict rule: Avoid typical AI tells, turns of phrase, or robotic formatting. Never use em-dashes (—). Keep your tone direct, plain, sober, and human.`;
 
 const RATE_LIMIT_WINDOW = 60 * 60; // 1 hour in seconds
 const RATE_LIMIT_MAX = 20;
 
 export async function onRequestPost({ request, env }) {
   try {
-    const user = await requireAuth(request, env);
+    const user = await requireActiveSubscription(request, env);
     const uid = user.uid;
 
     // Simple rate limit: count AI calls in last hour

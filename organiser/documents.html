@@ -60,6 +60,18 @@
 (async function () {
   const resp = await fetch("/api/auth/me");
   if (!resp.ok) { window.location.href = "/organiser/login.html"; return; }
+  const user = await resp.json();
+
+  if (user.subscription_status === "trial") {
+    const trialEnds = user.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    if (trialEnds && trialEnds < new Date()) {
+      window.location.href = "/organiser/subscribe.html";
+      return;
+    }
+  } else if (user.subscription_status !== "active" && user.subscription_status !== "lifetime") {
+    window.location.href = "/organiser/subscribe.html";
+    return;
+  }
 
   document.getElementById("logout-btn").addEventListener("click", async () => {
     await fetch("/api/auth/logout", { method: "POST" });

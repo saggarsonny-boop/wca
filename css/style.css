@@ -552,3 +552,42 @@ strong { font-weight: 600; }
 .mt-1 { margin-top: 1rem; }
 .mt-2 { margin-top: 2rem; }
 .text-soft { color: var(--text-soft); }
+
+/* ── Press and Hold Human-Only Button ── */
+.btn-hold {
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+
+.btn-hold__progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--text);
+  opacity: 0.15;
+  transition: width 1.5s linear;
+  pointer-events: none;
+}
+
+.btn-hold.holding .btn-hold__progress {
+  width: 100%;
+}
+
+.btn-hold.success {
+  background: #2a6e3f !important;
+  color: #ffffff !important;
+  border-color: #2a6e3f !important;
+  cursor: default;
+}
+
+.btn-hold.success .btn-hold__progress {
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+

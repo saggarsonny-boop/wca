@@ -91,10 +91,18 @@
   document.getElementById("user-email").textContent = user.email;
 
   if (user.subscription_status === "trial") {
+    const trialEnds = user.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    if (trialEnds && trialEnds < new Date()) {
+      window.location.href = "/organiser/subscribe.html";
+      return;
+    }
     const banner = document.createElement("div");
     banner.style.cssText = "background:#fef3cd;border:1px solid #f0c040;border-radius:4px;padding:0.75rem 1rem;margin-bottom:1.5rem;font-size:0.875rem;";
     banner.innerHTML = 'You are in your free trial. <a href="/organiser/subscribe.html">Subscribe to keep access.</a>';
     document.querySelector(".org-main h1").after(banner);
+  } else if (user.subscription_status !== "active" && user.subscription_status !== "lifetime") {
+    window.location.href = "/organiser/subscribe.html";
+    return;
   }
 
   document.getElementById("logout-btn").addEventListener("click", async () => {

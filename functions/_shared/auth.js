@@ -84,3 +84,35 @@ function unauthorized() {
     headers: { "Content-Type": "application/json" }
   });
 }
+
+export async function requireActiveSubscription(request, env) {
+  const user = await requireAuth(request, env);
+  const dbUser = await env.DB.prepare(
+    "SELECT subscription_status, trial_ends_at FROM organiser_users WHERE id = ?"
+  ).bind(user.uid).first();
+
+  if (!dbUser) throw unauthorized();
+
+  const status = dbUser.subscription_status;
+
+  if (status === "active" || status === "lifetime") {
+    return user;
+  }
+
+  if (status === "trial") {
+    const trialEnds = dbUser.trial_ends_at ? new Date(dbUser.trial_ends_at) : null;
+    if (trialEnds && trialEnds > new Date()) {
+      return user;
+    }
+  }
+
+  throw paymentRequired();
+}
+
+function paymentRequired() {
+  return new Response(JSON.stringify({ error: "Payment Required" }), {
+    status: 402,
+    headers: { "Content-Type": "application/json" }
+  });
+}
+
