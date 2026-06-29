@@ -341,27 +341,46 @@
   const stateSelectEl = form.elements["state_select"];
 
   function updateJurisdictionUI() {
-    if (jurSelect.value === "state") {
+    const jur = jurSelect.value;
+    const stateCode = stateSelectEl.value;
+    const stateOpt = stateSelectEl.options[stateSelectEl.selectedIndex];
+    const stateName = stateOpt ? stateOpt.text : "";
+    const districtInput = form.elements["district"];
+
+    if (jur === "state") {
       stateField.style.display = "block";
       caseNumberInput.placeholder = "e.g. CR-12-34567 or 2024-CF-123";
       
-      const stateOpt = stateSelectEl.options[stateSelectEl.selectedIndex];
-      const stateName = stateOpt ? stateOpt.text : "";
-      const stateCode = stateSelectEl.value;
-      
       if (!stateCode) {
         caseNameInput.placeholder = "e.g. State v. [Your Name]";
-      } else if (["CA", "NY", "MI", "IL", "CO"].includes(stateCode)) {
-        caseNameInput.placeholder = `e.g. People of the State of ${stateName} v. [Your Name]`;
-      } else if (["PA", "VA", "MA", "KY"].includes(stateCode)) {
-        caseNameInput.placeholder = `e.g. Commonwealth of ${stateName} v. [Your Name]`;
+        districtInput.placeholder = "e.g. County Circuit or Superior Court";
       } else {
-        caseNameInput.placeholder = `e.g. State of ${stateName} v. [Your Name]`;
+        if (["CA", "NY", "MI", "IL", "CO"].includes(stateCode)) {
+          caseNameInput.placeholder = `e.g. People of the State of ${stateName} v. [Your Name]`;
+        } else if (["PA", "VA", "MA", "KY"].includes(stateCode)) {
+          caseNameInput.placeholder = `e.g. Commonwealth of ${stateName} v. [Your Name]`;
+        } else {
+          caseNameInput.placeholder = `e.g. State of ${stateName} v. [Your Name]`;
+        }
+
+        // State court placeholder examples
+        if (stateCode === "MO") {
+          districtInput.placeholder = "e.g. Jackson County Circuit Court, Kansas City";
+        } else if (stateCode === "CA") {
+          districtInput.placeholder = "e.g. Los Angeles County Superior Court";
+        } else if (stateCode === "NY") {
+          districtInput.placeholder = "e.g. New York County Supreme Court, Manhattan";
+        } else {
+          const circuitStates = ["IL", "OR", "VA", "FL", "MI", "AR", "AL", "IN", "KY", "MS", "TN", "WV", "WI"];
+          const type = circuitStates.includes(stateCode) ? "Circuit Court" : "Superior Court";
+          districtInput.placeholder = `e.g. [County Name] County ${type}`;
+        }
       }
     } else {
       stateField.style.display = "none";
       caseNumberInput.placeholder = "e.g. 2:24-cr-20123";
       caseNameInput.placeholder = "e.g. United States v. [Your Name]";
+      districtInput.placeholder = "e.g. Eastern District of Michigan, Detroit";
     }
   }
 

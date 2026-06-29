@@ -48,6 +48,8 @@
     .segment-home { background: #dd6b20; }
     .segment-saved { background: #2a6e3f; }
 
+    .print-only-header { display: none; }
+
     @media print {
       body {
         background: #fff;
@@ -67,17 +69,8 @@
         max-width: 100%;
       }
       
-      /* Print Page Header */
-      .org-main::before {
-        content: "SENTENCE PROJECTION & RELEASE TIMELINE REPORT\aCONFIDENTIAL & FOR DISCUSSION WITH CASE MANAGER";
-        display: block;
-        text-align: center;
-        font-weight: bold;
-        font-size: 13pt;
-        border-bottom: 2px double #000;
-        padding-bottom: 0.5rem;
-        margin-bottom: 2rem;
-        white-space: pre-wrap;
+      .print-only-header {
+        display: block !important;
       }
       
       .calc-row {
@@ -180,8 +173,21 @@
   </aside>
 
   <main class="org-main">
-    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Release Calculator</h1>
-    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.75rem;">Estimate your actual release timeline based on federal guidelines and credits.</p>
+    
+    <!-- Print-Only Header Block -->
+    <div class="print-only-header" style="margin-bottom:2rem; font-family:'Times New Roman', Georgia, serif;">
+      <h2 style="text-align:center; font-size:14pt; font-weight:bold; margin-bottom:0.25rem; border-bottom:2px double #000; padding-bottom:0.4rem; font-family:'Times New Roman', Georgia, serif;">SENTENCE PROJECTION & RELEASE TIMELINE REPORT</h2>
+      <div style="display:flex; justify-content:space-between; margin-top:1rem; font-size:10.5pt; font-style:italic;">
+        <span><strong>Client:</strong> <span id="print-inmate-name">Loading...</span></span>
+        <span><strong>Report Date:</strong> <span id="print-report-date"></span></span>
+      </div>
+      <div style="text-align:center; font-size:9pt; font-weight:bold; color:#853030; margin-top:0.75rem; text-transform:uppercase; letter-spacing:1px; border-top:1px solid #ccc; padding-top:0.4rem;">
+        CONFIDENTIAL — FOR DISCUSSION WITH CASE MANAGER
+      </div>
+    </div>
+
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;" class="no-print">Release Calculator</h1>
+    <p class="text-soft no-print" style="font-size:0.875rem; margin-bottom:1.75rem;">Estimate your actual release timeline based on federal guidelines and credits.</p>
 
     <div class="calc-row">
       
@@ -372,7 +378,12 @@
 
   function calculate() {
     const sentenceVal = Math.max(1, parseInt(inputSentence.value) || 0);
-    const surrenderVal = inputSurrender.value ? new Date(inputSurrender.value + "T12:00:00") : new Date();
+    
+    let surrenderVal = inputSurrender.value ? new Date(inputSurrender.value + "T12:00:00") : new Date();
+    if (surrenderVal.getFullYear() < 1000) {
+      surrenderVal.setFullYear(2000 + surrenderVal.getFullYear());
+    }
+
     const hasRDAP = inputRDAP.checked;
     const hasFSA = inputFSA.checked;
     const isRemanded = hasRemandInput.checked;
@@ -387,8 +398,16 @@
       const endVal = remandEndInput.value;
       
       if (startVal) {
-        const startDate = new Date(startVal + "T12:00:00");
-        const endDate = endVal ? new Date(endVal + "T12:00:00") : surrenderVal;
+        let startDate = new Date(startVal + "T12:00:00");
+        let endDate = endVal ? new Date(endVal + "T12:00:00") : surrenderVal;
+        
+        // Auto-fix 2-digit/century year entries (e.g. 0024 -> 2024)
+        if (startDate.getFullYear() < 1000) {
+          startDate.setFullYear(2000 + startDate.getFullYear());
+        }
+        if (endDate.getFullYear() < 1000) {
+          endDate.setFullYear(2000 + endDate.getFullYear());
+        }
         
         if (endDate >= startDate) {
           const diffTime = Math.abs(endDate - startDate);
@@ -496,6 +515,26 @@
   hasRemandInput.addEventListener("change", calculate);
   remandStartInput.addEventListener("input", calculate);
   remandEndInput.addEventListener("input", calculate);
+
+  // Set report date
+  document.getElementById("print-report-date").textContent = new Date().toLocaleDateString(undefined, {month: 'long', day: 'numeric', year: 'numeric'});
+
+  // Load client name from case file
+  try {
+    const cfResp = await fetch("/api/organiser/case-file");
+    if (cfResp.ok) {
+      const { data } = await cfResp.json();
+      if (data && data.case_name) {
+        document.getElementById("print-inmate-name").textContent = data.case_name;
+      } else {
+        document.getElementById("print-inmate-name").textContent = user.email;
+      }
+    } else {
+      document.getElementById("print-inmate-name").textContent = user.email;
+    }
+  } catch (_) {
+    document.getElementById("print-inmate-name").textContent = user.email;
+  }
 
   calculate();
 })();
