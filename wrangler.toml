@@ -19,6 +19,11 @@ binding       = "DB"
 database_name = "wca-subscribers"
 database_id   = "f9e924d6-3547-4ba4-ac8d-005e95d36628"
 
+[vars]
+STRIPE_PRICE_ID_MONTHLY = "price_1TnWjLPIZtoQZOG1UvF3o6l7"
+STRIPE_PRICE_ID_LIFETIME = "price_1TnWjMPIZtoQZOG1oJxDdoml"
+
+
 # R2 bucket for document storage — uncomment after creating the bucket:
 #   npx wrangler r2 bucket create wca-documents
 # [[r2_buckets]]
