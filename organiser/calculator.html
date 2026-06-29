@@ -103,13 +103,25 @@
         </div>
 
         <div class="case-field">
-          <label for="surrender-date">Estimated Surrender Date</label>
+          <label for="surrender-date">Estimated Surrender Date / BOP Custody Start</label>
           <input type="date" id="surrender-date" style="width:100%;">
+          <span class="text-soft" style="font-size:0.75rem; display:block; margin-top:0.25rem;">Type the date directly (MM/DD/YYYY) or click calendar to pick.</span>
         </div>
 
-        <div class="case-field" style="display:flex; align-items:center; gap:0.5rem; margin-top:1rem;">
+        <div class="case-field" style="display:flex; align-items:center; gap:0.5rem; margin-top:1.25rem;">
+          <input type="checkbox" id="has-remand" style="width:auto; margin:0;">
+          <label for="has-remand" style="margin:0; cursor:pointer;">Prior jail or remand custody credit?</label>
+        </div>
+
+        <div class="case-field" id="remand-days-container" style="display:none; margin-top:0.5rem; background:var(--bg-alt); padding:0.75rem; border-radius:4px;">
+          <label for="remand-days">Remand Jail Time (Total Days)</label>
+          <input type="number" id="remand-days" min="0" value="0" style="width:100%;">
+          <span class="text-soft" style="font-size:0.75rem; display:block; margin-top:0.25rem; line-height:1.35;">Prior jail time is credited day-for-day off actual prison time, but does NOT earn First Step Act programming credits.</span>
+        </div>
+
+        <div class="case-field" style="display:flex; align-items:center; gap:0.5rem; margin-top:1.25rem;">
           <input type="checkbox" id="eligible-rdap" checked style="width:auto; margin:0;">
-          <label for="eligible-rdap" style="margin:0; cursor:pointer;">Eligible for RDAP drug program (up to 12 months reduction)</label>
+          <label for="eligible-rdap" style="margin:0; cursor:pointer;">Eligible for RDAP program (up to 12 months reduction)</label>
         </div>
 
         <div class="case-field" style="display:flex; align-items:center; gap:0.5rem; margin-top:1rem;">
@@ -130,6 +142,10 @@
           <div style="display:flex; justify-content:space-between; color:#853030;">
             <span>GCT Discount (15% Good Conduct Time):</span>
             <strong id="sum-gct">-5.4 months</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; color:#853030; display:none;" id="row-remand">
+            <span>Prior Jail/Remand Credit:</span>
+            <strong id="sum-remand">0 days</strong>
           </div>
           <div style="display:flex; justify-content:space-between; color:#2a6e3f;">
             <span>RDAP Program Reduction:</span>
@@ -178,6 +194,36 @@
         <button type="button" onclick="window.print()" class="btn btn--outline" style="font-size:0.875rem; padding:0.5rem 1rem;">🖨️ Print / Save Timeline PDF</button>
       </div>
 
+      <!-- Calculation Explainer -->
+      <div style="margin-top:2.5rem; background:var(--bg-alt); padding:1.5rem; border-radius:8px; border:1px solid var(--border);" class="no-print">
+        <h4 style="font-size:1rem; margin-bottom:0.75rem; border-bottom:1px solid var(--border); padding-bottom:0.4rem;">How These Numbers Are Calculated ("The Working")</h4>
+        <div style="font-size:0.875rem; line-height:1.6; color:var(--text-soft); display:flex; flex-direction:column; gap:0.75rem;">
+          <p>
+            <strong>1. Good Conduct Time (GCT):</strong> By federal law, inmates receive up to 54 days of good time credit per year of sentence imposed (~14.79% reduction). This is applied from day 1 for any sentence greater than 12 months.
+          </p>
+          <p>
+            <strong>2. Prior Jail / Remand Credit:</strong> Any time spent locked up in county jail or non-BOP custody before sentencing/surrender is credited day-for-day off your prison sentence. However, this period does NOT qualify for First Step Act programming credits because program credits are only earned while in a designated BOP facility.
+          </p>
+          <p>
+            <strong>3. RDAP drug program reduction:</strong> Completing the Residential Drug Abuse Program (RDAP) grants a sentence reduction of up to 12 months. The reduction scale is:
+            <span style="display:block; padding-left:1rem; margin-top:0.25rem;">
+              • Sentence of 37+ months: 12 months off.<br>
+              • Sentence of 31–36 months: 9 months off.<br>
+              • Sentence of 24–30 months: 6 months off.<br>
+              • Sentence under 24 months: Not eligible for sentence reduction.
+            </span>
+          </p>
+          <p>
+            <strong>4. First Step Act (FSA) Credits:</strong> Eligible inmates earn 10 to 15 days of early release credit for every 30 days of productive programming. 
+            <span style="display:block; padding-left:1rem; margin-top:0.25rem;">
+              • Up to 365 days (12 months) of earned credits are applied directly to advance your release date from prison.<br>
+              • Any excess credits earned beyond 12 months are applied to speed up your transfer to home confinement or a halfway house.<br>
+              • <em>Note:</em> The first 6 months of an inmate's prison term are when assessments are conducted, programs are assigned, and credits accumulate; early release credits cannot be formally applied to advance release dates until they are fully earned and documented.
+            </span>
+          </p>
+        </div>
+      </div>
+
       <p class="text-soft" style="font-size:0.85rem; margin-top:1.5rem; line-height:1.4;">
         * Calculations are estimates based on standard BOP policies: Good Conduct Time is calculated at 54 days per year (approx 14.8%). RDAP reduction depends on sentence length (12 months off for 37+ months, 9 months for 31-36 months, 6 months for 24-30 months). First Step Act credits assume maximum program completion (15 days earned per month, capped at 1 year early release, with excess applied to home confinement). Actual outcomes are decided entirely by the Bureau of Prisons and probation officers.
       </p>
@@ -215,12 +261,25 @@
   const inputSurrender = document.getElementById("surrender-date");
   const inputRDAP = document.getElementById("eligible-rdap");
   const inputFSA = document.getElementById("eligible-fsa");
+  const hasRemandInput = document.getElementById("has-remand");
+  const remandDaysInput = document.getElementById("remand-days");
+  const remandContainer = document.getElementById("remand-days-container");
+  const rowRemand = document.getElementById("row-remand");
+  const sumRemand = document.getElementById("sum-remand");
 
   function calculate() {
     const sentenceVal = Math.max(1, parseInt(inputSentence.value) || 0);
     const surrenderVal = inputSurrender.value ? new Date(inputSurrender.value + "T12:00:00") : new Date();
     const hasRDAP = inputRDAP.checked;
     const hasFSA = inputFSA.checked;
+    const isRemanded = hasRemandInput.checked;
+    const remandDays = isRemanded ? (parseInt(remandDaysInput.value) || 0) : 0;
+    const remandMonths = remandDays / 30.44;
+
+    // Show/hide remand input UI and summary details
+    remandContainer.style.display = isRemanded ? "block" : "none";
+    rowRemand.style.display = isRemanded ? "flex" : "none";
+    sumRemand.textContent = `-${remandDays} days`;
 
     // 1. Good Conduct Time (GCT): approx 14.8% off for sentences over 12 months
     const gctReduction = sentenceVal > 12 ? Math.round(sentenceVal * 0.1479 * 10) / 10 : 0;
@@ -254,9 +313,9 @@
     const baseHomeConfinement = Math.min(6, Math.round(sentenceVal * 0.1 * 10) / 10);
     const totalHomeConfinement = Math.min(12, baseHomeConfinement + fsaHomeConfinementMonths);
 
-    // Calculate actual prison time
-    const actualPrisonMonths = Math.max(0, gctSentence - rdapReduction - fsaEarlyRelease - totalHomeConfinement);
-    const totalSavedMonths = gctReduction + rdapReduction + fsaEarlyRelease;
+    // Calculate actual prison time (prior remand time directly subtracts day-for-day)
+    const actualPrisonMonths = Math.max(0, gctSentence - rdapReduction - fsaEarlyRelease - totalHomeConfinement - remandMonths);
+    const totalSavedMonths = gctReduction + rdapReduction + fsaEarlyRelease + remandMonths;
 
     // Update labels
     document.getElementById("sum-imposed").textContent = `${sentenceVal} months`;
@@ -294,6 +353,8 @@
   inputSurrender.addEventListener("input", calculate);
   inputRDAP.addEventListener("change", calculate);
   inputFSA.addEventListener("change", calculate);
+  hasRemandInput.addEventListener("change", calculate);
+  remandDaysInput.addEventListener("input", calculate);
 
   calculate();
 })();

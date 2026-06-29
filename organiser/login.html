@@ -29,11 +29,45 @@
           <input type="email" id="email" name="email" autocomplete="email" required>
         </div>
         <div class="field">
-          <label for="password">Password</label>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <label for="password">Password</label>
+            <a href="#" id="forgot-password-link" style="font-size:0.75rem; color:#2c4a7c; text-decoration:none;">Forgot password?</a>
+          </div>
           <input type="password" id="password" name="password" autocomplete="current-password" required>
         </div>
         <button type="submit" class="btn btn-full">Sign in</button>
         <div id="auth-status" class="auth-status" role="alert" aria-live="polite"></div>
+      </form>
+
+      <!-- Forgot Password Request -->
+      <form id="forgot-form" style="display:none;" novalidate>
+        <div class="field">
+          <label for="forgot-email">Enter your account email</label>
+          <input type="email" id="forgot-email" name="email" placeholder="email@example.com" required>
+        </div>
+        <button type="submit" class="btn btn-full">Send Verification Code</button>
+        <div style="margin-top:1rem; text-align:center;">
+          <a href="#" class="back-to-login" style="font-size:0.8rem; color:#2c4a7c; text-decoration:none;">Back to Sign in</a>
+        </div>
+        <div id="forgot-status" class="auth-status" role="alert" aria-live="polite"></div>
+      </form>
+
+      <!-- Reset Password Confirm -->
+      <form id="reset-confirm-form" style="display:none;" novalidate>
+        <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">We sent a 6-digit code to your email. Enter it below along with your new password.</p>
+        <div class="field">
+          <label for="reset-code">6-Digit Verification Code</label>
+          <input type="text" id="reset-code" name="code" placeholder="123456" maxlength="6" required style="letter-spacing:0.2em; text-align:center; font-family:monospace; font-size:1.1rem;">
+        </div>
+        <div class="field">
+          <label for="new-password">New Password (min 8 chars)</label>
+          <input type="password" id="new-password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-full">Save New Password</button>
+        <div style="margin-top:1rem; text-align:center;">
+          <a href="#" class="back-to-login" style="font-size:0.8rem; color:#2c4a7c; text-decoration:none;">Back to Sign in</a>
+        </div>
+        <div id="reset-confirm-status" class="auth-status" role="alert" aria-live="polite"></div>
       </form>
 
       <p class="auth-switch">
@@ -86,6 +120,88 @@
       status.className = "auth-status auth-status--err";
       btn.disabled = false;
       btn.textContent = "Sign in";
+    }
+  });
+
+  const forgotLink = document.getElementById("forgot-password-link");
+  const forgotForm = document.getElementById("forgot-form");
+  const resetForm = document.getElementById("reset-confirm-form");
+  const authSwitch = document.querySelector(".auth-switch");
+
+  const statusForgot = document.getElementById("forgot-status");
+  const statusReset = document.getElementById("reset-confirm-status");
+
+  forgotLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    loginForm.style.display = "none";
+    forgotForm.style.display = "block";
+    resetForm.style.display = "none";
+    authSwitch.style.display = "none";
+  });
+
+  document.querySelectorAll(".back-to-login").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      loginForm.style.display = "block";
+      forgotForm.style.display = "none";
+      resetForm.style.display = "none";
+      authSwitch.style.display = "block";
+      statusForgot.textContent = "";
+      statusReset.textContent = "";
+    });
+  });
+
+  forgotForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    statusForgot.textContent = "Sending...";
+    statusForgot.style.color = "var(--text-soft)";
+    
+    const r = await fetch("/api/auth/reset-password-request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: document.getElementById("forgot-email").value })
+    });
+    
+    if (r.ok) {
+      statusForgot.textContent = "";
+      forgotForm.style.display = "none";
+      resetForm.style.display = "block";
+    } else {
+      const data = await r.json();
+      statusForgot.textContent = data.error || "Failed to send code.";
+      statusForgot.style.color = "#8b2020";
+    }
+  });
+
+  resetForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    statusReset.textContent = "Updating password...";
+    statusReset.style.color = "var(--text-soft)";
+
+    const r = await fetch("/api/auth/reset-password-confirm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: document.getElementById("forgot-email").value,
+        code: document.getElementById("reset-code").value,
+        password: document.getElementById("new-password").value
+      })
+    });
+
+    if (r.ok) {
+      statusReset.textContent = "Password updated! You can now sign in.";
+      statusReset.style.color = "#2a6e3f";
+      setTimeout(() => {
+        loginForm.style.display = "block";
+        forgotForm.style.display = "none";
+        resetForm.style.display = "none";
+        authSwitch.style.display = "block";
+        statusReset.textContent = "";
+      }, 2000);
+    } else {
+      const data = await r.json();
+      statusReset.textContent = data.error || "Reset failed. Please verify your code.";
+      statusReset.style.color = "#8b2020";
     }
   });
 })();

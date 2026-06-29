@@ -16,6 +16,15 @@ export async function onRequest({ request, env }) {
     if (request.method === "POST") {
       const { label, date_val, note } = await request.json();
       if (!label || !date_val) return err("Label and date are required.");
+
+      // Enforce maximum of 30 dates per case file
+      const { count } = await env.DB.prepare(
+        "SELECT COUNT(*) as count FROM organiser_dates WHERE user_id = ?"
+      ).bind(uid).first();
+      if (count >= 30) {
+        return err("You have reached the limit of 30 timeline dates for this case file.", 400);
+      }
+
       const r = await env.DB.prepare(
         "INSERT INTO organiser_dates (user_id, label, date_val, note, created_at) VALUES (?, ?, ?, ?, datetime('now')) RETURNING id"
       ).bind(uid, label, date_val, note || "").first();

@@ -8,6 +8,16 @@
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/organiser.css">
+  <style>
+    @media print {
+      body { background: #fff; color: #000; font-family: Georgia, serif; }
+      .org-sidebar, .site-header, #logout-btn, button, .text-soft, .save-bar, h2, h4, pre { display: none !important; }
+      .org-layout { display: block; }
+      .org-main { padding: 0; max-width: 100%; }
+      textarea { border: none !important; background: transparent !important; padding: 0 !important; color: #000 !important; font-size: 1rem !important; resize: none !important; box-shadow: none !important; pointer-events: none !important; height: auto !important; }
+      .case-field { border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; margin-bottom: 1.5rem; page-break-inside: avoid; }
+    }
+  </style>
 </head>
 <body>
 
@@ -93,9 +103,25 @@ Guidelines for Writing a Letter of Support:
         </pre>
       </div>
 
-      <div style="margin-top:2.5rem; display:flex; align-items:center; gap:1.5rem;">
-        <button type="submit" class="btn">Save changes</button>
-        <span id="save-status" style="font-size:0.875rem;"></span>
+      <h2 style="font-size:1.25rem; margin-top:3rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">4. Allocution Prep & Practice</h2>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Your personal address to the judge at sentencing. Plan your outline and write down your notes. Keep it concise, remorseful, and future-focused (under 5 minutes).</p>
+
+      <div class="case-field">
+        <label>Allocution Statement / Outline</label>
+        <textarea name="mitigation_allocution" rows="8" placeholder="Draft your address to the judge here. Focus on: taking full responsibility, acknowledging the harm caused, outlining your rehabilitation steps, and stating what you plan to do next."></textarea>
+      </div>
+
+      <div class="case-field">
+        <label>Practice Notes</label>
+        <textarea name="mitigation_allocution_practice" rows="4" placeholder="Notes on your delivery (e.g. tone, speaking pace, key bullet points to memorize, feedback from family/lawyer)."></textarea>
+      </div>
+
+      <div style="margin-top:2.5rem; display:flex; justify-content:space-between; align-items:center; margin-top:3rem;">
+        <div>
+          <button type="submit" class="btn">Save changes</button>
+          <span id="save-status" style="font-size:0.875rem; margin-left:1rem;"></span>
+        </div>
+        <button type="button" onclick="window.print()" class="btn btn--outline">🖨️ Download PDF Report</button>
       </div>
 
     </form>
@@ -126,7 +152,10 @@ Guidelines for Writing a Letter of Support:
 
   const form = document.getElementById("mitigation-form");
   const saveStatus = document.getElementById("save-status");
-  const FIELDS = ["mitigation_statement", "mitigation_medical_conditions", "mitigation_medications", "mitigation_character_letters"];
+  const FIELDS = [
+    "mitigation_statement", "mitigation_medical_conditions", "mitigation_medications", 
+    "mitigation_character_letters", "mitigation_allocution", "mitigation_allocution_practice"
+  ];
 
   // Load existing data from case-file endpoint (shares same encrypted record)
   const load = await fetch("/api/organiser/case-file");

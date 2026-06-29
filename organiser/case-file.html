@@ -8,6 +8,17 @@
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/organiser.css">
+  <style>
+    @media print {
+      body { background: #fff; color: #000; font-family: Georgia, serif; }
+      .org-sidebar, .site-header, #logout-btn, button, .text-soft, .save-bar, h3 { display: none !important; }
+      .org-layout { display: block; }
+      .org-main { padding: 0; max-width: 100%; }
+      input, select, textarea { border: none !important; background: transparent !important; padding: 0 !important; color: #000 !important; font-size: 1rem !important; resize: none !important; box-shadow: none !important; pointer-events: none !important; }
+      .case-field, .case-field-block { border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; margin-bottom: 1rem; page-break-inside: avoid; }
+      textarea { height: auto !important; }
+    }
+  </style>
 </head>
 <body>
 
@@ -44,43 +55,200 @@
     <form id="case-form" novalidate>
 
       <div class="case-field">
+        <label>Jurisdiction</label>
+        <select name="jurisdiction" id="jurisdiction-select" style="width:100%;">
+          <option value="federal">Federal</option>
+          <option value="state">State</option>
+        </select>
+      </div>
+
+      <div class="case-field" id="state-field" style="display:none;">
+        <label>State</label>
+        <select name="state_select" style="width:100%;">
+          <option value="">-- Select State --</option>
+          <option value="AL">Alabama</option>
+          <option value="AK">Alaska</option>
+          <option value="AZ">Arizona</option>
+          <option value="AR">Arkansas</option>
+          <option value="CA">California</option>
+          <option value="CO">Colorado</option>
+          <option value="CT">Connecticut</option>
+          <option value="DE">Delaware</option>
+          <option value="FL">Florida</option>
+          <option value="GA">Georgia</option>
+          <option value="HI">Hawaii</option>
+          <option value="ID">Idaho</option>
+          <option value="IL">Illinois</option>
+          <option value="IN">Indiana</option>
+          <option value="IA">Iowa</option>
+          <option value="KS">Kansas</option>
+          <option value="KY">Kentucky</option>
+          <option value="LA">Louisiana</option>
+          <option value="ME">Maine</option>
+          <option value="MD">Maryland</option>
+          <option value="MA">Massachusetts</option>
+          <option value="MI">Michigan</option>
+          <option value="MN">Minnesota</option>
+          <option value="MS">Mississippi</option>
+          <option value="MO">Missouri</option>
+          <option value="MT">Montana</option>
+          <option value="NE">Nebraska</option>
+          <option value="NV">Nevada</option>
+          <option value="NH">New Hampshire</option>
+          <option value="NJ">New Jersey</option>
+          <option value="NM">New Mexico</option>
+          <option value="NY">New York</option>
+          <option value="NC">North Carolina</option>
+          <option value="ND">North Dakota</option>
+          <option value="OH">Ohio</option>
+          <option value="OK">Oklahoma</option>
+          <option value="OR">Oregon</option>
+          <option value="PA">Pennsylvania</option>
+          <option value="RI">Rhode Island</option>
+          <option value="SC">South Carolina</option>
+          <option value="SD">South Dakota</option>
+          <option value="TN">Tennessee</option>
+          <option value="TX">Texas</option>
+          <option value="UT">Utah</option>
+          <option value="VT">Vermont</option>
+          <option value="VA">Virginia</option>
+          <option value="WA">Washington</option>
+          <option value="WV">West Virginia</option>
+          <option value="WI">Wisconsin</option>
+          <option value="WY">Wyoming</option>
+        </select>
+      </div>
+
+      <div class="case-field">
         <label>Case name or reference</label>
         <input type="text" name="case_name" placeholder="e.g. United States v. [Your Name]">
       </div>
 
       <div class="case-field">
-        <label>District and court</label>
+        <label>District / County Court</label>
         <input type="text" name="district" placeholder="e.g. Eastern District of Michigan, Detroit">
       </div>
 
       <div class="case-field">
         <label>Case number</label>
-        <input type="text" name="case_number" placeholder="e.g. 2:24-cr-20123">
+        <input type="text" name="case_number" id="case-number-input" placeholder="e.g. 2:24-cr-20123">
       </div>
 
       <div class="case-field">
-        <label>Charges (plain language)</label>
-        <textarea name="charges" rows="3" placeholder="Describe the charges in your own words."></textarea>
+        <label>Charges</label>
+        <span class="text-soft" style="font-size:0.8rem; display:block; margin-bottom:0.4rem;">Invite: Copy and paste the official charges from your indictment or target letter below. You can update or summarize this later.</span>
+        <textarea name="charges" rows="5" placeholder="Paste or describe charges here..."></textarea>
       </div>
 
-      <div class="case-field">
-        <label>Defense attorney</label>
-        <input type="text" name="attorney_name" placeholder="Name">
+      <!-- Attorneys Tracker -->
+      <h3 style="font-size:1.15rem; margin-top:2rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.4rem;">Defense Counsel History</h3>
+
+      <div class="case-field-block" style="background:var(--bg-alt); padding:1rem; border-radius:6px; margin-bottom:1.5rem;">
+        <h4 style="font-size:0.95rem; margin-bottom:0.75rem;">Attorney 1 (Primary / Former)</h4>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
+          <div>
+            <label style="font-size:0.8rem;">Name</label>
+            <input type="text" name="attorney_name_1" placeholder="Name">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Phone</label>
+            <input type="text" name="attorney_phone_1" placeholder="Office / Cell">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Email</label>
+            <input type="email" name="attorney_email_1" placeholder="Email">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Date Hired</label>
+            <input type="date" name="attorney_hired_1">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">End of Engagement</label>
+            <input type="date" name="attorney_end_1">
+          </div>
+        </div>
       </div>
 
-      <div class="case-field">
-        <label>Attorney phone</label>
-        <input type="text" name="attorney_phone" placeholder="">
+      <div class="case-field-block" style="background:var(--bg-alt); padding:1rem; border-radius:6px; margin-bottom:1.5rem;">
+        <h4 style="font-size:0.95rem; margin-bottom:0.75rem;">Attorney 2 (if applicable)</h4>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
+          <div>
+            <label style="font-size:0.8rem;">Name</label>
+            <input type="text" name="attorney_name_2" placeholder="Name">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Phone</label>
+            <input type="text" name="attorney_phone_2" placeholder="Office / Cell">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Email</label>
+            <input type="email" name="attorney_email_2" placeholder="Email">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Date Hired</label>
+            <input type="date" name="attorney_hired_2">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">End of Engagement</label>
+            <input type="date" name="attorney_end_2">
+          </div>
+        </div>
       </div>
 
-      <div class="case-field">
-        <label>Attorney email</label>
-        <input type="email" name="attorney_email" placeholder="">
+      <div class="case-field-block" style="background:var(--bg-alt); padding:1rem; border-radius:6px; margin-bottom:1.5rem;">
+        <h4 style="font-size:0.95rem; margin-bottom:0.75rem;">Attorney 3 (if applicable)</h4>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
+          <div>
+            <label style="font-size:0.8rem;">Name</label>
+            <input type="text" name="attorney_name_3" placeholder="Name">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Phone</label>
+            <input type="text" name="attorney_phone_3" placeholder="Office / Cell">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Email</label>
+            <input type="email" name="attorney_email_3" placeholder="Email">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Date Hired</label>
+            <input type="date" name="attorney_hired_3">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">End of Engagement</label>
+            <input type="date" name="attorney_end_3">
+          </div>
+        </div>
       </div>
+
+      <div class="case-field-block" style="background:var(--bg-alt); padding:1rem; border-radius:6px; margin-bottom:1.5rem;">
+        <h4 style="font-size:0.95rem; margin-bottom:0.75rem;">Appellate Counsel (Appeal Phase)</h4>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
+          <div>
+            <label style="font-size:0.8rem;">Name</label>
+            <input type="text" name="appeal_attorney_name" placeholder="Name">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Phone</label>
+            <input type="text" name="appeal_attorney_phone" placeholder="Office / Cell">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Email</label>
+            <input type="email" name="appeal_attorney_email" placeholder="Email">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;">Date Hired</label>
+            <input type="date" name="appeal_attorney_hired">
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-size:1.15rem; margin-top:2rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.4rem;">Court Officers</h3>
 
       <div class="case-field">
         <label>Judge</label>
-        <input type="text" name="judge" placeholder="Name and title">
+        <span class="text-soft" style="font-size:0.8rem; display:block; margin-bottom:0.4rem;">Note: You can update the judge's name if your case is reassigned.</span>
+        <input type="text" name="judge" placeholder="e.g. Honorable Richard Jones">
       </div>
 
       <div class="case-field">
@@ -102,6 +270,7 @@
         <label>Current stage</label>
         <select name="stage">
           <option value="">-- Select --</option>
+          <option value="pre_investigation">Pre-investigation (nothing has happened)</option>
           <option value="investigation">Under investigation / target letter</option>
           <option value="charged">Charged / arraignment</option>
           <option value="pretrial">Pretrial phase</option>
@@ -119,9 +288,12 @@
         <textarea name="notes" rows="5" placeholder="Anything else you want to keep here."></textarea>
       </div>
 
-      <div class="save-bar">
-        <button type="submit" class="btn">Save</button>
-        <span class="save-status" id="save-status"></span>
+      <div class="save-bar" style="display:flex; justify-content:space-between; align-items:center; margin-top:2.5rem;">
+        <div>
+          <button type="submit" class="btn">Save changes</button>
+          <span class="save-status" id="save-status" style="margin-left:1.5rem;"></span>
+        </div>
+        <button type="button" onclick="window.print()" class="btn btn--outline">🖨️ Download PDF Report</button>
       </div>
 
     </form>
@@ -152,7 +324,31 @@
 
   const form = document.getElementById("case-form");
   const saveStatus = document.getElementById("save-status");
-  const FIELDS = ["case_name","district","case_number","charges","attorney_name","attorney_phone","attorney_email","judge","prosecutor","pretrial_officer","probation_officer","stage","notes"];
+  const FIELDS = [
+    "jurisdiction", "state_select", "case_name", "district", "case_number", 
+    "charges", 
+    "attorney_name_1", "attorney_phone_1", "attorney_email_1", "attorney_hired_1", "attorney_end_1",
+    "attorney_name_2", "attorney_phone_2", "attorney_email_2", "attorney_hired_2", "attorney_end_2",
+    "attorney_name_3", "attorney_phone_3", "attorney_email_3", "attorney_hired_3", "attorney_end_3",
+    "appeal_attorney_name", "appeal_attorney_phone", "appeal_attorney_email", "appeal_attorney_hired",
+    "judge", "prosecutor", "pretrial_officer", "probation_officer", "stage", "notes"
+  ];
+
+  const jurSelect = document.getElementById("jurisdiction-select");
+  const stateField = document.getElementById("state-field");
+  const caseNumberInput = document.getElementById("case-number-input");
+
+  function updateJurisdictionUI() {
+    if (jurSelect.value === "state") {
+      stateField.style.display = "block";
+      caseNumberInput.placeholder = "e.g. CR-12-34567 or 2024-CF-123";
+    } else {
+      stateField.style.display = "none";
+      caseNumberInput.placeholder = "e.g. 2:24-cr-20123";
+    }
+  }
+
+  jurSelect.addEventListener("change", updateJurisdictionUI);
 
   // Load existing data
   const load = await fetch("/api/organiser/case-file");
@@ -165,6 +361,7 @@
       });
     }
   }
+  updateJurisdictionUI();
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();

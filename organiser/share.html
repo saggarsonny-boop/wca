@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shared Case File — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+  <style>
+    .share-header {
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+    }
+    .share-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .meta-item {
+      background: var(--bg-alt);
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .meta-item label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-soft);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .meta-item span {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .block-section {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+    }
+    .block-section h3 {
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .data-text {
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: var(--text);
+    }
+    @media print {
+      .share-header, button { display: none !important; }
+      body { background: #fff; color: #000; font-family: Georgia, serif; }
+      .block-section { border: none; box-shadow: none; padding: 0; margin-bottom: 2rem; page-break-inside: avoid; }
+      .meta-item { background: transparent; border: none; border-bottom: 1px solid #ccc; border-radius: 0; padding: 0.5rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="share-header">
+  <div class="share-container" style="display:flex; justify-content:space-between; align-items:center;">
+    <span class="site-logo" style="margin:0;"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</span>
+    <button type="button" onclick="window.print()" class="btn btn--outline" style="font-size:0.85rem; padding:0.4rem 0.9rem;">🖨️ Download PDF Report</button>
+  </div>
+</div>
+
+<div class="share-container" style="margin-bottom:5rem;">
+  <div id="loading-view" style="text-align:center; padding:3rem 0; color:var(--text-soft);">
+    <h3>Loading case workspace...</h3>
+  </div>
+
+  <div id="error-view" style="display:none; text-align:center; padding:3rem 0; color:#8b2020;">
+    <h3 id="error-msg">Failed to load shared workspace</h3>
+  </div>
+
+  <div id="content-view" style="display:none;">
+    <h1 style="font-size:1.75rem; margin-bottom:0.25rem;">Case Organiser Report</h1>
+    <p id="owner-email" class="text-soft" style="font-size:0.9rem; margin-bottom:2rem;"></p>
+
+    <!-- General Metadata -->
+    <div class="meta-grid">
+      <div class="meta-item">
+        <label>Case Name</label>
+        <span id="case-name">N/A</span>
+      </div>
+      <div class="meta-item">
+        <label>Jurisdiction</label>
+        <span id="jurisdiction">N/A</span>
+      </div>
+      <div class="meta-item" id="state-meta" style="display:none;">
+        <label>State</label>
+        <span id="state-val">N/A</span>
+      </div>
+      <div class="meta-item">
+        <label>Case Number</label>
+        <span id="case-number">N/A</span>
+      </div>
+      <div class="meta-item">
+        <label>District / Court</label>
+        <span id="court">N/A</span>
+      </div>
+      <div class="meta-item">
+        <label>Current Case Stage</label>
+        <span id="stage">N/A</span>
+      </div>
+    </div>
+
+    <!-- Charges -->
+    <div class="block-section">
+      <h3>Charges</h3>
+      <div id="charges" class="data-text text-soft">No charges added yet.</div>
+    </div>
+
+    <!-- Timeline Dates -->
+    <div class="block-section">
+      <h3>Timeline Dates</h3>
+      <ul id="dates-list" style="padding-left:1.2rem; margin:0; line-height:1.6;">
+        <!-- Dates dynamic insertion -->
+      </ul>
+    </div>
+
+    <!-- Legal Counsel -->
+    <div class="block-section">
+      <h3>Defense Legal Counsel History</h3>
+      <div id="attorneys-container" style="display:flex; flex-direction:column; gap:1.5rem;">
+        <!-- Attorneys list -->
+      </div>
+    </div>
+
+    <!-- Mitigation Workbook Details -->
+    <div class="block-section">
+      <h3>PSR Mitigation Workbook</h3>
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div>
+          <h4 style="font-size:0.95rem; margin-bottom:0.3rem;">Personal Statement Narrative Outline</h4>
+          <div id="mitigation-statement" class="data-text text-soft">No personal statement outline drafted yet.</div>
+        </div>
+        <div>
+          <h4 style="font-size:0.95rem; margin-bottom:0.3rem;">Medical and Mental Health Conditions</h4>
+          <div id="mitigation-medical" class="data-text text-soft">No medical records documented yet.</div>
+        </div>
+        <div>
+          <h4 style="font-size:0.95rem; margin-bottom:0.3rem;">Medications & Treatments</h4>
+          <div id="mitigation-meds" class="data-text text-soft">No prescriptions listed yet.</div>
+        </div>
+        <div>
+          <h4 style="font-size:0.95rem; margin-bottom:0.3rem;">Character Letters & Status</h4>
+          <div id="mitigation-letters" class="data-text text-soft">No letters tracked yet.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Allocution Prep -->
+    <div class="block-section">
+      <h3>Allocution Prep & Outlines</h3>
+      <div style="display:flex; flex-direction:column; gap:1.5rem;">
+        <div>
+          <h4 style="font-size:0.95rem; margin-bottom:0.3rem;">Allocution Draft / Outline</h4>
+          <div id="mitigation-allocution" class="data-text text-soft">No allocution outlines prepared yet.</div>
+        </div>
+        <div>
+          <h4 style="font-size:0.95rem; margin-bottom:0.3rem;">Allocution Practice Delivery Notes</h4>
+          <div id="mitigation-allocution-practice" class="data-text text-soft">No delivery details logged yet.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- General Notes -->
+    <div class="block-section">
+      <h3>Notes</h3>
+      <div id="notes" class="data-text text-soft">No general notes added.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(async function () {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+
+  if (!token) {
+    showError("A secure access token is required to view this case file.");
+    return;
+  }
+
+  try {
+    const r = await fetch(`/api/organiser/share?token=${encodeURIComponent(token)}`);
+    if (!r.ok) {
+      const data = await r.json();
+      showError(data.error || "Failed to retrieve case file data.");
+      return;
+    }
+
+    const payload = await r.json();
+    renderContent(payload);
+  } catch (err) {
+    showError("Could not connect to database. Please check your internet connection.");
+  }
+
+  function showError(msg) {
+    document.getElementById("loading-view").style.display = "none";
+    document.getElementById("error-view").style.display = "block";
+    document.getElementById("error-msg").textContent = msg;
+  }
+
+  function renderContent(data) {
+    document.getElementById("loading-view").style.display = "none";
+    document.getElementById("content-view").style.display = "block";
+
+    document.getElementById("owner-email").textContent = `Shared by workspace owner: ${data.email}`;
+
+    const cf = data.case_file || {};
+
+    // Render metadata
+    document.getElementById("case-name").textContent = cf.case_name || "N/A";
+    document.getElementById("jurisdiction").textContent = cf.jurisdiction ? (cf.jurisdiction === "federal" ? "Federal" : "State") : "N/A";
+    
+    if (cf.jurisdiction === "state" && cf.state_select) {
+      document.getElementById("state-meta").style.display = "block";
+      document.getElementById("state-val").textContent = cf.state_select;
+    }
+    
+    document.getElementById("case-number").textContent = cf.case_number || "N/A";
+    document.getElementById("court").textContent = cf.district || "N/A";
+
+    const stageMap = {
+      pre_investigation: "Pre-investigation (nothing has happened)",
+      investigation: "Under investigation / target letter",
+      charged: "Charged / arraignment",
+      pretrial: "Pretrial phase",
+      plea: "Plea negotiations",
+      trial: "Trial",
+      sentencing: "Presentence / sentencing",
+      appeal: "Appeal",
+      supervised: "Supervised release",
+      post: "Post-supervision"
+    };
+    document.getElementById("stage").textContent = cf.stage ? (stageMap[cf.stage] || cf.stage) : "N/A";
+
+    // Charges & Notes
+    if (cf.charges) document.getElementById("charges").textContent = cf.charges;
+    if (cf.notes) document.getElementById("notes").textContent = cf.notes;
+
+    // Dates
+    const datesList = document.getElementById("dates-list");
+    if (data.dates && data.dates.length > 0) {
+      datesList.innerHTML = "";
+      data.dates.forEach(d => {
+        const li = document.createElement("li");
+        li.style.marginBottom = "0.5rem";
+        const dateFormatted = new Date(d.date_val + "T12:00:00").toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+        li.innerHTML = `<strong>${dateFormatted}</strong> - ${esc(d.label)} ${d.note ? `<br><span style="color:var(--text-soft); font-size:0.875rem;">${esc(d.note)}</span>` : ""}`;
+        datesList.appendChild(li);
+      });
+    } else {
+      datesList.innerHTML = "<li style='list-style:none; margin-left:-1.2rem; color:var(--text-soft);'>No dates added yet.</li>";
+    }
+
+    // Attorneys History
+    const attyContainer = document.getElementById("attorneys-container");
+    let attyHtml = "";
+    
+    const attyList = [
+      { num: 1, title: "Attorney 1 (Primary / Former)" },
+      { num: 2, title: "Attorney 2" },
+      { num: 3, title: "Attorney 3" }
+    ];
+
+    attyList.forEach(a => {
+      const name = cf[`attorney_name_${a.num}`];
+      const phone = cf[`attorney_phone_${a.num}`];
+      const email = cf[`attorney_email_${a.num}`];
+      const hired = cf[`attorney_hired_${a.num}`];
+      const end = cf[`attorney_end_${a.num}`];
+
+      if (name || phone || email) {
+        attyHtml += `
+          <div style="background:#f8fafc; border:1px solid var(--border); padding:1rem; border-radius:6px;">
+            <strong style="display:block; margin-bottom:0.5rem; color:var(--text); font-size:0.95rem;">${a.title}</strong>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:0.5rem; font-size:0.9rem; color:var(--text-soft);">
+              <div><strong>Name:</strong> ${esc(name || "N/A")}</div>
+              <div><strong>Phone:</strong> ${esc(phone || "N/A")}</div>
+              <div><strong>Email:</strong> ${esc(email || "N/A")}</div>
+              <div><strong>Hired:</strong> ${hired ? new Date(hired + "T12:00:00").toLocaleDateString() : "N/A"}</div>
+              <div><strong>End Date:</strong> ${end ? new Date(end + "T12:00:00").toLocaleDateString() : "Present"}</div>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    // Appeal Attorney
+    const apName = cf.appeal_attorney_name;
+    const apPhone = cf.appeal_attorney_phone;
+    const apEmail = cf.appeal_attorney_email;
+    const apHired = cf.appeal_attorney_hired;
+    
+    if (apName || apPhone || apEmail) {
+      attyHtml += `
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:1rem; border-radius:6px;">
+          <strong style="display:block; margin-bottom:0.5rem; color:var(--text); font-size:0.95rem;">Appellate Counsel (Appeal Phase)</strong>
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:0.5rem; font-size:0.9rem; color:var(--text-soft);">
+            <div><strong>Name:</strong> ${esc(apName || "N/A")}</div>
+            <div><strong>Phone:</strong> ${esc(apPhone || "N/A")}</div>
+            <div><strong>Email:</strong> ${esc(apEmail || "N/A")}</div>
+            <div><strong>Hired:</strong> ${apHired ? new Date(apHired + "T12:00:00").toLocaleDateString() : "N/A"}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    if (!attyHtml) {
+      attyContainer.innerHTML = "<div style='color:var(--text-soft); font-size:0.925rem;'>No attorneys registered in defense history.</div>";
+    } else {
+      attyContainer.innerHTML = attyHtml;
+    }
+
+    // Mitigation Workbook
+    if (cf.mitigation_statement) document.getElementById("mitigation-statement").textContent = cf.mitigation_statement;
+    if (cf.mitigation_medical_conditions) document.getElementById("mitigation-medical").textContent = cf.mitigation_medical_conditions;
+    if (cf.mitigation_medications) document.getElementById("mitigation-meds").textContent = cf.mitigation_medications;
+    if (cf.mitigation_character_letters) document.getElementById("mitigation-letters").textContent = cf.mitigation_character_letters;
+    if (cf.mitigation_allocution) document.getElementById("mitigation-allocution").textContent = cf.mitigation_allocution;
+    if (cf.mitigation_allocution_practice) document.getElementById("mitigation-allocution-practice").textContent = cf.mitigation_allocution_practice;
+  }
+
+  function esc(s) {
+    return (s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+})();
+</script>
+
+</body>
+</html>
