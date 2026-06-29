@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mitigation Workbook — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">Dashboard</a>
+      <a href="/organiser/case-file.html">Case File</a>
+      <a href="/organiser/mitigation.html" class="active">Mitigation Workbook</a>
+      <a href="/organiser/dates.html">Dates</a>
+      <a href="/organiser/checklists.html">Checklists</a>
+      <a href="/organiser/calculator.html">Release Calculator</a>
+      <span class="sidebar-label">Resources</span>
+      <a href="/organiser/links.html">Links</a>
+      <a href="/organiser/documents.html">Documents</a>
+      <span class="sidebar-label">Guide</span>
+      <a href="/organiser/ai.html">Ask a question</a>
+    </nav>
+  </aside>
+
+  <main class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Mitigation Workbook</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.75rem;">Prepare for your Presentence Report (PSR) and sentencing. Everything is encrypted and private.</p>
+
+    <div style="background:var(--bg-alt); padding:1rem; border-radius:6px; margin-bottom:2rem; font-size:0.9rem; border-left:3px solid var(--accent);">
+      <strong>PSR Mitigation Guide</strong><br>
+      The probation officer's report is the primary source the judge and Bureau of Prisons use. Complete these sections to prepare your personal statement, track character letters, and document your medical history.
+    </div>
+
+    <form id="mitigation-form" novalidate>
+
+      <h2 style="font-size:1.25rem; margin-top:2rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">1. Personal Statement</h2>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Draft your statement of responsibility. Avoid excuses. Focus on acceptance, remorse, and what you have learned.</p>
+      
+      <div class="case-field">
+        <label>My Personal Statement</label>
+        <textarea name="mitigation_statement" rows="12" placeholder="Write your statement here. Keep it plain, honest, and direct."></textarea>
+      </div>
+
+      <h2 style="font-size:1.25rem; margin-top:3rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">2. Medical and Mental Health History</h2>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Crucial for prison placement and RDAP program eligibility. Document all diagnoses, medications, and treatments.</p>
+
+      <div class="case-field">
+        <label>Diagnoses & Conditions</label>
+        <textarea name="mitigation_medical_conditions" rows="4" placeholder="List all physical and mental health conditions diagnosed by a professional."></textarea>
+      </div>
+
+      <div class="case-field">
+        <label>Medications & Treatments</label>
+        <textarea name="mitigation_medications" rows="4" placeholder="List current medications, dosages, and ongoing therapies."></textarea>
+      </div>
+
+      <h2 style="font-size:1.25rem; margin-top:3rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">3. Character Letters Tracker</h2>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Track who is writing letters on your behalf. Copy the template below to guide your writers.</p>
+
+      <div class="case-field">
+        <label>Letter Writers & Status</label>
+        <textarea name="mitigation_character_letters" rows="6" placeholder="Example:&#10;John Doe (Employer) - Draft received&#10;Jane Smith (Neighbor) - Requested 6/20"></textarea>
+      </div>
+
+      <div style="background:#fff; border:1px solid var(--border); padding:1rem; border-radius:6px; margin-top:1rem;">
+        <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">Character Letter Instructions (Copy to send to writers)</h4>
+        <pre style="white-space:pre-wrap; font-family:var(--font-sans); font-size:0.825rem; color:var(--text-soft); line-height:1.45; background:var(--bg-alt); padding:0.75rem; border-radius:4px; max-height:200px; overflow-y:auto; user-select:all;">
+Guidelines for Writing a Letter of Support:
+
+1. Introduce yourself and explain your relationship to the defendant (e.g. coworker, neighbor, friend). Mention how long you have known them.
+2. State clearly that you are aware of the conviction. Do not minimize the offense or criticize the prosecution or judge.
+3. Describe the defendant's character, highlighting specific examples of honesty, helpfulness, or responsibility.
+4. Describe how they reacted upon finding out about the offense (remorse, taking responsibility).
+5. Address the letter to "Honorable [Judge's Last Name]" and sign it with your name, title, and contact details.
+        </pre>
+      </div>
+
+      <div style="margin-top:2.5rem; display:flex; align-items:center; gap:1.5rem;">
+        <button type="submit" class="btn">Save changes</button>
+        <span id="save-status" style="font-size:0.875rem;"></span>
+      </div>
+
+    </form>
+  </main>
+</div>
+
+<script>
+(async function () {
+  const resp = await fetch("/api/auth/me");
+  if (!resp.ok) { window.location.href = "/organiser/login.html"; return; }
+  const user = await resp.json();
+
+  if (user.subscription_status === "trial") {
+    const trialEnds = user.trial_ends_at ? new Date(user.trial_ends_at) : null;
+    if (trialEnds && trialEnds < new Date()) {
+      window.location.href = "/organiser/subscribe.html";
+      return;
+    }
+  } else if (user.subscription_status !== "active" && user.subscription_status !== "lifetime") {
+    window.location.href = "/organiser/subscribe.html";
+    return;
+  }
+
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/organiser/login.html";
+  });
+
+  const form = document.getElementById("mitigation-form");
+  const saveStatus = document.getElementById("save-status");
+  const FIELDS = ["mitigation_statement", "mitigation_medical_conditions", "mitigation_medications", "mitigation_character_letters"];
+
+  // Load existing data from case-file endpoint (shares same encrypted record)
+  const load = await fetch("/api/organiser/case-file");
+  let existingPayload = {};
+  if (load.ok) {
+    const { data } = await load.json();
+    if (data) {
+      existingPayload = data;
+      FIELDS.forEach(f => {
+        const el = form.elements[f];
+        if (el && data[f] != null) el.value = data[f];
+      });
+    }
+  }
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    saveStatus.textContent = "Saving...";
+    saveStatus.style.color = "var(--text-soft)";
+    const btn = form.querySelector("button[type=submit]");
+    btn.disabled = true;
+
+    // Merge workbook details into existing encrypted payload
+    FIELDS.forEach(f => {
+      existingPayload[f] = form.elements[f]?.value || "";
+    });
+
+    const r = await fetch("/api/organiser/case-file", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(existingPayload)
+    });
+
+    if (r.ok) {
+      saveStatus.textContent = "Saved.";
+      saveStatus.style.color = "#2a6e3f";
+    } else {
+      saveStatus.textContent = "Save failed. Please try again.";
+      saveStatus.style.color = "#8b2020";
+    }
+    btn.disabled = false;
+    setTimeout(() => { saveStatus.textContent = ""; }, 3000);
+  });
+})();
+</script>
+
+</body>
+</html>
