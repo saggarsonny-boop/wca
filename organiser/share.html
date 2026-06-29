@@ -95,18 +95,44 @@
     <h1 style="font-size:1.75rem; margin-bottom:0.25rem;">Case Organiser Report</h1>
     <p id="owner-email" class="text-soft" style="font-size:0.9rem; margin-bottom:2rem;"></p>
 
-    <!-- General Metadata -->
-    <div class="meta-grid">
+    <!-- Inmate / Defendant Information -->
+    <h3 style="font-size:1.15rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem; margin-bottom:1rem; font-family:var(--font-serif);">Inmate / Defendant Information</h3>
+    <div class="meta-grid" style="margin-bottom:2.5rem;">
       <div class="meta-item">
-        <label>Case Name</label>
+        <label>Inmate Full Name</label>
+        <span id="inmate-name">N/A</span>
+      </div>
+      <div class="meta-item">
+        <label>Date of Birth</label>
+        <span id="inmate-dob">N/A</span>
+      </div>
+      <div class="meta-item">
+        <label id="lbl-bop-number">BOP Register Number</label>
+        <span id="inmate-bop">N/A</span>
+      </div>
+      <div class="meta-item">
+        <label>Residential / Housing Status</label>
+        <span id="inmate-housing">N/A</span>
+      </div>
+    </div>
+
+    <!-- General Metadata -->
+    <h3 style="font-size:1.15rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem; margin-bottom:1rem; font-family:var(--font-serif);">Case Details</h3>
+    <div class="meta-grid" style="margin-bottom:2.5rem;">
+      <div class="meta-item">
+        <label>Case Name / Reference</label>
         <span id="case-name">N/A</span>
+      </div>
+      <div class="meta-item">
+        <label>Country</label>
+        <span id="country-val">N/A</span>
       </div>
       <div class="meta-item">
         <label>Jurisdiction</label>
         <span id="jurisdiction">N/A</span>
       </div>
       <div class="meta-item" id="state-meta" style="display:none;">
-        <label>State</label>
+        <label id="lbl-state-type">State / Province</label>
         <span id="state-val">N/A</span>
       </div>
       <div class="meta-item">
@@ -114,7 +140,7 @@
         <span id="case-number">N/A</span>
       </div>
       <div class="meta-item">
-        <label>District / Court</label>
+        <label>Court / District</label>
         <span id="court">N/A</span>
       </div>
       <div class="meta-item">
@@ -231,12 +257,80 @@
     const cf = data.case_file || {};
 
     // Render metadata
-    document.getElementById("case-name").textContent = cf.case_name || "N/A";
-    document.getElementById("jurisdiction").textContent = cf.jurisdiction ? (cf.jurisdiction === "federal" ? "Federal" : "State") : "N/A";
+    const countryMap = {
+      us: "United States of America",
+      uk: "United Kingdom",
+      ca: "Canada",
+      au: "Australia",
+      in: "India"
+    };
+
+    // Render Inmate details
+    document.getElementById("inmate-name").textContent = cf.inmate_name || "N/A";
     
-    if (cf.jurisdiction === "state" && cf.state_select) {
-      document.getElementById("state-meta").style.display = "block";
-      document.getElementById("state-val").textContent = cf.state_select;
+    if (cf.dob) {
+      const dobDate = new Date(cf.dob + "T12:00:00");
+      document.getElementById("inmate-dob").textContent = dobDate.toLocaleDateString(undefined, {month: 'long', day: 'numeric', year: 'numeric'});
+    } else {
+      document.getElementById("inmate-dob").textContent = "N/A";
+    }
+
+    const country = cf.country || "us";
+    const regLabel = document.getElementById("lbl-bop-number");
+    if (country === "us") {
+      regLabel.textContent = "BOP Register Number";
+    } else {
+      regLabel.textContent = "Inmate Registration Number";
+    }
+    document.getElementById("inmate-bop").textContent = cf.bop_number || "N/A";
+
+    const housingMap = {
+      permanent: "Permanent Housing / Address",
+      temporary: "Temporary / Family Address",
+      homeless: "No Fixed Address (Homeless)"
+    };
+    document.getElementById("inmate-housing").textContent = cf.housing_status ? (housingMap[cf.housing_status] || cf.housing_status) : "N/A";
+
+    // Render metadata
+    document.getElementById("case-name").textContent = cf.case_name || "N/A";
+    document.getElementById("country-val").textContent = countryMap[country] || country.toUpperCase();
+    
+    const jurMap = {
+      federal: "Federal",
+      state: "State",
+      provincial: "Provincial",
+      commonwealth: "Commonwealth",
+      central: "Central",
+      england_wales: "England & Wales",
+      scotland: "Scotland",
+      northern_ireland: "Northern Ireland"
+    };
+    document.getElementById("jurisdiction").textContent = cf.jurisdiction ? (jurMap[cf.jurisdiction] || cf.jurisdiction) : "N/A";
+
+    const stateValSpan = document.getElementById("state-val");
+    const stateMetaDiv = document.getElementById("state-meta");
+    const stateLabel = document.getElementById("lbl-state-type");
+
+    let subRegion = "";
+    if (country === "us") {
+      subRegion = cf.state_us;
+      stateLabel.textContent = "State";
+    } else if (country === "ca") {
+      subRegion = cf.state_ca;
+      stateLabel.textContent = "Province / Territory";
+    } else if (country === "au") {
+      subRegion = cf.state_au;
+      stateLabel.textContent = "State / Territory";
+    } else if (country === "in") {
+      subRegion = cf.state_in;
+      stateLabel.textContent = "State / UT";
+    }
+
+    if (subRegion) {
+      stateMetaDiv.style.display = "block";
+      stateValSpan.textContent = subRegion;
+    } else {
+      stateMetaDiv.style.display = "none";
     }
     
     document.getElementById("case-number").textContent = cf.case_number || "N/A";
@@ -349,5 +443,6 @@
 })();
 </script>
 
+<script src="/js/wca-translate.js"></script>
 </body>
 </html>

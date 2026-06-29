@@ -267,6 +267,11 @@
             <span>Estimated Actual Prison Time:</span>
             <strong id="sum-actual-prison" style="color:#2c4a7c;">9.6 months</strong>
           </div>
+          <hr style="border:0; border-top:1px solid var(--border); margin:0.5rem 0;">
+          <div style="display:flex; justify-content:space-between; font-size:1.1rem; font-weight:600;">
+            <span>Total Incarceration Time:</span>
+            <strong id="sum-total-incarceration" style="color:#1a1a18;">-</strong>
+          </div>
         </div>
       </div>
 
@@ -475,15 +480,19 @@
     const totalSavedMonths = gctReduction + rdapReduction + fsaEarlyRelease + remandMonths;
 
     // Update labels
+    const actualPrisonDays = Math.round(actualPrisonMonths * 30.44);
+    const totalIncarcerationMonths = actualPrisonMonths + remandMonths;
+    const totalIncarcerationDays = actualPrisonDays + remandDays;
+
     document.getElementById("sum-imposed").textContent = `${sentenceVal} months`;
     document.getElementById("sum-gct").textContent = `-${gctReduction.toFixed(1)} months`;
     document.getElementById("sum-rdap").textContent = hasRDAP ? `-${rdapReduction} months` : "0 months";
     document.getElementById("sum-fsa").textContent = hasFSA ? `-${fsaEarlyRelease.toFixed(1)} months` : "0 months";
     document.getElementById("sum-actual-prison").textContent = `${actualPrisonMonths.toFixed(1)} months`;
+    document.getElementById("sum-total-incarceration").textContent = `${totalIncarcerationMonths.toFixed(1)} months (~${totalIncarcerationDays} days)`;
 
     // Map Dates (using precise day increments to prevent truncation/float bugs)
     const prisonEndDate = new Date(surrenderVal.getTime());
-    const actualPrisonDays = Math.round(actualPrisonMonths * 30.44);
     prisonEndDate.setDate(prisonEndDate.getDate() + actualPrisonDays);
 
     const homeEndDate = new Date(prisonEndDate.getTime());
@@ -524,7 +533,9 @@
     const cfResp = await fetch("/api/organiser/case-file");
     if (cfResp.ok) {
       const { data } = await cfResp.json();
-      if (data && data.case_name) {
+      if (data && data.inmate_name) {
+        document.getElementById("print-inmate-name").textContent = data.inmate_name;
+      } else if (data && data.case_name) {
         document.getElementById("print-inmate-name").textContent = data.case_name;
       } else {
         document.getElementById("print-inmate-name").textContent = user.email;
@@ -540,5 +551,6 @@
 })();
 </script>
 
+<script src="/js/wca-translate.js"></script>
 </body>
 </html>

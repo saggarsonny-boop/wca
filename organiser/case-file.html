@@ -54,17 +54,59 @@
 
     <form id="case-form" novalidate>
 
+      <!-- Inmate / Defendant Information Card -->
+      <div style="background: var(--bg-alt); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 2rem;">
+        <h3 style="font-size:1.1rem; margin-bottom:1rem; font-family:var(--font-serif); border-bottom:1px solid var(--border); padding-bottom:0.4rem;">Inmate / Defendant Information</h3>
+        
+        <div class="case-field">
+          <label>Inmate Full Name</label>
+          <input type="text" name="inmate_name" placeholder="e.g. John Doe">
+        </div>
+
+        <div class="case-field">
+          <label>Date of Birth (DOB)</label>
+          <input type="date" name="dob" style="width:100%;">
+        </div>
+
+        <div class="case-field">
+          <label id="lbl-bop-number">BOP Register Number</label>
+          <input type="text" name="bop_number" placeholder="e.g. 12345-509" id="bop-number-input">
+        </div>
+
+        <div class="case-field">
+          <label>Residential / Housing Status</label>
+          <select name="housing_status" style="width:100%;">
+            <option value="permanent">Permanent Housing / Address</option>
+            <option value="temporary">Temporary / Family Address</option>
+            <option value="homeless">No Fixed Address (Homeless)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Case Details -->
       <div class="case-field">
-        <label>Jurisdiction</label>
+        <label>Country</label>
+        <select name="country" id="country-select" style="width:100%;">
+          <option value="us">United States of America</option>
+          <option value="uk">United Kingdom</option>
+          <option value="ca">Canada</option>
+          <option value="au">Australia</option>
+          <option value="in">India</option>
+        </select>
+      </div>
+
+      <div class="case-field">
+        <label id="lbl-jurisdiction">Jurisdiction</label>
         <select name="jurisdiction" id="jurisdiction-select" style="width:100%;">
           <option value="federal">Federal</option>
           <option value="state">State</option>
         </select>
       </div>
 
-      <div class="case-field" id="state-field" style="display:none;">
+      <!-- US State Select -->
+      <div class="case-field" id="state-field-us" style="display:none;">
         <label>State</label>
-        <select name="state_select" style="width:100%;">
+        <select name="state_us" id="state-select-us" style="width:100%;">
           <option value="">-- Select State --</option>
           <option value="AL">Alabama</option>
           <option value="AK">Alaska</option>
@@ -116,6 +158,66 @@
           <option value="WV">West Virginia</option>
           <option value="WI">Wisconsin</option>
           <option value="WY">Wyoming</option>
+        </select>
+      </div>
+
+      <!-- Canada Province Select -->
+      <div class="case-field" id="state-field-ca" style="display:none;">
+        <label>Province / Territory</label>
+        <select name="state_ca" id="state-select-ca" style="width:100%;">
+          <option value="">-- Select Province --</option>
+          <option value="ON">Ontario</option>
+          <option value="QC">Quebec</option>
+          <option value="BC">British Columbia</option>
+          <option value="AB">Alberta</option>
+          <option value="MB">Manitoba</option>
+          <option value="SK">Saskatchewan</option>
+          <option value="NS">Nova Scotia</option>
+          <option value="NB">New Brunswick</option>
+          <option value="NL">Newfoundland & Labrador</option>
+          <option value="PE">Prince Edward Island</option>
+          <option value="YT">Yukon</option>
+          <option value="NT">Northwest Territories</option>
+          <option value="NU">Nunavut</option>
+        </select>
+      </div>
+
+      <!-- Australia State Select -->
+      <div class="case-field" id="state-field-au" style="display:none;">
+        <label>State / Territory</label>
+        <select name="state_au" id="state-select-au" style="width:100%;">
+          <option value="">-- Select State --</option>
+          <option value="NSW">New South Wales</option>
+          <option value="VIC">Victoria</option>
+          <option value="QLD">Queensland</option>
+          <option value="WA">Western Australia</option>
+          <option value="SA">South Australia</option>
+          <option value="TAS">Tasmania</option>
+          <option value="ACT">Australian Capital Territory</option>
+          <option value="NT">Northern Territory</option>
+        </select>
+      </div>
+
+      <!-- India State Select -->
+      <div class="case-field" id="state-field-in" style="display:none;">
+        <label>State / Union Territory</label>
+        <select name="state_in" id="state-select-in" style="width:100%;">
+          <option value="">-- Select State --</option>
+          <option value="MH">Maharashtra</option>
+          <option value="DL">Delhi</option>
+          <option value="KA">Karnataka</option>
+          <option value="TN">Tamil Nadu</option>
+          <option value="UP">Uttar Pradesh</option>
+          <option value="WB">West Bengal</option>
+          <option value="TS">Telangana</option>
+          <option value="GJ">Gujarat</option>
+          <option value="RJ">Rajasthan</option>
+          <option value="MP">Madhya Pradesh</option>
+          <option value="HR">Haryana</option>
+          <option value="AP">Andhra Pradesh</option>
+          <option value="BR">Bihar</option>
+          <option value="PB">Punjab</option>
+          <option value="KL">Kerala</option>
         </select>
       </div>
 
@@ -325,8 +427,9 @@
   const form = document.getElementById("case-form");
   const saveStatus = document.getElementById("save-status");
   const FIELDS = [
-    "jurisdiction", "state_select", "case_name", "district", "case_number", 
-    "charges", 
+    "inmate_name", "dob", "bop_number", "housing_status", "country", "jurisdiction", 
+    "state_us", "state_ca", "state_au", "state_in",
+    "case_name", "district", "case_number", "charges", 
     "attorney_name_1", "attorney_phone_1", "attorney_email_1", "attorney_hired_1", "attorney_end_1",
     "attorney_name_2", "attorney_phone_2", "attorney_email_2", "attorney_hired_2", "attorney_end_2",
     "attorney_name_3", "attorney_phone_3", "attorney_email_3", "attorney_hired_3", "attorney_end_3",
@@ -334,64 +437,193 @@
     "judge", "prosecutor", "pretrial_officer", "probation_officer", "stage", "notes"
   ];
 
+  const countrySelect = document.getElementById("country-select");
   const jurSelect = document.getElementById("jurisdiction-select");
-  const stateField = document.getElementById("state-field");
   const caseNumberInput = document.getElementById("case-number-input");
   const caseNameInput = form.elements["case_name"];
-  const stateSelectEl = form.elements["state_select"];
+  const bopNumberLabel = document.getElementById("lbl-bop-number");
+  const bopNumberInput = document.getElementById("bop-number-input");
 
-  function updateJurisdictionUI() {
-    const jur = jurSelect.value;
-    const stateCode = stateSelectEl.value;
-    const stateOpt = stateSelectEl.options[stateSelectEl.selectedIndex];
-    const stateName = stateOpt ? stateOpt.text : "";
-    const districtInput = form.elements["district"];
+  const stateUsField = document.getElementById("state-field-us");
+  const stateCaField = document.getElementById("state-field-ca");
+  const stateAuField = document.getElementById("state-field-au");
+  const stateInField = document.getElementById("state-field-in");
 
-    if (jur === "state") {
-      stateField.style.display = "block";
-      caseNumberInput.placeholder = "e.g. CR-12-34567 or 2024-CF-123";
-      
-      if (!stateCode) {
-        caseNameInput.placeholder = "e.g. State v. [Your Name]";
-        districtInput.placeholder = "e.g. County Circuit or Superior Court";
-      } else {
-        if (["CA", "NY", "MI", "IL", "CO"].includes(stateCode)) {
-          caseNameInput.placeholder = `e.g. People of the State of ${stateName} v. [Your Name]`;
-        } else if (["PA", "VA", "MA", "KY"].includes(stateCode)) {
-          caseNameInput.placeholder = `e.g. Commonwealth of ${stateName} v. [Your Name]`;
-        } else {
-          caseNameInput.placeholder = `e.g. State of ${stateName} v. [Your Name]`;
-        }
+  const stateUsSelect = document.getElementById("state-select-us");
+  const stateCaSelect = document.getElementById("state-select-ca");
+  const stateAuSelect = document.getElementById("state-select-au");
+  const stateInSelect = document.getElementById("state-select-in");
 
-        // State court placeholder examples
-        if (stateCode === "MO") {
-          districtInput.placeholder = "e.g. Jackson County Circuit Court, Kansas City";
-        } else if (stateCode === "CA") {
-          districtInput.placeholder = "e.g. Los Angeles County Superior Court";
-        } else if (stateCode === "NY") {
-          districtInput.placeholder = "e.g. New York County Supreme Court, Manhattan";
-        } else {
-          const circuitStates = ["IL", "OR", "VA", "FL", "MI", "AR", "AL", "IN", "KY", "MS", "TN", "WV", "WI"];
-          const type = circuitStates.includes(stateCode) ? "Circuit Court" : "Superior Court";
-          districtInput.placeholder = `e.g. [County Name] County ${type}`;
-        }
-      }
-    } else {
-      stateField.style.display = "none";
-      caseNumberInput.placeholder = "e.g. 2:24-cr-20123";
-      caseNameInput.placeholder = "e.g. United States v. [Your Name]";
-      districtInput.placeholder = "e.g. Eastern District of Michigan, Detroit";
+  const jurisdictionOptions = {
+    us: [
+      { value: "federal", text: "Federal" },
+      { value: "state", text: "State" }
+    ],
+    uk: [
+      { value: "england_wales", text: "England & Wales" },
+      { value: "scotland", text: "Scotland" },
+      { value: "northern_ireland", text: "Northern Ireland" }
+    ],
+    ca: [
+      { value: "federal", text: "Federal" },
+      { value: "provincial", text: "Provincial" }
+    ],
+    au: [
+      { value: "commonwealth", text: "Commonwealth" },
+      { value: "state", text: "State / Territory" }
+    ],
+    in: [
+      { value: "central", text: "Central" },
+      { value: "state", text: "State" }
+    ]
+  };
+
+  function repopulateJurisdictions(countryCode) {
+    const opts = jurisdictionOptions[countryCode] || jurisdictionOptions.us;
+    const oldVal = jurSelect.value;
+    jurSelect.innerHTML = "";
+    opts.forEach(opt => {
+      const el = document.createElement("option");
+      el.value = opt.value;
+      el.textContent = opt.text;
+      jurSelect.appendChild(el);
+    });
+    if (opts.some(o => o.value === oldVal)) {
+      jurSelect.value = oldVal;
     }
   }
 
+  function updateJurisdictionUI() {
+    const country = countrySelect.value;
+    const jur = jurSelect.value;
+    const districtInput = form.elements["district"];
+
+    if (country === "us") {
+      bopNumberLabel.textContent = "BOP Register Number";
+      bopNumberInput.placeholder = "e.g. 12345-509";
+    } else {
+      bopNumberLabel.textContent = "Inmate Registration Number";
+      bopNumberInput.placeholder = "e.g. Reg No. or ID Reference";
+    }
+
+    stateUsField.style.display = "none";
+    stateCaField.style.display = "none";
+    stateAuField.style.display = "none";
+    stateInField.style.display = "none";
+
+    if (country === "us") {
+      if (jur === "state") {
+        stateUsField.style.display = "block";
+        caseNumberInput.placeholder = "e.g. CR-12-34567 or 2024-CF-123";
+        const stateCode = stateUsSelect.value;
+        const stateOpt = stateUsSelect.options[stateUsSelect.selectedIndex];
+        const stateName = stateOpt ? stateOpt.text : "";
+        if (!stateCode) {
+          caseNameInput.placeholder = "e.g. State v. [Your Name]";
+          districtInput.placeholder = "e.g. County Circuit or Superior Court";
+        } else {
+          if (["CA", "NY", "MI", "IL", "CO"].includes(stateCode)) {
+            caseNameInput.placeholder = `e.g. People of the State of ${stateName} v. [Your Name]`;
+          } else if (["PA", "VA", "MA", "KY"].includes(stateCode)) {
+            caseNameInput.placeholder = `e.g. Commonwealth of ${stateName} v. [Your Name]`;
+          } else {
+            caseNameInput.placeholder = `e.g. State of ${stateName} v. [Your Name]`;
+          }
+          if (stateCode === "MO") {
+            districtInput.placeholder = "e.g. Jackson County Circuit Court, Kansas City";
+          } else if (stateCode === "CA") {
+            districtInput.placeholder = "e.g. Los Angeles County Superior Court";
+          } else if (stateCode === "NY") {
+            districtInput.placeholder = "e.g. New York County Supreme Court, Manhattan";
+          } else {
+            const circuitStates = ["IL", "OR", "VA", "FL", "MI", "AR", "AL", "IN", "KY", "MS", "TN", "WV", "WI"];
+            const type = circuitStates.includes(stateCode) ? "Circuit Court" : "Superior Court";
+            districtInput.placeholder = `e.g. [County Name] County ${type}`;
+          }
+        }
+      } else {
+        caseNumberInput.placeholder = "e.g. 2:24-cr-20123";
+        caseNameInput.placeholder = "e.g. United States v. [Your Name]";
+        districtInput.placeholder = "e.g. Eastern District of Michigan, Detroit";
+      }
+    } else if (country === "uk") {
+      if (jur === "scotland") {
+        caseNumberInput.placeholder = "e.g. FSD/123/24";
+        caseNameInput.placeholder = "e.g. Procurator Fiscal v. [Your Name]";
+        districtInput.placeholder = "e.g. Edinburgh Sheriff Court";
+      } else if (jur === "northern_ireland") {
+        caseNumberInput.placeholder = "e.g. 12/03456/A";
+        caseNameInput.placeholder = "e.g. The King v. [Your Name]";
+        districtInput.placeholder = "e.g. Belfast Crown Court";
+      } else {
+        caseNumberInput.placeholder = "e.g. T20240123";
+        caseNameInput.placeholder = "e.g. R v. [Your Name]";
+        districtInput.placeholder = "e.g. Central Criminal Court (Old Bailey), London";
+      }
+    } else if (country === "ca") {
+      if (jur === "provincial") {
+        stateCaField.style.display = "block";
+        caseNumberInput.placeholder = "e.g. 24-123456";
+        const provCode = stateCaSelect.value;
+        const provOpt = stateCaSelect.options[stateCaSelect.selectedIndex];
+        const provName = provOpt ? provOpt.text : "";
+        caseNameInput.placeholder = `e.g. His Majesty The King v. [Your Name]`;
+        districtInput.placeholder = provName ? `e.g. ${provName} Court of Justice` : "e.g. Ontario Court of Justice, Toronto";
+      } else {
+        caseNumberInput.placeholder = "e.g. T-1234-24";
+        caseNameInput.placeholder = "e.g. His Majesty The King v. [Your Name]";
+        districtInput.placeholder = "e.g. Federal Court of Canada, Ottawa";
+      }
+    } else if (country === "au") {
+      if (jur === "state") {
+        stateAuField.style.display = "block";
+        caseNumberInput.placeholder = "e.g. 2024/00123456";
+        const stateCode = stateAuSelect.value;
+        const stateOpt = stateAuSelect.options[stateAuSelect.selectedIndex];
+        const stateName = stateOpt ? stateOpt.text : "";
+        caseNameInput.placeholder = `e.g. R v. [Your Name]`;
+        districtInput.placeholder = stateName ? `e.g. Supreme Court of ${stateName}` : "e.g. District Court of New South Wales, Sydney";
+      } else {
+        caseNumberInput.placeholder = "e.g. NSD123/2024";
+        caseNameInput.placeholder = "e.g. R v. [Your Name]";
+        districtInput.placeholder = "e.g. Federal Court of Australia, Melbourne";
+      }
+    } else if (country === "in") {
+      if (jur === "state") {
+        stateInField.style.display = "block";
+        caseNumberInput.placeholder = "e.g. SC/1234/2024";
+        const stateCode = stateInSelect.value;
+        const stateOpt = stateInSelect.options[stateInSelect.selectedIndex];
+        const stateName = stateOpt ? stateOpt.text : "";
+        caseNameInput.placeholder = `e.g. State of ${stateName || 'Maharashtra'} v. [Your Name]`;
+        districtInput.placeholder = stateName ? `e.g. High Court of ${stateName}` : "e.g. Bombay High Court, Mumbai";
+      } else {
+        caseNumberInput.placeholder = "e.g. WP(C) 123/2024";
+        caseNameInput.placeholder = "e.g. Union of India v. [Your Name]";
+        districtInput.placeholder = "e.g. Supreme Court of India, New Delhi";
+      }
+    }
+  }
+
+  countrySelect.addEventListener("change", () => {
+    repopulateJurisdictions(countrySelect.value);
+    updateJurisdictionUI();
+  });
   jurSelect.addEventListener("change", updateJurisdictionUI);
-  stateSelectEl.addEventListener("change", updateJurisdictionUI);
+  stateUsSelect.addEventListener("change", updateJurisdictionUI);
+  stateCaSelect.addEventListener("change", updateJurisdictionUI);
+  stateAuSelect.addEventListener("change", updateJurisdictionUI);
+  stateInSelect.addEventListener("change", updateJurisdictionUI);
 
   // Load existing data
   const load = await fetch("/api/organiser/case-file");
   if (load.ok) {
     const { data } = await load.json();
     if (data) {
+      if (data.country) {
+        countrySelect.value = data.country;
+      }
+      repopulateJurisdictions(countrySelect.value);
       FIELDS.forEach(f => {
         const el = form.elements[f];
         if (el && data[f] != null) el.value = data[f];
@@ -428,5 +660,6 @@
 })();
 </script>
 
+<script src="/js/wca-translate.js"></script>
 </body>
 </html>
