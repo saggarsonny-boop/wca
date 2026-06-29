@@ -23,6 +23,6 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: true }, 200, { "Set-Cookie": sessionCookie(token) });
   } catch (e) {
     console.error("register error", e);
-    return err("Registration failed. Please try again.", 500);
+    return err(`DEBUG: ${e?.message || String(e)}`, 500);
   }
 }
