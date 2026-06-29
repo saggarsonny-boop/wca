@@ -337,18 +337,36 @@
   const jurSelect = document.getElementById("jurisdiction-select");
   const stateField = document.getElementById("state-field");
   const caseNumberInput = document.getElementById("case-number-input");
+  const caseNameInput = form.elements["case_name"];
+  const stateSelectEl = form.elements["state_select"];
 
   function updateJurisdictionUI() {
     if (jurSelect.value === "state") {
       stateField.style.display = "block";
       caseNumberInput.placeholder = "e.g. CR-12-34567 or 2024-CF-123";
+      
+      const stateOpt = stateSelectEl.options[stateSelectEl.selectedIndex];
+      const stateName = stateOpt ? stateOpt.text : "";
+      const stateCode = stateSelectEl.value;
+      
+      if (!stateCode) {
+        caseNameInput.placeholder = "e.g. State v. [Your Name]";
+      } else if (["CA", "NY", "MI", "IL", "CO"].includes(stateCode)) {
+        caseNameInput.placeholder = `e.g. People of the State of ${stateName} v. [Your Name]`;
+      } else if (["PA", "VA", "MA", "KY"].includes(stateCode)) {
+        caseNameInput.placeholder = `e.g. Commonwealth of ${stateName} v. [Your Name]`;
+      } else {
+        caseNameInput.placeholder = `e.g. State of ${stateName} v. [Your Name]`;
+      }
     } else {
       stateField.style.display = "none";
       caseNumberInput.placeholder = "e.g. 2:24-cr-20123";
+      caseNameInput.placeholder = "e.g. United States v. [Your Name]";
     }
   }
 
   jurSelect.addEventListener("change", updateJurisdictionUI);
+  stateSelectEl.addEventListener("change", updateJurisdictionUI);
 
   // Load existing data
   const load = await fetch("/api/organiser/case-file");

@@ -49,13 +49,105 @@
     .segment-saved { background: #2a6e3f; }
 
     @media print {
-      body { background: #fff; color: #000; font-family: Georgia, serif; }
-      .org-sidebar, .site-header, #logout-btn, .calc-box:first-child, button, p.text-soft:last-child { display: none !important; }
-      .org-layout { display: block; }
-      .org-main { padding: 0; max-width: 100%; }
-      .calc-box { border: none; padding: 0; }
-      .result-box { border: 1px solid #000; margin-top: 1rem; page-break-inside: avoid; }
-      .timeline-bar { border: 1px solid #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body {
+        background: #fff;
+        color: #000;
+        font-family: 'Times New Roman', Georgia, serif;
+        line-height: 1.5;
+        font-size: 11pt;
+      }
+      .org-sidebar, .site-header, #logout-btn, .calc-box:first-child, button, .no-print, p.text-soft {
+        display: none !important;
+      }
+      .org-layout {
+        display: block;
+      }
+      .org-main {
+        padding: 0;
+        max-width: 100%;
+      }
+      
+      /* Print Page Header */
+      .org-main::before {
+        content: "SENTENCE PROJECTION & RELEASE TIMELINE REPORT\aCONFIDENTIAL & FOR DISCUSSION WITH CASE MANAGER";
+        display: block;
+        text-align: center;
+        font-weight: bold;
+        font-size: 13pt;
+        border-bottom: 2px double #000;
+        padding-bottom: 0.5rem;
+        margin-bottom: 2rem;
+        white-space: pre-wrap;
+      }
+      
+      .calc-row {
+        display: block;
+      }
+      
+      /* Format the summary table for formal printing */
+      .calc-box {
+        border: none !important;
+        padding: 0 !important;
+        margin-bottom: 2rem;
+      }
+      .calc-box h3 {
+        font-size: 11pt;
+        border-bottom: 1px solid #000;
+        padding-bottom: 0.25rem;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        font-family: 'Times New Roman', Georgia, serif;
+      }
+      
+      /* Timeline Summary rows as official list items */
+      .calc-box div[style*="display:flex"] {
+        display: flex !important;
+        justify-content: space-between !important;
+        border-bottom: 1px dashed #ccc;
+        padding: 0.4rem 0 !important;
+      }
+      .calc-box div[style*="font-size:1.1rem"] {
+        font-size: 11pt !important;
+        font-weight: bold !important;
+        border-bottom: 2px solid #000 !important;
+        border-top: 1px solid #000 !important;
+        padding: 0.5rem 0 !important;
+        margin-top: 1rem;
+      }
+      
+      .result-box {
+        border: none !important;
+        padding: 0 !important;
+        margin-top: 2rem;
+      }
+      .result-box h3 {
+        font-size: 11pt;
+        border-bottom: 1px solid #000;
+        padding-bottom: 0.25rem;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        font-family: 'Times New Roman', Georgia, serif;
+      }
+      
+      /* Hide horizontal colored bar in print */
+      .timeline-bar {
+        display: none !important;
+      }
+      
+      /* Print friendly labels list */
+      .result-box div[style*="display:flex"] {
+        display: block !important;
+      }
+      .result-box div[style*="display:flex"] > div {
+        display: flex !important;
+        justify-content: space-between !important;
+        border-bottom: 1px dashed #ccc;
+        padding: 0.4rem 0 !important;
+        margin-bottom: 0.5rem;
+      }
+      .result-box div[style*="display:flex"] > div span {
+        font-weight: bold;
+      }
     }
   </style>
 </head>
@@ -113,10 +205,19 @@
           <label for="has-remand" style="margin:0; cursor:pointer;">Prior jail or remand custody credit?</label>
         </div>
 
-        <div class="case-field" id="remand-days-container" style="display:none; margin-top:0.5rem; background:var(--bg-alt); padding:0.75rem; border-radius:4px;">
-          <label for="remand-days">Remand Jail Time (Total Days)</label>
-          <input type="number" id="remand-days" min="0" value="0" style="width:100%;">
-          <span class="text-soft" style="font-size:0.75rem; display:block; margin-top:0.25rem; line-height:1.35;">Prior jail time is credited day-for-day off actual prison time, but does NOT earn First Step Act programming credits.</span>
+        <div class="case-field" id="remand-days-container" style="display:none; margin-top:0.5rem; background:var(--bg-alt); padding:0.75rem; border-radius:4px; flex-direction:column; gap:0.5rem;">
+          <div>
+            <label for="remand-start" style="font-size:0.8rem; font-weight:600;">Jail / Remand Start Date</label>
+            <input type="date" id="remand-start" style="width:100%;">
+          </div>
+          <div>
+            <label for="remand-end" style="font-size:0.8rem; font-weight:600;">Jail / Remand End Date (Optional)</label>
+            <input type="date" id="remand-end" style="width:100%;">
+            <span class="text-soft" style="font-size:0.7rem; display:block; margin-top:0.25rem; line-height:1.35;">Leave empty if you were transferred directly to BOP custody on your Surrender Date.</span>
+          </div>
+          <div style="font-size:0.8rem; font-weight:600; margin-top:0.25rem; border-top:1px solid var(--border); padding-top:0.4rem;">
+            Calculated Remand Time: <span id="lbl-remand-calc-days">0 days</span>
+          </div>
         </div>
 
         <div class="case-field" style="display:flex; align-items:center; gap:0.5rem; margin-top:1.25rem;">
@@ -262,8 +363,10 @@
   const inputRDAP = document.getElementById("eligible-rdap");
   const inputFSA = document.getElementById("eligible-fsa");
   const hasRemandInput = document.getElementById("has-remand");
-  const remandDaysInput = document.getElementById("remand-days");
+  const remandStartInput = document.getElementById("remand-start");
+  const remandEndInput = document.getElementById("remand-end");
   const remandContainer = document.getElementById("remand-days-container");
+  const lblRemandCalcDays = document.getElementById("lbl-remand-calc-days");
   const rowRemand = document.getElementById("row-remand");
   const sumRemand = document.getElementById("sum-remand");
 
@@ -273,17 +376,36 @@
     const hasRDAP = inputRDAP.checked;
     const hasFSA = inputFSA.checked;
     const isRemanded = hasRemandInput.checked;
-    const remandDays = isRemanded ? (parseInt(remandDaysInput.value) || 0) : 0;
-    const remandMonths = remandDays / 30.44;
+    
+    let remandDays = 0;
 
-    // Show/hide remand input UI and summary details
-    remandContainer.style.display = isRemanded ? "block" : "none";
-    rowRemand.style.display = isRemanded ? "flex" : "none";
+    if (isRemanded) {
+      remandContainer.style.display = "flex";
+      rowRemand.style.display = "flex";
+      
+      const startVal = remandStartInput.value;
+      const endVal = remandEndInput.value;
+      
+      if (startVal) {
+        const startDate = new Date(startVal + "T12:00:00");
+        const endDate = endVal ? new Date(endVal + "T12:00:00") : surrenderVal;
+        
+        if (endDate >= startDate) {
+          const diffTime = Math.abs(endDate - startDate);
+          remandDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+      }
+    } else {
+      remandContainer.style.display = "none";
+      rowRemand.style.display = "none";
+    }
+
+    lblRemandCalcDays.textContent = `${remandDays} days`;
     sumRemand.textContent = `-${remandDays} days`;
+    const remandMonths = remandDays / 30.44;
 
     // 1. Good Conduct Time (GCT): approx 14.8% off for sentences over 12 months
     const gctReduction = sentenceVal > 12 ? Math.round(sentenceVal * 0.1479 * 10) / 10 : 0;
-    const gctSentence = sentenceVal - gctReduction;
 
     // 2. RDAP Reduction
     let rdapReduction = 0;
@@ -293,28 +415,44 @@
       else rdapReduction = 6;
     }
 
-    // 3. First Step Act Early Release (Max 12 months reduction off sentence)
-    // Earned at 15 days per month of programming once in positive status
+    const gctSentence = Math.max(0, sentenceVal - gctReduction - rdapReduction);
+    const remainingSentence = Math.max(0, gctSentence - remandMonths);
+    const baseHomeConfinement = Math.min(6, Math.round(sentenceVal * 0.1 * 10) / 10);
+
+    // 3. First Step Act Early Release (Max 12 months early release)
+    // Non-circular formula: P = (Sentence - HomeConfinement) / (1 + CreditRate)
+    let actualPrisonMonths = 0;
     let fsaEarlyRelease = 0;
     let fsaHomeConfinementMonths = 0;
     
     if (hasFSA) {
-      // General estimate: 15 days/month off, capped at 12 months early release
-      const estimatedFSAMonthsEarned = Math.round(gctSentence * 0.5 * 10) / 10;
-      fsaEarlyRelease = Math.min(12, estimatedFSAMonthsEarned);
+      const creditRate = 0.5; // 15 days credit per month of prison served (50% rate)
+      const rawP = (remainingSentence - baseHomeConfinement) / (1 + creditRate);
       
-      // Excess credits convert to extra home confinement/halfway house
-      if (estimatedFSAMonthsEarned > 12) {
-        fsaHomeConfinementMonths = Math.min(6, estimatedFSAMonthsEarned - 12);
+      if (rawP >= 0) {
+        actualPrisonMonths = rawP;
+        fsaEarlyRelease = actualPrisonMonths * creditRate;
+        
+        // If earned credits exceed the 12-month early release cap
+        if (fsaEarlyRelease > 12) {
+          const excessCredits = fsaEarlyRelease - 12;
+          fsaEarlyRelease = 12;
+          // Excess credits convert to halfway house / home confinement (capped at extra 6 months)
+          fsaHomeConfinementMonths = Math.min(6, excessCredits);
+          // Recalculate P with capped credits and home confinement
+          const finalHC = baseHomeConfinement + fsaHomeConfinementMonths;
+          actualPrisonMonths = Math.max(0, remainingSentence - 12 - finalHC);
+        }
+      } else {
+        actualPrisonMonths = 0;
+        fsaEarlyRelease = 0;
       }
+    } else {
+      actualPrisonMonths = Math.max(0, remainingSentence - baseHomeConfinement);
+      fsaEarlyRelease = 0;
     }
 
-    // Standard home confinement under Second Chance Act is up to 10% of sentence or 6 months (whichever is less)
-    const baseHomeConfinement = Math.min(6, Math.round(sentenceVal * 0.1 * 10) / 10);
     const totalHomeConfinement = Math.min(12, baseHomeConfinement + fsaHomeConfinementMonths);
-
-    // Calculate actual prison time (prior remand time directly subtracts day-for-day)
-    const actualPrisonMonths = Math.max(0, gctSentence - rdapReduction - fsaEarlyRelease - totalHomeConfinement - remandMonths);
     const totalSavedMonths = gctReduction + rdapReduction + fsaEarlyRelease + remandMonths;
 
     // Update labels
@@ -324,12 +462,14 @@
     document.getElementById("sum-fsa").textContent = hasFSA ? `-${fsaEarlyRelease.toFixed(1)} months` : "0 months";
     document.getElementById("sum-actual-prison").textContent = `${actualPrisonMonths.toFixed(1)} months`;
 
-    // Map Dates
+    // Map Dates (using precise day increments to prevent truncation/float bugs)
     const prisonEndDate = new Date(surrenderVal.getTime());
-    prisonEndDate.setMonth(prisonEndDate.getMonth() + actualPrisonMonths);
+    const actualPrisonDays = Math.round(actualPrisonMonths * 30.44);
+    prisonEndDate.setDate(prisonEndDate.getDate() + actualPrisonDays);
 
     const homeEndDate = new Date(prisonEndDate.getTime());
-    homeEndDate.setMonth(homeEndDate.getMonth() + totalHomeConfinement);
+    const totalHomeDays = Math.round(totalHomeConfinement * 30.44);
+    homeEndDate.setDate(homeEndDate.getDate() + totalHomeDays);
 
     document.getElementById("lbl-prison-date").textContent = prisonEndDate.toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
     document.getElementById("lbl-home-date").textContent = homeEndDate.toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
@@ -354,7 +494,8 @@
   inputRDAP.addEventListener("change", calculate);
   inputFSA.addEventListener("change", calculate);
   hasRemandInput.addEventListener("change", calculate);
-  remandDaysInput.addEventListener("input", calculate);
+  remandStartInput.addEventListener("input", calculate);
+  remandEndInput.addEventListener("input", calculate);
 
   calculate();
 })();

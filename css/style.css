@@ -545,7 +545,11 @@ strong { font-weight: 600; }
   }
 }
 
-.site-footer a { color: var(--text-soft); }
+.site-footer a {
+  color: var(--text-soft);
+  margin: 0 0.5rem; /* Spread out links slightly */
+  display: inline-block;
+}
 .site-footer a:hover { color: var(--text); }
 
 /* ── Utility ── */
@@ -560,6 +564,11 @@ strong { font-weight: 600; }
   user-select: none;
   -webkit-user-select: none;
   cursor: pointer;
+  border-radius: 50px !important; /* Force a pill/capsule shape */
+  background: var(--bg-alt) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .btn-hold__progress {
@@ -568,8 +577,8 @@ strong { font-weight: 600; }
   left: 0;
   height: 100%;
   width: 0%;
-  background: var(--text);
-  opacity: 0.15;
+  background: var(--accent); /* Solid theme blue */
+  opacity: 0.25; /* Opaque enough to see clearly, translucent to keep text readable */
   transition: width 1.5s linear;
   pointer-events: none;
 }
