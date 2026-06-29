@@ -78,8 +78,11 @@
       </div>
 
       <div style="background:#fff; border:1px solid var(--border); padding:1rem; border-radius:6px; margin-top:1rem;">
-        <h4 style="font-size:0.9rem; margin-bottom:0.5rem;">Character Letter Instructions (Copy to send to writers)</h4>
-        <pre style="white-space:pre-wrap; font-family:var(--font-sans); font-size:0.825rem; color:var(--text-soft); line-height:1.45; background:var(--bg-alt); padding:0.75rem; border-radius:4px; max-height:200px; overflow-y:auto; user-select:all;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
+          <h4 style="font-size:0.9rem; margin:0;">Character Letter Guidelines</h4>
+          <button type="button" id="copy-template-btn" class="btn btn--outline" style="font-size:0.75rem; padding:0.25rem 0.5rem;">📋 Copy Instructions</button>
+        </div>
+        <pre id="template-text" style="white-space:pre-wrap; font-family:var(--font-sans); font-size:0.825rem; color:var(--text-soft); line-height:1.45; background:var(--bg-alt); padding:0.75rem; border-radius:4px; max-height:200px; overflow-y:auto;">
 Guidelines for Writing a Letter of Support:
 
 1. Introduce yourself and explain your relationship to the defendant (e.g. coworker, neighbor, friend). Mention how long you have known them.
@@ -166,6 +169,15 @@ Guidelines for Writing a Letter of Support:
     }
     btn.disabled = false;
     setTimeout(() => { saveStatus.textContent = ""; }, 3000);
+  });
+
+  document.getElementById("copy-template-btn").addEventListener("click", () => {
+    const text = document.getElementById("template-text").textContent.trim();
+    navigator.clipboard.writeText(text).then(() => {
+      const copyBtn = document.getElementById("copy-template-btn");
+      copyBtn.textContent = "✔️ Copied!";
+      setTimeout(() => { copyBtn.textContent = "📋 Copy Instructions"; }, 2000);
+    });
   });
 })();
 </script>

@@ -47,6 +47,16 @@
     .segment-prison { background: #2c4a7c; }
     .segment-home { background: #dd6b20; }
     .segment-saved { background: #2a6e3f; }
+
+    @media print {
+      body { background: #fff; color: #000; font-family: Georgia, serif; }
+      .org-sidebar, .site-header, #logout-btn, .calc-box:first-child, button, p.text-soft:last-child { display: none !important; }
+      .org-layout { display: block; }
+      .org-main { padding: 0; max-width: 100%; }
+      .calc-box { border: none; padding: 0; }
+      .result-box { border: 1px solid #000; margin-top: 1rem; page-break-inside: avoid; }
+      .timeline-bar { border: 1px solid #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
   </style>
 </head>
 <body>
@@ -162,6 +172,10 @@
           <span style="display:inline-block; width:12px; height:12px; background:#2a6e3f; border-radius:2px;"></span>
           <span>Time Saved by Credits: <strong id="lbl-saved">-</strong></span>
         </div>
+      </div>
+
+      <div style="margin-top:1.5rem; display:flex; justify-content:flex-end;">
+        <button type="button" onclick="window.print()" class="btn btn--outline" style="font-size:0.875rem; padding:0.5rem 1rem;">🖨️ Print / Save Timeline PDF</button>
       </div>
 
       <p class="text-soft" style="font-size:0.85rem; margin-top:1.5rem; line-height:1.4;">
