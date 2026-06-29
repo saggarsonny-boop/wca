@@ -189,6 +189,11 @@
     <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;" class="no-print">Release Calculator</h1>
     <p class="text-soft no-print" style="font-size:0.875rem; margin-bottom:1.75rem;">Estimate your actual release timeline based on federal guidelines and credits.</p>
 
+    <!-- Calculator Jurisdiction warning banner -->
+    <div id="calculator-jurisdiction-warning" style="display:none; background:#fff3cd; border:1px solid #ffeeba; color:#856404; padding:1rem; border-radius:6px; margin-bottom:1.5rem; font-size:0.875rem; line-height:1.5;" class="no-print">
+      ⚠️ <strong>Federal Sentence Notice:</strong> Your Case File is set to a State or International jurisdiction. Since Good Conduct Time (GCT), RDAP, and First Step Act (FSA) credits are specific to **United States Federal (BOP) prisons**, these options are locked. State or local guidelines vary widely; please consult your attorney.
+    </div>
+
     <div class="calc-row">
       
       <!-- Inputs -->
@@ -528,15 +533,34 @@
   // Set report date
   document.getElementById("print-report-date").textContent = new Date().toLocaleDateString(undefined, {month: 'long', day: 'numeric', year: 'numeric'});
 
-  // Load client name from case file
+  // Load client name and check jurisdiction from case file
   try {
     const cfResp = await fetch("/api/organiser/case-file");
     if (cfResp.ok) {
       const { data } = await cfResp.json();
-      if (data && data.inmate_name) {
-        document.getElementById("print-inmate-name").textContent = data.inmate_name;
-      } else if (data && data.case_name) {
-        document.getElementById("print-inmate-name").textContent = data.case_name;
+      if (data) {
+        if (data.inmate_name) {
+          document.getElementById("print-inmate-name").textContent = data.inmate_name;
+        } else if (data.case_name) {
+          document.getElementById("print-inmate-name").textContent = data.case_name;
+        } else {
+          document.getElementById("print-inmate-name").textContent = user.email;
+        }
+
+        // Lock RDAP and FSA options if non-USA or non-Federal
+        const isUS = data.country === "us" || !data.country;
+        const isFed = data.jurisdiction === "federal" || !data.jurisdiction;
+        if (!isUS || !isFed) {
+          document.getElementById("calculator-jurisdiction-warning").style.display = "block";
+          
+          inputRDAP.checked = false;
+          inputFSA.checked = false;
+          inputRDAP.disabled = true;
+          inputFSA.disabled = true;
+          
+          inputRDAP.closest(".case-field").style.opacity = "0.5";
+          inputFSA.closest(".case-field").style.opacity = "0.5";
+        }
       } else {
         document.getElementById("print-inmate-name").textContent = user.email;
       }
