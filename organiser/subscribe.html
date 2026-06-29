@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscribe — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" style="padding-bottom:2rem;">
+    <div class="container">
+      <h1>Case Organiser</h1>
+      <p class="lead" style="margin-top:0.5rem;">
+        A private workspace for one federal case. Keep everything in one place.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="pricing-grid">
+
+        <div class="price-card price-card--featured">
+          <div class="price-card__name">Monthly</div>
+          <div class="price-card__amount">$49</div>
+          <div class="price-card__period">per month, cancel any time</div>
+          <ul class="price-card__features">
+            <li>Case file — your facts, your contacts, your notes</li>
+            <li>Date and deadline tracker</li>
+            <li>Stage-by-stage checklists</li>
+            <li>Curated resource links</li>
+            <li>Private document storage (up to 500 MB)</li>
+            <li>Plain-language AI guide</li>
+          </ul>
+          <button class="btn" style="width:100%;" data-plan="monthly" id="btn-monthly">Start monthly plan</button>
+        </div>
+
+        <div class="price-card">
+          <div class="price-card__name">One-time</div>
+          <div class="price-card__amount">$497</div>
+          <div class="price-card__period">one payment, lifetime access</div>
+          <ul class="price-card__features">
+            <li>Everything in the monthly plan</li>
+            <li>No recurring charges</li>
+            <li>Access for as long as the case runs</li>
+          </ul>
+          <button class="btn btn--outline" style="width:100%;" data-plan="lifetime" id="btn-lifetime">Get lifetime access</button>
+        </div>
+
+      </div>
+
+      <p class="text-soft" style="margin-top:1.5rem; font-size:0.85rem;">
+        This is a practical tool for managing your own notes and documents.
+        It does not provide legal advice. All AI responses are general information only.
+      </p>
+
+      <div id="checkout-status" class="auth-status" role="alert" aria-live="polite" style="margin-top:0.75rem;"></div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script>
+(function () {
+  const status = document.getElementById("checkout-status");
+
+  async function startCheckout(plan) {
+    status.textContent = "Redirecting to checkout...";
+    status.className = "auth-status";
+    const btn = document.getElementById("btn-" + plan);
+    btn.disabled = true;
+
+    try {
+      const resp = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan })
+      });
+
+      if (resp.status === 401) {
+        window.location.href = "/organiser/login.html";
+        return;
+      }
+
+      const data = await resp.json();
+      if (resp.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        status.textContent = data.error || "Could not start checkout. Please try again.";
+        status.className = "auth-status auth-status--err";
+        btn.disabled = false;
+      }
+    } catch {
+      status.textContent = "Network error. Please try again.";
+      status.className = "auth-status auth-status--err";
+      btn.disabled = false;
+    }
+  }
+
+  document.getElementById("btn-monthly").addEventListener("click", () => startCheckout("monthly"));
+  document.getElementById("btn-lifetime").addEventListener("click", () => startCheckout("lifetime"));
+})();
+</script>
+
+</body>
+</html>

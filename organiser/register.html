@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+  </div>
+</header>
+
+<main>
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <h1>Create account</h1>
+      <p class="auth-sub">Start your 7-day free trial. No card required to register.</p>
+
+      <form id="register-form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="password">Password <span style="font-weight:normal;font-size:0.8em;">(at least 8 characters)</span></label>
+          <input type="password" id="password" name="password" autocomplete="new-password" required minlength="8">
+        </div>
+        <button type="submit" class="btn btn-full">Create account</button>
+        <div id="auth-status" class="auth-status" role="alert" aria-live="polite"></div>
+      </form>
+
+      <p class="auth-switch">
+        Already have an account? <a href="/organiser/login.html">Sign in</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script>
+(function () {
+  const form = document.getElementById("register-form");
+  const status = document.getElementById("auth-status");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    status.textContent = "";
+    status.className = "auth-status";
+    const btn = form.querySelector("button[type=submit]");
+    btn.disabled = true;
+    btn.textContent = "Creating account...";
+
+    try {
+      const resp = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email.value.trim(),
+          password: form.password.value
+        })
+      });
+      const data = await resp.json();
+      if (resp.ok) {
+        window.location.href = "/organiser/subscribe.html";
+      } else {
+        status.textContent = data.error || "Registration failed. Please try again.";
+        status.className = "auth-status auth-status--err";
+        btn.disabled = false;
+        btn.textContent = "Create account";
+      }
+    } catch {
+      status.textContent = "Network error. Please try again.";
+      status.className = "auth-status auth-status--err";
+      btn.disabled = false;
+      btn.textContent = "Create account";
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

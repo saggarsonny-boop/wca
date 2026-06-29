@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+  </div>
+</header>
+
+<main>
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <h1>Case Organiser</h1>
+      <p class="auth-sub">Sign in to your private workspace.</p>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-full">Sign in</button>
+        <div id="auth-status" class="auth-status" role="alert" aria-live="polite"></div>
+      </form>
+
+      <p class="auth-switch">
+        No account? <a href="/organiser/register.html">Create one</a>
+      </p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script>
+(function () {
+  const form = document.getElementById("login-form");
+  const status = document.getElementById("auth-status");
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    status.textContent = "";
+    status.className = "auth-status";
+    const btn = form.querySelector("button[type=submit]");
+    btn.disabled = true;
+    btn.textContent = "Signing in...";
+
+    try {
+      const resp = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email.value.trim(),
+          password: form.password.value
+        })
+      });
+      const data = await resp.json();
+      if (resp.ok) {
+        window.location.href = "/organiser/";
+      } else {
+        status.textContent = data.error || "Sign in failed. Please try again.";
+        status.className = "auth-status auth-status--err";
+        btn.disabled = false;
+        btn.textContent = "Sign in";
+      }
+    } catch {
+      status.textContent = "Network error. Please try again.";
+      status.className = "auth-status auth-status--err";
+      btn.disabled = false;
+      btn.textContent = "Sign in";
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

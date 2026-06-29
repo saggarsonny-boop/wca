@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklists — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">Dashboard</a>
+      <a href="/organiser/case-file.html">Case File</a>
+      <a href="/organiser/dates.html">Dates</a>
+      <a href="/organiser/checklists.html" class="active">Checklists</a>
+      <span class="sidebar-label">Resources</span>
+      <a href="/organiser/links.html">Links</a>
+      <a href="/organiser/documents.html">Documents</a>
+      <span class="sidebar-label">Guide</span>
+      <a href="/organiser/ai.html">Ask a question</a>
+    </nav>
+  </aside>
+
+  <main class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Checklists</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.75rem;">Stage-by-stage prompts. Check what you have covered. Your state is saved in this browser.</p>
+
+    <div id="checklist-container"></div>
+
+  </main>
+</div>
+
+<script>
+// Checklists are static and stored in localStorage — no server round-trip needed.
+// They are prompts for what to know and ask, not instructions.
+
+const CHECKLISTS = [
+  {
+    id: "investigation",
+    title: "Under investigation",
+    items: [
+      "Do you know whether you are a target, subject, or witness?",
+      "Has your attorney reviewed any target letter or grand jury subpoena?",
+      "Have you identified all documents that may be relevant?",
+      "Do you have a clear channel for communicating with your attorney?",
+      "Have you avoided discussing the matter with anyone other than your attorney?",
+      "Do you understand what a proffer agreement is and when it arises?",
+    ]
+  },
+  {
+    id: "arraignment",
+    title: "Arraignment and early proceedings",
+    items: [
+      "Do you understand each count in the indictment or information?",
+      "Has your attorney explained the maximum penalties for each count?",
+      "Have you entered a plea of not guilty (standard at arraignment)?",
+      "Have you reviewed pretrial release conditions with your attorney?",
+      "Have you confirmed your next court date?",
+      "Has your attorney requested discovery from the government?",
+    ]
+  },
+  {
+    id: "pretrial",
+    title: "Pretrial phase",
+    items: [
+      "Has your attorney reviewed all discovery materials?",
+      "Have you discussed the strength of the government evidence with your attorney?",
+      "Has your attorney considered any pretrial motions (suppression, dismissal)?",
+      "Do you understand what a plea agreement involves?",
+      "Have you discussed the sentencing guidelines with your attorney?",
+      "Do you understand the difference between going to trial and pleading guilty?",
+    ]
+  },
+  {
+    id: "psr",
+    title: "Presentence report (PSR)",
+    items: [
+      "Have you met with the probation officer for the PSR interview?",
+      "Has your attorney reviewed the draft PSR with you?",
+      "Have you identified any factual errors in the PSR?",
+      "Has your attorney filed objections to the PSR if needed?",
+      "Do you understand how your offense level is calculated?",
+      "Do you understand what criminal history category applies to you?",
+      "Have you gathered character letters for the sentencing memo?",
+      "Has your attorney explained the sentencing memo and its purpose?",
+    ]
+  },
+  {
+    id: "sentencing",
+    title: "Sentencing",
+    items: [
+      "Do you know the sentencing date and the courtroom?",
+      "Has your attorney explained what will happen at the hearing?",
+      "Do you plan to speak at sentencing (allocution)?",
+      "Have you discussed any restitution amount with your attorney?",
+      "Do you understand what supervised release is and how long it will last?",
+      "Do you understand any fine or forfeiture that applies?",
+    ]
+  },
+  {
+    id: "supervised",
+    title: "Supervised release",
+    items: [
+      "Do you know all conditions of your supervised release?",
+      "Do you know your reporting requirements and schedule?",
+      "Have you confirmed your employment status complies with conditions?",
+      "Do you know the geographic restrictions that apply?",
+      "Have you discussed any special conditions with your attorney?",
+      "Do you know what to do if you have a question about a condition?",
+      "Has your attorney explained early termination eligibility under 18 U.S.C. 3583(e)?",
+    ]
+  },
+  {
+    id: "licensing",
+    title: "Professional licensing and administrative actions",
+    items: [
+      "Have you identified all professional licenses or certifications you hold?",
+      "Has your attorney (or a licensing specialist) reviewed each board's reporting obligations?",
+      "Do you know the timeline for mandatory self-reporting to each board?",
+      "Have you reviewed your DEA registration status if applicable?",
+      "Have you checked your OIG exclusion status?",
+      "Have you reviewed your NPDB (National Practitioner Data Bank) entry?",
+      "Have you spoken with a healthcare attorney about the exclusion database?",
+    ]
+  }
+];
+
+(async function () {
+  const resp = await fetch("/api/auth/me");
+  if (!resp.ok) { window.location.href = "/organiser/login.html"; return; }
+
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/organiser/login.html";
+  });
+
+  const KEY = "wca_checklists";
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch {}
+
+  const container = document.getElementById("checklist-container");
+
+  CHECKLISTS.forEach(group => {
+    const div = document.createElement("div");
+    div.className = "checklist-group";
+    div.innerHTML = `<h3>${group.title}</h3>`;
+
+    const ul = document.createElement("ul");
+    ul.className = "checklist";
+
+    group.items.forEach((item, idx) => {
+      const id = `${group.id}_${idx}`;
+      const checked = state[id] || false;
+      const li = document.createElement("li");
+      if (checked) li.className = "done";
+      li.innerHTML = `
+        <input type="checkbox" id="${id}" ${checked ? "checked" : ""}>
+        <label for="${id}">${item}</label>
+      `;
+      li.querySelector("input").addEventListener("change", function () {
+        state[id] = this.checked;
+        li.className = this.checked ? "done" : "";
+        localStorage.setItem(KEY, JSON.stringify(state));
+      });
+      ul.appendChild(li);
+    });
+
+    div.appendChild(ul);
+    container.appendChild(div);
+  });
+})();
+</script>
+
+</body>
+</html>

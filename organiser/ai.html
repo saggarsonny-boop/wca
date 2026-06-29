@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask a question — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">Dashboard</a>
+      <a href="/organiser/case-file.html">Case File</a>
+      <a href="/organiser/dates.html">Dates</a>
+      <a href="/organiser/checklists.html">Checklists</a>
+      <span class="sidebar-label">Resources</span>
+      <a href="/organiser/links.html">Links</a>
+      <a href="/organiser/documents.html">Documents</a>
+      <span class="sidebar-label">Guide</span>
+      <a href="/organiser/ai.html" class="active">Ask a question</a>
+    </nav>
+  </aside>
+
+  <main class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Ask a question</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:0.75rem;">Plain-language answers about how the federal process works. Not legal advice about your case.</p>
+
+    <div class="ai-disclaimer">
+      This guide explains the process in general terms. It cannot predict outcomes, tell you what to argue, or draft legal documents.
+      Every answer will point you toward a question to raise with your own attorney.
+    </div>
+
+    <div class="ai-messages" id="ai-messages" style="margin-top:1.25rem;"></div>
+
+    <div class="ai-input-row">
+      <textarea id="ai-input" placeholder="What would you like to understand?" rows="2" aria-label="Your question"></textarea>
+      <button class="btn" id="ai-send">Send</button>
+    </div>
+
+    <p class="text-soft" style="font-size:0.8rem; margin-top:0.5rem;">Up to 20 questions per hour.</p>
+
+  </main>
+</div>
+
+<script>
+(async function () {
+  const resp = await fetch("/api/auth/me");
+  if (!resp.ok) { window.location.href = "/organiser/login.html"; return; }
+
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/organiser/login.html";
+  });
+
+  const messages = document.getElementById("ai-messages");
+  const input = document.getElementById("ai-input");
+  const sendBtn = document.getElementById("ai-send");
+  const history = [];
+
+  function escHtml(s) {
+    return (s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");
+  }
+
+  function addMessage(role, text) {
+    const div = document.createElement("div");
+    div.className = `ai-msg ai-msg--${role}`;
+    const body = document.createElement("div");
+    body.className = "ai-msg__body";
+    body.innerHTML = escHtml(text);
+    div.appendChild(body);
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  async function send() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    sendBtn.disabled = true;
+    sendBtn.textContent = "...";
+
+    addMessage("user", text);
+    history.push({ role: "user", content: text });
+
+    const r = await fetch("/api/organiser/ai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text, history: history.slice(-6) })
+    });
+
+    const data = await r.json();
+    if (r.ok) {
+      addMessage("assistant", data.reply);
+      history.push({ role: "assistant", content: data.reply });
+    } else {
+      addMessage("assistant", data.error || "Something went wrong. Please try again.");
+    }
+
+    sendBtn.disabled = false;
+    sendBtn.textContent = "Send";
+    input.focus();
+  }
+
+  sendBtn.addEventListener("click", send);
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+  });
+})();
+</script>
+
+</body>
+</html>

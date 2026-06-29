@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documents — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">Dashboard</a>
+      <a href="/organiser/case-file.html">Case File</a>
+      <a href="/organiser/dates.html">Dates</a>
+      <a href="/organiser/checklists.html">Checklists</a>
+      <span class="sidebar-label">Resources</span>
+      <a href="/organiser/links.html">Links</a>
+      <a href="/organiser/documents.html" class="active">Documents</a>
+      <span class="sidebar-label">Guide</span>
+      <a href="/organiser/ai.html">Ask a question</a>
+    </nav>
+  </aside>
+
+  <main class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Documents</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1rem;">Private file storage. PDFs, letters, anything up to 20 MB per file, 500 MB total.</p>
+
+    <ul class="doc-list" id="doc-list">
+      <li style="color:var(--text-soft);font-size:0.9rem;padding:0.75rem 0;">Loading...</li>
+    </ul>
+
+    <label class="upload-area" id="upload-area">
+      <input type="file" id="file-input" multiple>
+      <div>
+        <strong>Click to upload</strong> or drag a file here<br>
+        <span style="font-size:0.8rem;">PDF, Word, images — up to 20 MB per file</span>
+      </div>
+    </label>
+
+    <div id="upload-status" class="auth-status" style="margin-top:0.75rem;"></div>
+
+  </main>
+</div>
+
+<script>
+(async function () {
+  const resp = await fetch("/api/auth/me");
+  if (!resp.ok) { window.location.href = "/organiser/login.html"; return; }
+
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/organiser/login.html";
+  });
+
+  const docList = document.getElementById("doc-list");
+  const uploadStatus = document.getElementById("upload-status");
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  function escHtml(s) {
+    return (s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  async function loadDocs() {
+    const r = await fetch("/api/organiser/documents");
+    if (!r.ok) return;
+    const { documents } = await r.json();
+    docList.innerHTML = "";
+
+    if (!documents.length) {
+      const li = document.createElement("li");
+      li.style.cssText = "color:var(--text-soft);font-size:0.9rem;padding:0.75rem 0;";
+      li.textContent = "No documents yet. Upload one below.";
+      docList.appendChild(li);
+      return;
+    }
+
+    documents.forEach(d => {
+      const li = document.createElement("li");
+      li.className = "doc-item";
+      li.innerHTML = `
+        <span class="doc-item__name">
+          <a href="/api/organiser/documents?key=${encodeURIComponent(d.r2_key)}" target="_blank" rel="noopener">${escHtml(d.filename)}</a>
+        </span>
+        <span class="doc-item__size">${formatSize(d.size_bytes)}</span>
+        <button class="doc-item__del" data-key="${escHtml(d.r2_key)}" aria-label="Delete">✕</button>
+      `;
+      docList.appendChild(li);
+    });
+
+    docList.querySelectorAll(".doc-item__del").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!confirm("Delete this file permanently?")) return;
+        await fetch(`/api/organiser/documents?key=${encodeURIComponent(btn.dataset.key)}`, { method: "DELETE" });
+        loadDocs();
+      });
+    });
+  }
+
+  async function uploadFile(file) {
+    uploadStatus.textContent = `Uploading ${file.name}...`;
+    uploadStatus.className = "auth-status";
+    const form = new FormData();
+    form.append("file", file);
+    const r = await fetch("/api/organiser/documents", { method: "POST", body: form });
+    const data = await r.json();
+    if (r.ok) {
+      uploadStatus.textContent = `${file.name} uploaded.`;
+      uploadStatus.className = "auth-status auth-status--ok";
+      loadDocs();
+    } else {
+      uploadStatus.textContent = data.error || "Upload failed.";
+      uploadStatus.className = "auth-status auth-status--err";
+    }
+    setTimeout(() => { uploadStatus.textContent = ""; }, 4000);
+  }
+
+  document.getElementById("file-input").addEventListener("change", async function () {
+    for (const file of this.files) await uploadFile(file);
+    this.value = "";
+  });
+
+  const area = document.getElementById("upload-area");
+  area.addEventListener("dragover", e => { e.preventDefault(); area.style.borderColor = "var(--accent)"; });
+  area.addEventListener("dragleave", () => { area.style.borderColor = ""; });
+  area.addEventListener("drop", async e => {
+    e.preventDefault();
+    area.style.borderColor = "";
+    for (const file of e.dataTransfer.files) await uploadFile(file);
+  });
+
+  loadDocs();
+})();
+</script>
+
+</body>
+</html>

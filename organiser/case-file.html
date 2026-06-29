@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case File — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">Dashboard</a>
+      <a href="/organiser/case-file.html" class="active">Case File</a>
+      <a href="/organiser/dates.html">Dates</a>
+      <a href="/organiser/checklists.html">Checklists</a>
+      <span class="sidebar-label">Resources</span>
+      <a href="/organiser/links.html">Links</a>
+      <a href="/organiser/documents.html">Documents</a>
+      <span class="sidebar-label">Guide</span>
+      <a href="/organiser/ai.html">Ask a question</a>
+    </nav>
+  </aside>
+
+  <main class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Case File</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.75rem;">Your basic facts. Everything here is encrypted and private to you.</p>
+
+    <form id="case-form" novalidate>
+
+      <div class="case-field">
+        <label>Case name or reference</label>
+        <input type="text" name="case_name" placeholder="e.g. United States v. [Your Name]">
+      </div>
+
+      <div class="case-field">
+        <label>District and court</label>
+        <input type="text" name="district" placeholder="e.g. Eastern District of Michigan, Detroit">
+      </div>
+
+      <div class="case-field">
+        <label>Case number</label>
+        <input type="text" name="case_number" placeholder="e.g. 2:24-cr-20123">
+      </div>
+
+      <div class="case-field">
+        <label>Charges (plain language)</label>
+        <textarea name="charges" rows="3" placeholder="Describe the charges in your own words."></textarea>
+      </div>
+
+      <div class="case-field">
+        <label>Defense attorney</label>
+        <input type="text" name="attorney_name" placeholder="Name">
+      </div>
+
+      <div class="case-field">
+        <label>Attorney phone</label>
+        <input type="text" name="attorney_phone" placeholder="">
+      </div>
+
+      <div class="case-field">
+        <label>Attorney email</label>
+        <input type="email" name="attorney_email" placeholder="">
+      </div>
+
+      <div class="case-field">
+        <label>Judge</label>
+        <input type="text" name="judge" placeholder="Name and title">
+      </div>
+
+      <div class="case-field">
+        <label>Prosecutor / AUSA</label>
+        <input type="text" name="prosecutor" placeholder="Name">
+      </div>
+
+      <div class="case-field">
+        <label>Pretrial officer (if applicable)</label>
+        <input type="text" name="pretrial_officer" placeholder="Name and contact">
+      </div>
+
+      <div class="case-field">
+        <label>Probation officer (if assigned)</label>
+        <input type="text" name="probation_officer" placeholder="Name and contact">
+      </div>
+
+      <div class="case-field">
+        <label>Current stage</label>
+        <select name="stage">
+          <option value="">-- Select --</option>
+          <option value="investigation">Under investigation / target letter</option>
+          <option value="charged">Charged / arraignment</option>
+          <option value="pretrial">Pretrial phase</option>
+          <option value="plea">Plea negotiations</option>
+          <option value="trial">Trial</option>
+          <option value="sentencing">Presentence / sentencing</option>
+          <option value="appeal">Appeal</option>
+          <option value="supervised">Supervised release</option>
+          <option value="post">Post-supervision</option>
+        </select>
+      </div>
+
+      <div class="case-field">
+        <label>Notes</label>
+        <textarea name="notes" rows="5" placeholder="Anything else you want to keep here."></textarea>
+      </div>
+
+      <div class="save-bar">
+        <button type="submit" class="btn">Save</button>
+        <span class="save-status" id="save-status"></span>
+      </div>
+
+    </form>
+  </main>
+</div>
+
+<script>
+(async function () {
+  const resp = await fetch("/api/auth/me");
+  if (!resp.ok) { window.location.href = "/organiser/login.html"; return; }
+
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/organiser/login.html";
+  });
+
+  const form = document.getElementById("case-form");
+  const saveStatus = document.getElementById("save-status");
+  const FIELDS = ["case_name","district","case_number","charges","attorney_name","attorney_phone","attorney_email","judge","prosecutor","pretrial_officer","probation_officer","stage","notes"];
+
+  // Load existing data
+  const load = await fetch("/api/organiser/case-file");
+  if (load.ok) {
+    const { data } = await load.json();
+    if (data) {
+      FIELDS.forEach(f => {
+        const el = form.elements[f];
+        if (el && data[f] != null) el.value = data[f];
+      });
+    }
+  }
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    saveStatus.textContent = "Saving...";
+    saveStatus.style.color = "var(--text-soft)";
+    const btn = form.querySelector("button[type=submit]");
+    btn.disabled = true;
+
+    const payload = {};
+    FIELDS.forEach(f => { payload[f] = form.elements[f]?.value || ""; });
+
+    const r = await fetch("/api/organiser/case-file", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (r.ok) {
+      saveStatus.textContent = "Saved.";
+      saveStatus.style.color = "#2a6e3f";
+    } else {
+      saveStatus.textContent = "Save failed. Please try again.";
+      saveStatus.style.color = "#8b2020";
+    }
+    btn.disabled = false;
+    setTimeout(() => { saveStatus.textContent = ""; }, 3000);
+  });
+})();
+</script>
+
+</body>
+</html>

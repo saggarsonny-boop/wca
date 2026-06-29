@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/" class="active">Dashboard</a>
+      <a href="/organiser/case-file.html">Case File</a>
+      <a href="/organiser/dates.html">Dates</a>
+      <a href="/organiser/checklists.html">Checklists</a>
+      <span class="sidebar-label">Resources</span>
+      <a href="/organiser/links.html">Links</a>
+      <a href="/organiser/documents.html">Documents</a>
+      <span class="sidebar-label">Guide</span>
+      <a href="/organiser/ai.html">Ask a question</a>
+    </nav>
+  </aside>
+
+  <main class="org-main">
+
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Your workspace</h1>
+    <p id="user-email" class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;"></p>
+
+    <div class="org-grid">
+
+      <a href="/organiser/case-file.html" class="org-card">
+        <div class="org-card__icon">📋</div>
+        <h3>Case File</h3>
+        <p>Your basic facts, contacts, key numbers, and notes in one place.</p>
+      </a>
+
+      <a href="/organiser/dates.html" class="org-card">
+        <div class="org-card__icon">📅</div>
+        <h3>Dates</h3>
+        <p>Hearings, deadlines, filing dates. Add them once and keep them visible.</p>
+      </a>
+
+      <a href="/organiser/checklists.html" class="org-card">
+        <div class="org-card__icon">✅</div>
+        <h3>Checklists</h3>
+        <p>Stage-by-stage prompts so nothing gets missed.</p>
+      </a>
+
+      <a href="/organiser/documents.html" class="org-card">
+        <div class="org-card__icon">📁</div>
+        <h3>Documents</h3>
+        <p>Store your PDFs and files privately. Up to 500 MB.</p>
+      </a>
+
+      <a href="/organiser/links.html" class="org-card">
+        <div class="org-card__icon">🔗</div>
+        <h3>Links</h3>
+        <p>Curated resources on the federal process, all in one place.</p>
+      </a>
+
+      <a href="/organiser/ai.html" class="org-card">
+        <div class="org-card__icon">💬</div>
+        <h3>Ask a question</h3>
+        <p>Plain-language answers about how the process works. Not legal advice.</p>
+      </a>
+
+    </div>
+
+  </main>
+</div>
+
+<script>
+(async function () {
+  const resp = await fetch("/api/auth/me");
+  if (!resp.ok) { window.location.href = "/organiser/login.html"; return; }
+  const user = await resp.json();
+  document.getElementById("user-email").textContent = user.email;
+
+  if (user.subscription_status === "trial") {
+    const banner = document.createElement("div");
+    banner.style.cssText = "background:#fef3cd;border:1px solid #f0c040;border-radius:4px;padding:0.75rem 1rem;margin-bottom:1.5rem;font-size:0.875rem;";
+    banner.innerHTML = 'You are in your free trial. <a href="/organiser/subscribe.html">Subscribe to keep access.</a>';
+    document.querySelector(".org-main h1").after(banner);
+  }
+
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/organiser/login.html";
+  });
+})();
+</script>
+
+</body>
+</html>

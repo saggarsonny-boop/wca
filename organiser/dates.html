@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dates — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">Dashboard</a>
+      <a href="/organiser/case-file.html">Case File</a>
+      <a href="/organiser/dates.html" class="active">Dates</a>
+      <a href="/organiser/checklists.html">Checklists</a>
+      <span class="sidebar-label">Resources</span>
+      <a href="/organiser/links.html">Links</a>
+      <a href="/organiser/documents.html">Documents</a>
+      <span class="sidebar-label">Guide</span>
+      <a href="/organiser/ai.html">Ask a question</a>
+    </nav>
+  </aside>
+
+  <main class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Dates</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:0.5rem;">Hearings, deadlines, filing dates. In order.</p>
+
+    <ul class="dates-list" id="dates-list">
+      <li style="color:var(--text-soft);font-size:0.9rem;padding:1rem 0;" id="dates-empty">Loading...</li>
+    </ul>
+
+    <div class="add-date-form" id="add-form">
+      <div class="field field-date">
+        <label for="new-date" style="font-size:0.8rem;color:var(--text-soft);display:block;margin-bottom:0.25rem;">Date</label>
+        <input type="date" id="new-date">
+      </div>
+      <div class="field field-label" style="flex:1;">
+        <label for="new-label" style="font-size:0.8rem;color:var(--text-soft);display:block;margin-bottom:0.25rem;">Label</label>
+        <input type="text" id="new-label" placeholder="e.g. Sentencing hearing">
+      </div>
+      <div class="field field-note" style="flex:1;">
+        <label for="new-note" style="font-size:0.8rem;color:var(--text-soft);display:block;margin-bottom:0.25rem;">Note (optional)</label>
+        <input type="text" id="new-note" placeholder="">
+      </div>
+      <div>
+        <button class="btn" id="add-btn" style="white-space:nowrap;">Add date</button>
+      </div>
+    </div>
+    <div id="add-status" class="auth-status" style="margin-top:0.5rem;"></div>
+
+  </main>
+</div>
+
+<script>
+(async function () {
+  const resp = await fetch("/api/auth/me");
+  if (!resp.ok) { window.location.href = "/organiser/login.html"; return; }
+
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/organiser/login.html";
+  });
+
+  const list = document.getElementById("dates-list");
+  const emptyItem = document.getElementById("dates-empty");
+  const addStatus = document.getElementById("add-status");
+
+  function formatDate(val) {
+    if (!val) return "";
+    const [y, m, d] = val.split("-");
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return `${months[+m-1]} ${+d}, ${y}`;
+  }
+
+  async function loadDates() {
+    const r = await fetch("/api/organiser/dates");
+    if (!r.ok) return;
+    const { dates } = await r.json();
+    list.innerHTML = "";
+
+    if (!dates.length) {
+      const li = document.createElement("li");
+      li.style.cssText = "color:var(--text-soft);font-size:0.9rem;padding:1rem 0;";
+      li.textContent = "No dates added yet. Use the form below to add one.";
+      list.appendChild(li);
+      return;
+    }
+
+    dates.forEach(d => {
+      const li = document.createElement("li");
+      li.className = "date-item";
+      li.innerHTML = `
+        <span class="date-item__val">${formatDate(d.date_val)}</span>
+        <span class="date-item__label">${escHtml(d.label)}${d.note ? `<br><span class="date-item__note">${escHtml(d.note)}</span>` : ""}</span>
+        <button class="date-item__del" data-key="${d.id}" aria-label="Delete">✕</button>
+      `;
+      list.appendChild(li);
+    });
+
+    list.querySelectorAll(".date-item__del").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!confirm("Delete this date?")) return;
+        await fetch(`/api/organiser/dates?id=${btn.dataset.key}`, { method: "DELETE" });
+        loadDates();
+      });
+    });
+  }
+
+  function escHtml(s) {
+    return (s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  document.getElementById("add-btn").addEventListener("click", async () => {
+    const dateVal = document.getElementById("new-date").value;
+    const label = document.getElementById("new-label").value.trim();
+    const note = document.getElementById("new-note").value.trim();
+    if (!dateVal || !label) {
+      addStatus.textContent = "Date and label are required.";
+      addStatus.className = "auth-status auth-status--err";
+      return;
+    }
+    const r = await fetch("/api/organiser/dates", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ label, date_val: dateVal, note })
+    });
+    if (r.ok) {
+      document.getElementById("new-date").value = "";
+      document.getElementById("new-label").value = "";
+      document.getElementById("new-note").value = "";
+      addStatus.textContent = "";
+      loadDates();
+    } else {
+      const d = await r.json();
+      addStatus.textContent = d.error || "Could not add date.";
+      addStatus.className = "auth-status auth-status--err";
+    }
+  });
+
+  loadDates();
+})();
+</script>
+
+</body>
+</html>
