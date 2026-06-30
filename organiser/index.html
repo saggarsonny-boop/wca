@@ -34,6 +34,8 @@
       <a href="/organiser/documents.html">Documents</a>
       <span class="sidebar-label">Guide</span>
       <a href="/organiser/ai.html">Ask a question</a>
+      <span class="sidebar-label">Partners</span>
+      <a href="/organiser/attorney.html">Defense Counsel Portal</a>
     </nav>
   </aside>
 
@@ -123,6 +125,14 @@
       </div>
     </div>
 
+    <!-- Attorney Connections Row -->
+    <div id="attorney-connections-box" style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:10px; margin-top:2.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.02); display:none;">
+      <h3 style="margin-bottom:0.4rem; font-size:1.1rem; display:flex; align-items:center; gap:0.5rem;">💼 Attorney Connection Connections</h3>
+      <p class="text-soft" style="font-size:0.875rem; margin-bottom:1rem;">Approve or revoke connections with your defense counsel to share read-only progress views.</p>
+      <div id="connections-list" style="display:flex; flex-direction:column; gap:0.75rem;">
+        <!-- Connections lists -->
+      </div>
+    </div>
   
     <p class="text-soft no-print" style="font-size:0.75rem; border-top:1px solid var(--border); padding-top:1rem; margin-top:3rem; line-height: 1.5;">
       <strong>Legal Disclaimer:</strong> White Collar Academy is a case organization and management system. We do not provide legal advice, representation, or sentencing predictions. All calculations, guides, checklists, workbook sections, and AI responses are for general informational purposes only. Always review and verify all calculations, dates, narrative drafts, and materials with your defense counsel.
@@ -238,6 +248,92 @@
     }
   });
 
+  // Load attorney connection requests
+  const connBox = document.getElementById("attorney-connections-box");
+  const connList = document.getElementById("connections-list");
+
+  async function loadConnections() {
+    try {
+      const r = await fetch("/api/organiser/attorney/connections");
+      if (r.ok) {
+        const { connections } = await r.json();
+        if (connections.length === 0) {
+          connBox.style.display = "none";
+          return;
+        }
+
+        connBox.style.display = "block";
+        connList.innerHTML = "";
+
+        connections.forEach(c => {
+          const div = document.createElement("div");
+          div.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#FAF8F5; border:1px solid var(--border); padding:0.75rem 1rem; border-radius:6px; font-size:0.9rem; flex-wrap:wrap; gap:0.5rem;";
+
+          if (c.status === "pending") {
+            div.innerHTML = `
+              <span>Defense counsel (<strong>${esc(c.attorney_email)}</strong>) requests access to view your dashboard.</span>
+              <div>
+                <button class="btn btn-conn-approve" data-id="${c.id}" style="font-size:0.75rem; padding:0.35rem 0.75rem;">Approve</button>
+                <button class="btn btn--outline btn-conn-decline" data-id="${c.id}" style="font-size:0.75rem; padding:0.35rem 0.75rem; margin-left:0.5rem; color:#8b2020; border-color:#ded9cf;">Decline</button>
+              </div>
+            `;
+          } else {
+            div.innerHTML = `
+              <span>Linked Attorney: <strong>${esc(c.attorney_email)}</strong> (Has read-only access).</span>
+              <button class="btn btn--outline btn-conn-revoke" data-id="${c.id}" style="font-size:0.75rem; padding:0.35rem 0.75rem; color:#8b2020; border-color:#ded9cf;">Revoke Access</button>
+            `;
+          }
+          connList.appendChild(div);
+        });
+
+        // Event listeners
+        document.querySelectorAll(".btn-conn-approve").forEach(b => {
+          b.addEventListener("click", async function() {
+            const id = this.getAttribute("data-id");
+            const approveRes = await fetch("/api/organiser/attorney/connections", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ link_id: id, action: "approve" })
+            });
+            if (approveRes.ok) loadConnections();
+          });
+        });
+
+        document.querySelectorAll(".btn-conn-decline").forEach(b => {
+          b.addEventListener("click", async function() {
+            const id = this.getAttribute("data-id");
+            const declineRes = await fetch("/api/organiser/attorney/connections", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ link_id: id, action: "decline" })
+            });
+            if (declineRes.ok) loadConnections();
+          });
+        });
+
+        document.querySelectorAll(".btn-conn-revoke").forEach(b => {
+          b.addEventListener("click", async function() {
+            const id = this.getAttribute("data-id");
+            if (confirm("Revoke attorney read-only workspace access?")) {
+              const revokeRes = await fetch("/api/organiser/attorney/connections", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ link_id: id })
+              });
+              if (revokeRes.ok) loadConnections();
+            }
+          });
+        });
+
+      }
+    } catch (_) {}
+  }
+
+  function esc(s) {
+    return (s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  loadConnections();
   loadShareToken();
 })();
 </script>
