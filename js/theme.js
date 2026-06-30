@@ -13,8 +13,23 @@
         .replace(/White Collar/g, "Blue Collar")
         .replace(/white collar/g, "blue collar");
       
-      // Traverse DOM and replace texts
-      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      // Traverse DOM safely (rejecting script, style, input, textarea tags)
+      const walker = document.createTreeWalker(
+        document.body, 
+        NodeFilter.SHOW_TEXT,
+        {
+          acceptNode: function(node) {
+            const parent = node.parentNode;
+            if (!parent) return NodeFilter.FILTER_REJECT;
+            const parentTag = parent.tagName.toUpperCase();
+            if (parentTag === "SCRIPT" || parentTag === "STYLE" || parentTag === "TEXTAREA" || parentTag === "INPUT") {
+              return NodeFilter.FILTER_REJECT;
+            }
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        }
+      );
+      
       let node;
       while (node = walker.nextNode()) {
         node.nodeValue = node.nodeValue
