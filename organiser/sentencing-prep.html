@@ -97,13 +97,14 @@
           </select>
         </div>
 
-        <div class="score-row">
-          <span style="max-width:300px; display:inline-block;">Prior Criminal History (USSG Category)</span>
-          <select id="score-history" style="width:100%;">
-            <option value="0" selected>None / Minor (Category I: 0-1 pts) - e.g. first-time offender or single minor fine</option>
-            <option value="2">Category II (2-3 pts) - e.g. one prior minor misdemeanor or probation sentence</option>
-            <option value="4">Category III (4-6 pts) - e.g. two or three prior convictions or parole violations</option>
-            <option value="6">Category IV or higher (7+ pts) - e.g. multiple felony sentences or significant history</option>
+        <div class="score-row" style="display:block; border-bottom:1px solid var(--border); padding:1rem 0;">
+          <label style="display:block; font-weight:600; margin-bottom:0.35rem; font-size:0.9rem;">Prior Criminal History (USSG Category)</label>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.75rem; line-height:1.4;">USSG stands for <strong>United States Sentencing Guidelines</strong>. It dictates how criminal history points are calculated based on prior convictions. Choose the category that matches your record:</span>
+          <select id="score-history" style="width:100%; max-width:100%; padding:0.5rem 0.75rem; border:1px solid var(--border); border-radius:4px; font-size:0.9rem; background:var(--bg); color:var(--text); font-family:var(--font-sans);">
+            <option value="0" selected>None / Minor (Category I) - First-time offender or single minor infraction (e.g. traffic fine)</option>
+            <option value="2">Category II - One prior misdemeanor conviction (probation sentence or minor jail time)</option>
+            <option value="4">Category III - Two or three prior convictions (or parole/probation violations)</option>
+            <option value="6">Category IV or higher - Multiple felony convictions or significant criminal record</option>
           </select>
         </div>
 
@@ -146,31 +147,48 @@
       <form id="psr-form">
         <div style="margin-bottom:1.5rem;">
           <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem;">1. Offense Conduct & Acceptance of Responsibility</label>
-          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;"><strong>Consultant Rule:</strong> Express genuine remorse for your actions. Do not minimize your role, blame co-conspirators, or argue the law. The probation officer tracks acceptance to justify your 3-level guideline reduction.</span>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;">
+            <strong>Rule:</strong> Express remorse and take responsibility. Do not blame co-defendants, minimize your actions, or complain about investigators. Acceptance of responsibility grants you a 3-level guideline reduction.<br>
+            * <em>What to write:</em> "I deeply regret my actions. I recognize that I caused harm to [victims/family]..."<br>
+            * <em>What to avoid:</em> "I didn't know it was illegal" or "I only did it because my boss told me to."
+          </span>
           <textarea id="psr-conduct" rows="3" style="width:100%; padding:0.6rem; border:1px solid var(--border); border-radius:4px; font-family:var(--font-sans); background:#fff; color:var(--text);" placeholder="Draft your statement of remorse and responsibility here..."></textarea>
         </div>
 
         <div style="margin-bottom:1.5rem;">
           <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem;">2. Family & Social History</label>
-          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;"><strong>Consultant Rule:</strong> Detail family stability, marriages, and children. High family ties justify placement recommendations near your home municipality (within 500 miles).</span>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;">
+            <strong>Rule:</strong> Detail family stability, marriages, child care obligations, and sick relatives. The BOP uses this to place you at a facility within 500 miles of your family.<br>
+            * <em>What to write:</em> List children, spouses, parents you care for, and their dependence on your presence/income.
+          </span>
           <textarea id="psr-family" rows="3" style="width:100%; padding:0.6rem; border:1px solid var(--border); border-radius:4px; font-family:var(--font-sans); background:#fff; color:var(--text);" placeholder="Describe your family support system and responsibilities..."></textarea>
         </div>
 
         <div style="margin-bottom:1.5rem;">
           <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem;">3. Physical & Mental Health Conditions</label>
-          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;"><strong>Consultant Rule:</strong> Document any history of anxiety, depression, asthma, or chronic illnesses. Documented medical diagnoses help secure care-level placements and medical designations.</span>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;">
+            <strong>Rule:</strong> Disclose all physical illnesses, learning disabilities, anxiety, depression, and medications. This maps you to a correct BOP Medical Care Level (Tier 1-4) and guarantees prescriptions.<br>
+            * <em>What to write:</em> Chronic conditions (asthma, diabetes, high blood pressure), past therapy/counseling, and current prescriptions.
+          </span>
           <textarea id="psr-health" rows="3" style="width:100%; padding:0.6rem; border:1px solid var(--border); border-radius:4px; font-family:var(--font-sans); background:#fff; color:var(--text);" placeholder="Document any physical or mental health diagnoses, treatments, or prescriptions..."></textarea>
         </div>
 
         <div style="margin-bottom:1.5rem; background:#fff8e6; padding:1rem; border:1px solid #ffeeba; border-radius:6px; border-left:4px solid #f0c040;">
-          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem; color:#856404;">4. Substance Abuse & RDAP Eligibility (Critical for 12-Month Reduction)</label>
-          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4; color:#6b5003;"><strong>Consultant Rule:</strong> To qualify for the Residential Drug Abuse Program (RDAP) 12-month sentence reduction, your PSR **must** document a history of drug or alcohol abuse in the 12 months prior to arrest. Disclose it here.</span>
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem; color:#856404;">4. Substance Abuse & RDAP Eligibility (12-Month Reduction)</label>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4; color:#6b5003;">
+            <strong>Rule:</strong> You must document a history of drug or alcohol abuse in the 12 months prior to arrest to qualify for the 12-month RDAP sentence reduction. Disclose it here honestly.<br>
+            * <em>What to write:</em> Frequency of use, age of first use, impact on work/relationships, and past rehab/counseling.<br>
+            * <em>Crucial:</em> If it is not documented in the PSR, the BOP will disqualify you from the program.
+          </span>
           <textarea id="psr-substance" rows="3" style="width:100%; padding:0.6rem; border:1px solid var(--border); border-radius:4px; font-family:var(--font-sans); background:#fff; color:var(--text);" placeholder="Detail your history of drug or alcohol use, dependency, or treatment..."></textarea>
         </div>
 
         <div style="margin-bottom:1.5rem;">
           <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem;">5. Financial Condition & Fines Ledger</label>
-          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;"><strong>Consultant Rule:</strong> Provide a complete, honest ledger of assets and liabilities. The probation officer sets fine schedules based on this. Concealing assets will block your acceptance of responsibility.</span>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;">
+            <strong>Rule:</strong> Detail all assets, debts, cash, and expenses. The probation officer sets your fine payment schedules based on this. Concealing assets is a crime and blocks acceptance points.<br>
+            * <em>What to write:</em> Home equity, bank accounts, monthly living expenses (rent, groceries), child support, and outstanding loans.
+          </span>
           <textarea id="psr-financial" rows="3" style="width:100%; padding:0.6rem; border:1px solid var(--border); border-radius:4px; font-family:var(--font-sans); background:#fff; color:var(--text);" placeholder="Summarize your assets, liabilities, business ownership, and outstanding debts..."></textarea>
         </div>
 

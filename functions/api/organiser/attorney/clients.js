@@ -1,10 +1,31 @@
-import { requireActiveSubscription } from "../../../_shared/auth.js";
+import { requireAuth } from "../../../_shared/auth.js";
 import { json, err } from "../../../_shared/response.js";
 
 export async function onRequest({ request, env }) {
   try {
-    const user = await requireActiveSubscription(request, env);
-    const attorney_id = user.uid;
+    const authUser = await requireAuth(request, env);
+    const attorney_id = authUser.uid;
+
+    // Fetch user details to verify active subscription
+    const dbUser = await env.DB.prepare(
+      "SELECT subscription_status, firm_code FROM organiser_users WHERE id = ?"
+    ).bind(attorney_id).first();
+
+    if (!dbUser) return err("User not found", 404);
+
+    const hasSub = dbUser.subscription_status === "active" || dbUser.subscription_status === "lifetime";
+
+    if (!hasSub) {
+      if (request.method === "GET") {
+        return json({ 
+          clients: [], 
+          used_slots: 0, 
+          firm_code: null,
+          needs_subscription: true 
+        });
+      }
+      return err("Active subscription required for this action.", 402);
+    }
 
     const url = new URL(request.url);
 
@@ -50,7 +71,7 @@ export async function onRequest({ request, env }) {
       return json({ 
         clients: results,
         used_slots: activeCount?.count || 0,
-        firm_code: user.firm_code || null
+        firm_code: dbUser.firm_code || null
       });
     }
 
