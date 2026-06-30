@@ -23,6 +23,8 @@
       align-items: center;
       padding: 0.75rem 0;
       border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     .score-row select {
       padding: 0.4rem 0.6rem;
@@ -31,32 +33,7 @@
       background: var(--bg);
       color: var(--text);
       font-size: 0.9rem;
-    }
-    .psr-accordion-btn {
-      width: 100%;
-      text-align: left;
-      background: var(--bg-alt);
-      border: 1px solid var(--border);
-      padding: 0.75rem 1rem;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-bottom: 0.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .psr-accordion-content {
-      padding: 1rem;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-top: none;
-      border-radius: 0 0 6px 6px;
-      margin-bottom: 1rem;
-      display: none;
-      font-size: 0.9rem;
-      line-height: 1.5;
+      max-width: 400px;
     }
   </style>
 </head>
@@ -94,7 +71,7 @@
 
   <main class="org-main">
     <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Sentencing Prep Dashboard</h1>
-    <p class="text-soft" style="font-size:0.875rem; margin-bottom:2rem;">Calculate security score metrics and review pre-sentence interview guidelines.</p>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:2rem;">Calculate security score metrics and review/draft pre-sentence interview simulator answers.</p>
 
     <!-- BOP Security Score Calculator -->
     <div class="prep-card">
@@ -121,12 +98,12 @@
         </div>
 
         <div class="score-row">
-          <span>Prior Criminal History</span>
-          <select id="score-history">
-            <option value="0">None / Category I (0 pts)</option>
-            <option value="2">Category II (2 pts)</option>
-            <option value="4">Category III (4 pts)</option>
-            <option value="6">Category IV or higher (6 pts)</option>
+          <span style="max-width:300px; display:inline-block;">Prior Criminal History (USSG Category)</span>
+          <select id="score-history" style="width:100%;">
+            <option value="0" selected>None / Minor (Category I: 0-1 pts) - e.g. first-time offender or single minor fine</option>
+            <option value="2">Category II (2-3 pts) - e.g. one prior minor misdemeanor or probation sentence</option>
+            <option value="4">Category III (4-6 pts) - e.g. two or three prior convictions or parole violations</option>
+            <option value="6">Category IV or higher (7+ pts) - e.g. multiple felony sentences or significant history</option>
           </select>
         </div>
 
@@ -152,7 +129,7 @@
             <strong style="font-size:1.05rem;">Estimated Security Points:</strong>
             <span class="text-soft" style="display:block; font-size:0.8rem;">(Subject to BOP SENTRY review)</span>
           </div>
-          <div style="font-size:1.75rem; font-weight:700; color:#2c4a7c; font-family:var(--font-serif);" id="score-total">3 Points</div>
+          <div style="font-size:1.75rem; font-weight:700; color:#2c4a7c; font-family:var(--font-serif);" id="score-total">0 Points</div>
         </div>
 
         <div id="designation-notice" style="margin-top:1rem; padding:0.75rem 1rem; border-radius:4px; font-weight:600; font-size:0.9rem;">
@@ -161,37 +138,47 @@
       </div>
     </div>
 
-    <!-- PSR Interview Prep Checklist -->
+    <!-- PSR Interview Prep & Intake Simulator -->
     <div class="prep-card">
-      <h3 style="font-family:var(--font-serif); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">📋 PSR Pre-Sentence Interview Guide</h3>
-      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1.5rem;">The Pre-Sentence Report (PSR) is the single most important document determining your custody conditions and programs. Prepare for the interview using these guidelines:</p>
+      <h3 style="font-family:var(--font-serif); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">📋 PSR Pre-Sentence Interview Intake Simulator</h3>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1.5rem;">Draft your responses to the 5 critical sections of the probation officer's interview. Your drafts are saved securely and can be reviewed with your defense counsel.</p>
 
-      <div class="psr-accordion">
-        <button class="psr-accordion-btn">1. Offense Conduct & Responsibility <span>▼</span></button>
-        <div class="psr-accordion-content">
-          <p><strong>The Guideline:</strong> Express genuine remorse for your actions. Do not minimize your role, blame co-conspirators, or complain about prosecuting agencies. The probation officer tracks acceptance of responsibility to justify your 3-level guideline reduction.</p>
+      <form id="psr-form">
+        <div style="margin-bottom:1.5rem;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem;">1. Offense Conduct & Acceptance of Responsibility</label>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;"><strong>Consultant Rule:</strong> Express genuine remorse for your actions. Do not minimize your role, blame co-conspirators, or argue the law. The probation officer tracks acceptance to justify your 3-level guideline reduction.</span>
+          <textarea id="psr-conduct" rows="3" style="width:100%; padding:0.6rem; border:1px solid var(--border); border-radius:4px; font-family:var(--font-sans); background:#fff; color:var(--text);" placeholder="Draft your statement of remorse and responsibility here..."></textarea>
         </div>
 
-        <button class="psr-accordion-btn">2. Family & Social History <span>▼</span></button>
-        <div class="psr-accordion-content">
-          <p><strong>The Guideline:</strong> Detail your family support structure, children, and marriages. If you have close family ties, this justifies placement recommendations near your home municipality (the BOP's 500-mile rule).</p>
+        <div style="margin-bottom:1.5rem;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem;">2. Family & Social History</label>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;"><strong>Consultant Rule:</strong> Detail family stability, marriages, and children. High family ties justify placement recommendations near your home municipality (within 500 miles).</span>
+          <textarea id="psr-family" rows="3" style="width:100%; padding:0.6rem; border:1px solid var(--border); border-radius:4px; font-family:var(--font-sans); background:#fff; color:var(--text);" placeholder="Describe your family support system and responsibilities..."></textarea>
         </div>
 
-        <button class="psr-accordion-btn">3. Physical & Mental Health <span>▼</span></button>
-        <div class="psr-accordion-content">
-          <p><strong>The Guideline:</strong> Document any mental health history, anxiety, depression, or physical conditions. If you have documented diagnoses, it helps secure placement at facilities with medical capabilities (BOP Care Levels 2-4) and access to counseling.</p>
+        <div style="margin-bottom:1.5rem;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem;">3. Physical & Mental Health Conditions</label>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;"><strong>Consultant Rule:</strong> Document any history of anxiety, depression, asthma, or chronic illnesses. Documented medical diagnoses help secure care-level placements and medical designations.</span>
+          <textarea id="psr-health" rows="3" style="width:100%; padding:0.6rem; border:1px solid var(--border); border-radius:4px; font-family:var(--font-sans); background:#fff; color:var(--text);" placeholder="Document any physical or mental health diagnoses, treatments, or prescriptions..."></textarea>
         </div>
 
-        <button class="psr-accordion-btn">4. Substance Abuse & RDAP Eligibility <span>▼</span></button>
-        <div class="psr-accordion-content">
-          <p><strong>The Guideline:</strong> If you have a history of drug or alcohol abuse, you must disclose it honestly. Documenting this history in the PSR is **mandatory** to qualify for the Residential Drug Abuse Program (RDAP), which can reduce your sentence by up to 12 months.</p>
+        <div style="margin-bottom:1.5rem; background:#fff8e6; padding:1rem; border:1px solid #ffeeba; border-radius:6px; border-left:4px solid #f0c040;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem; color:#856404;">4. Substance Abuse & RDAP Eligibility (Critical for 12-Month Reduction)</label>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4; color:#6b5003;"><strong>Consultant Rule:</strong> To qualify for the Residential Drug Abuse Program (RDAP) 12-month sentence reduction, your PSR **must** document a history of drug or alcohol abuse in the 12 months prior to arrest. Disclose it here.</span>
+          <textarea id="psr-substance" rows="3" style="width:100%; padding:0.6rem; border:1px solid var(--border); border-radius:4px; font-family:var(--font-sans); background:#fff; color:var(--text);" placeholder="Detail your history of drug or alcohol use, dependency, or treatment..."></textarea>
         </div>
 
-        <button class="psr-accordion-btn">5. Financial Condition & Fines <span>▼</span></button>
-        <div class="psr-accordion-content">
-          <p><strong>The Guideline:</strong> Provide a complete, honest ledger of assets and liabilities. The probation officer uses this to calculate fine ranges and set restitution payment plans. Concealing assets will block your acceptance of responsibility points.</p>
+        <div style="margin-bottom:1.5rem;">
+          <label style="display:block; font-weight:600; font-size:0.9rem; margin-bottom:0.35rem;">5. Financial Condition & Fines Ledger</label>
+          <span class="text-soft" style="display:block; font-size:0.8rem; margin-bottom:0.5rem; line-height:1.4;"><strong>Consultant Rule:</strong> Provide a complete, honest ledger of assets and liabilities. The probation officer sets fine schedules based on this. Concealing assets will block your acceptance of responsibility.</span>
+          <textarea id="psr-financial" rows="3" style="width:100%; padding:0.6rem; border:1px solid var(--border); border-radius:4px; font-family:var(--font-sans); background:#fff; color:var(--text);" placeholder="Summarize your assets, liabilities, business ownership, and outstanding debts..."></textarea>
         </div>
-      </div>
+
+        <div style="display:flex; align-items:center; gap:1.5rem;">
+          <button type="submit" class="btn" id="btn-save-psr">Save Simulator Answers</button>
+          <span id="save-status" style="font-size:0.9rem; font-weight:500;"></span>
+        </div>
+      </form>
     </div>
 
     <p class="text-soft no-print" style="font-size:0.75rem; border-top:1px solid var(--border); padding-top:1rem; margin-top:3rem; line-height: 1.5;">
@@ -211,24 +198,7 @@
     window.location.href = "/organiser/login.html";
   });
 
-  // Accordion toggle logic
-  document.querySelectorAll(".psr-accordion-btn").forEach(btn => {
-    btn.addEventListener("click", function() {
-      const content = this.nextElementSibling;
-      const isVisible = content.style.display === "block";
-      
-      // Close all first
-      document.querySelectorAll(".psr-accordion-content").forEach(c => c.style.display = "none");
-      document.querySelectorAll(".psr-accordion-btn span").forEach(s => s.textContent = "▼");
-
-      if (!isVisible) {
-        content.style.display = "block";
-        this.querySelector("span").textContent = "▲";
-      }
-    });
-  });
-
-  // BOP Calculator logic
+  // UI score controls
   const ageSelect = document.getElementById("score-age");
   const eduSelect = document.getElementById("score-edu");
   const histSelect = document.getElementById("score-history");
@@ -265,8 +235,70 @@
     s.addEventListener("change", calcTotal);
   });
 
-  // Calculate once on load
+  // Load existing data
+  let caseData = {};
+  const load = await fetch("/api/organiser/case-file");
+  if (load.ok) {
+    const res = await load.json();
+    if (res.data) {
+      caseData = res.data;
+      
+      // Load Score fields
+      if (caseData.custody_age != null) ageSelect.value = caseData.custody_age;
+      if (caseData.custody_edu != null) eduSelect.value = caseData.custody_edu;
+      if (caseData.custody_history != null) histSelect.value = caseData.custody_history;
+      if (caseData.custody_violence != null) violSelect.value = caseData.custody_violence;
+      if (caseData.custody_substance != null) subsSelect.value = caseData.custody_substance;
+      
+      // Load PSR fields
+      if (caseData.psr_conduct) document.getElementById("psr-conduct").value = caseData.psr_conduct;
+      if (caseData.psr_family) document.getElementById("psr-family").value = caseData.psr_family;
+      if (caseData.psr_health) document.getElementById("psr-health").value = caseData.psr_health;
+      if (caseData.psr_substance) document.getElementById("psr-substance").value = caseData.psr_substance;
+      if (caseData.psr_financial) document.getElementById("psr-financial").value = caseData.psr_financial;
+    }
+  }
+  
   calcTotal();
+
+  // Save changes
+  const form = document.getElementById("psr-form");
+  const saveStatus = document.getElementById("save-status");
+  
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+    saveStatus.textContent = "Saving answers...";
+    saveStatus.style.color = "var(--text-soft)";
+    
+    // Merge score fields
+    caseData.custody_age = parseInt(ageSelect.value);
+    caseData.custody_edu = parseInt(eduSelect.value);
+    caseData.custody_history = parseInt(histSelect.value);
+    caseData.custody_violence = parseInt(violSelect.value);
+    caseData.custody_substance = parseInt(subsSelect.value);
+    
+    // Merge PSR fields
+    caseData.psr_conduct = document.getElementById("psr-conduct").value;
+    caseData.psr_family = document.getElementById("psr-family").value;
+    caseData.psr_health = document.getElementById("psr-health").value;
+    caseData.psr_substance = document.getElementById("psr-substance").value;
+    caseData.psr_financial = document.getElementById("psr-financial").value;
+
+    const r = await fetch("/api/organiser/case-file", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(caseData)
+    });
+    
+    if (r.ok) {
+      saveStatus.textContent = "Answers saved successfully.";
+      saveStatus.style.color = "#2a6e3f";
+    } else {
+      saveStatus.textContent = "Save failed. Please try again.";
+      saveStatus.style.color = "#8b2020";
+    }
+    setTimeout(() => { saveStatus.textContent = ""; }, 4000);
+  });
 
 })();
 </script>
