@@ -17,10 +17,16 @@ export async function onRequestPost({ request, env }) {
       return json({ error: "Please fill out all required fields." }, 400);
     }
 
+    const origin = new URL(request.url).origin;
+    const isBCD = origin.includes("bluecollardiner");
+    const brandName = isBCD ? "Blue Collar Diner" : "White Collar Academy";
+    const shortName = isBCD ? "BCD" : "WCA";
+    const senderEmail = isBCD ? "firms@bluecollardiner.com" : "firms@whitecollaracademy.com";
+
     // Construct the email body
     const emailHtml = `
       <h2>New Law Firm Directory Application</h2>
-      <p>A new firm has submitted an application for the WCA Approved Law Firms directory.</p>
+      <p>A new firm has submitted an application for the ${shortName} Approved Law Firms directory.</p>
       
       <table border="1" cellpadding="6" style="border-collapse: collapse; font-family: sans-serif; font-size: 14px;">
         <tr>
@@ -73,10 +79,10 @@ export async function onRequestPost({ request, env }) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        from: "WCA Directory <firms@whitecollaracademy.com>",
+        from: `${shortName} Directory <${senderEmail}>`,
         to: "saggarsonny@gmail.com",
         reply_to: contact_email,
-        subject: `WCA Firm Application: ${firm_name}`,
+        subject: `${shortName} Firm Application: ${firm_name}`,
         html: emailHtml
       })
     });

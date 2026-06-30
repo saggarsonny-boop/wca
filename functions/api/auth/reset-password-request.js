@@ -32,6 +32,13 @@ export async function onRequestPost({ request, env }) {
     console.log(`Password reset code for ${email}: ${code}`);
 
     // 4. Send email using Resend
+    const origin = new URL(request.url).origin;
+    const isBCD = origin.includes("bluecollardiner");
+    const brandName = isBCD ? "Blue Collar Diner" : "White Collar Academy";
+    const shortName = isBCD ? "BCD" : "WCA";
+    const senderEmail = isBCD ? "support@bluecollardiner.com" : "support@whitecollaracademy.com";
+    const accentColor = isBCD ? "#b45309" : "#2c4a7c";
+
     const resendKey = env.RESEND_API_KEY;
     if (resendKey) {
       try {
@@ -42,13 +49,13 @@ export async function onRequestPost({ request, env }) {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            from: "White Collar Academy <support@whitecollaracademy.com>",
+            from: `${brandName} <${senderEmail}>`,
             to: email,
-            subject: "Reset your WCA Case Organiser Password",
+            subject: `Reset your ${shortName} Case Organiser Password`,
             html: `<div style="font-family:sans-serif; max-width:500px; margin:0 auto; padding:20px; border:1px solid #e2e8f0; border-radius:8px;">
-                     <h2 style="color:#2c4a7c; font-size:20px; margin-bottom:15px;">Reset your Case Organiser Password</h2>
+                     <h2 style="color:${accentColor}; font-size:20px; margin-bottom:15px;">Reset your Case Organiser Password</h2>
                      <p style="color:#4a5568; font-size:15px; line-height:1.5;">You requested to reset your password. Use the following 6-digit code to verify your identity:</p>
-                     <div style="font-size:32px; letter-spacing:4px; font-family:monospace; font-weight:bold; text-align:center; padding:15px; background:#f7fafc; color:#2c4a7c; margin:20px 0; border-radius:6px;">
+                     <div style="font-size:32px; letter-spacing:4px; font-family:monospace; font-weight:bold; text-align:center; padding:15px; background:#f7fafc; color:${accentColor}; margin:20px 0; border-radius:6px;">
                        ${code}
                      </div>
                      <p style="color:#718096; font-size:13px; line-height:1.4;">This code will expire in 15 minutes. If you did not request this reset, you can safely ignore this email.</p>

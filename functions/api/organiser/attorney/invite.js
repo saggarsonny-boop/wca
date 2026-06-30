@@ -15,6 +15,11 @@ export async function onRequestPost({ request, env }) {
     }
 
     const clean_email = client_email.toLowerCase().trim();
+    const origin = new URL(request.url).origin;
+    const isBCD = origin.includes("bluecollardiner");
+    const brandName = isBCD ? "Blue Collar Diner" : "White Collar Academy";
+    const shortName = isBCD ? "BCD" : "WCA";
+    const senderEmail = isBCD ? "firms@bluecollardiner.com" : "firms@whitecollaracademy.com";
 
     // Check if client is registered
     let clientUser = await env.DB.prepare(
@@ -34,7 +39,7 @@ export async function onRequestPost({ request, env }) {
         return json({ ok: true, notice: "Invitation already sent to this email." });
       }
 
-      // Send signup invitation email via Resend
+      // We generate a temp registration record
       const resendKey = env.RESEND_API_KEY;
       if (resendKey) {
         await fetch("https://api.resend.com/emails", {
@@ -44,14 +49,14 @@ export async function onRequestPost({ request, env }) {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            from: "WCA Organiser <firms@whitecollaracademy.com>",
+            from: `${shortName} Organiser <${senderEmail}>`,
             to: clean_email,
-            subject: `Invitation to set up your WCA Case Organiser workspace`,
+            subject: `Invitation to set up your ${shortName} Case Organiser workspace`,
             html: `
-              <h3>WCA Case Collaboration Invite</h3>
-              <p>Your attorney / case representative (<strong>${attorney_email}</strong>) has invited you to set up your secure Case Organiser workspace on White Collar Academy.</p>
-              <p>WCA helps you manage case details, calculate timeline credits, and draft your mitigation statement in an encrypted container.</p>
-              <p><a href="https://whitecollaracademy.com/organiser/register.html">Click here to register your account and get started.</a></p>
+              <h3>${shortName} Case Collaboration Invite</h3>
+              <p>Your attorney / case representative (<strong>${attorney_email}</strong>) has invited you to set up your secure Case Organiser workspace on ${brandName}.</p>
+              <p>${shortName} helps you manage case details, calculate timeline credits, and draft your mitigation statement in an encrypted container.</p>
+              <p><a href="${origin}/organiser/register.html">Click here to register your account and get started.</a></p>
               <p>Once registered, you can approve the connection request directly on your dashboard.</p>
             `
           })
@@ -71,16 +76,21 @@ export async function onRequestPost({ request, env }) {
       return err("You cannot invite yourself as a client.", 400);
     }
 
-    try {
-      await env.DB.prepare(
-        "INSERT INTO organiser_attorney_clients (attorney_id, client_id, linked_at, status) VALUES (?, ?, ?, 'pending')"
-      ).bind(attorney_id, client_id, linked_at).run();
-    } catch (dbErr) {
-      // Likely unique constraint violation (already exists)
-      return json({ ok: true, notice: "A connection request is already pending or active with this client." });
+    // Existing client user link logic
+    const existingLink = await env.DB.prepare(
+      "SELECT status FROM organiser_attorney_clients WHERE attorney_id = ? AND client_id = ?"
+    ).bind(attorney_id, clientUser.id).first();
+
+    if (existingLink) {
+      return json({ ok: true, notice: `You already have a connection request with this client (${existingLink.status}).` });
     }
 
-    // Send connection notice email via Resend
+    // Insert pending request
+    await env.DB.prepare(`
+      INSERT INTO organiser_attorney_clients (attorney_id, client_id, linked_at, status, is_active_slot)
+      VALUES (?, ?, ?, 'pending', 0)
+    `).bind(attorney_id, clientUser.id, linked_at).run();
+
     const resendKey = env.RESEND_API_KEY;
     if (resendKey) {
       await fetch("https://api.resend.com/emails", {
@@ -90,14 +100,14 @@ export async function onRequestPost({ request, env }) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          from: "WCA Organiser <firms@whitecollaracademy.com>",
+          from: `${shortName} Organiser <${senderEmail}>`,
           to: clean_email,
-          subject: `WCA Connection Request from ${attorney_email}`,
+          subject: `${shortName} Connection Request from ${attorney_email}`,
           html: `
-            <h3>WCA Collaboration Link Request</h3>
-            <p>Your defense counsel (<strong>${attorney_email}</strong>) has requested to link to your WCA Case Organiser workspace.</p>
+            <h3>${shortName} Collaboration Link Request</h3>
+            <p>Your defense counsel (<strong>${attorney_email}</strong>) has requested to link to your ${shortName} Case Organiser workspace.</p>
             <p>By approving, they will have read-only access to view your case files, dates, and statements.</p>
-            <p><a href="https://whitecollaracademy.com/organiser/">Log in to your dashboard to approve or decline this request.</a></p>
+            <p><a href="${origin}/organiser/">Log in to your dashboard to approve or decline this request.</a></p>
           `
         })
       });
