@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Road — White Collar Academy</title>
+  <meta name="description" content="A visual roadmap of the criminal process from investigation to post-custody life, showing the forks for trial or plea, bond or custody.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .road-container {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+    .road-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      cursor: zoom-in;
+      transition: transform 0.2s ease;
+      display: block;
+      margin: 0 auto;
+    }
+    .road-image:hover {
+      transform: scale(1.01);
+    }
+    .road-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .road-caption {
+      margin-top: 2rem;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/road.html" aria-current="page">The Road</a>
+      <a href="/about.html">About</a>
+      <a href="/chapters.html">Free Chapters</a>
+      <a href="/writing.html">Writing</a>
+      <a href="/course.html">The Course</a>
+      <a href="/organiser/login.html">Case Organiser</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+      <h1>The Road Through the Criminal Process</h1>
+      <p class="lead" style="margin-top: 0.75rem; max-width: 720px; margin-left: auto; margin-right: auto;">
+        A visual map of the entire journey, from initial investigation to life after custody.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      
+      <div class="road-container">
+        <!-- Interactive Vector Diagram Display -->
+        <a href="/assets/The_Road_Map.svg" target="_blank" title="Click to view full resolution vector map">
+          <img src="/assets/The_Road_Map.svg" alt="The Road Through the Criminal Process Map" class="road-image">
+        </a>
+
+        <div class="road-actions">
+          <a href="/assets/The_Road_Map.svg" target="_blank" class="btn btn--outline">🔍 View Full Size Vector Map</a>
+          <a href="/assets/The_Road_Map.pdf" download class="btn">📥 Download Map (PDF)</a>
+          <a href="/assets/The_Road_Map.png" download class="btn btn--outline">🖼️ Download Map (PNG)</a>
+        </div>
+      </div>
+
+      <div class="road-caption">
+        <!-- PLACEHOLDER CAPTION START -->
+        <p style="font-size: 1.1rem; font-weight: 500;">
+          This is the road most people walk. It runs in roughly the same order nearly every time, and you can see it end to end.
+        </p>
+        <p class="text-soft">
+          From the initial target letters and investigation through the forks of trial or plea negotiations, bond conditions, presentence calculations, custody terms, and eventually re-entry into life afterwards. Seeing the mechanics and steps helps demystify the fear and confusion.
+        </p>
+        <!-- PLACEHOLDER CAPTION END -->
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/about.html">About</a> · <a href="/writing.html">Writing</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/wca-translate.js"></script>
+</body>
+</html>

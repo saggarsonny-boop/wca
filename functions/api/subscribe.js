@@ -88,6 +88,21 @@ export async function onRequestPost(context) {
   }
 
   // ── Beehiiv: add subscriber and trigger welcome email ──────────────
+  // Note: Automation drip sequences are handled directly inside the Beehiiv platform
+  // to allow adding, editing, or reordering emails without needing a developer.
+  //
+  // HOW TO CONFIGURE THIS IN YOUR BEEHIIV DASHBOARD:
+  // 1. Go to Beehiiv -> Audience -> Automations.
+  // 2. Create a new Automation triggered when a subscriber joins this list (ID: pub_8a8a6dce-c503-4726-9188-df1220e280d7).
+  // 3. Step 1 (Immediate): Send "Email 1" containing the Ground chapter download link.
+  // 4. Step 2 (Delay): Add a 10 to 14 days delay step.
+  // 5. Step 3 (Delayed): Send "Email 2" introducing the book "Start Here" [TITLE PLACEHOLDER]
+  //    with the Amazon link: https://www.amazon.com/dp/PLACEHOLDER_ASIN [AMAZON PLACEHOLDER].
+  //
+  // COMPLIANCE / GATING GATES:
+  // Keep the Email 2 step set as "Draft" or "Inactive" inside the Beehiiv Automation dashboard
+  // until the Amazon link is live. This acts as the safety flag so only Email 1 goes out for now.
+  //
   if (env.BEEHIIV_API_KEY) {
     try {
       await fetch("https://api.beehiiv.com/v2/publications/pub_8a8a6dce-c503-4726-9188-df1220e280d7/subscriptions", {
@@ -99,12 +114,12 @@ export async function onRequestPost(context) {
         body: JSON.stringify({
           email,
           reactivate_existing: true,
-          send_welcome_email: true,
+          send_welcome_email: true, // Triggers Beehiiv's automated welcome/drip workflow
         }),
       });
     } catch (err) {
       console.error("Beehiiv error:", err);
-      // Don't fail the signup if Beehiiv is down — email is already in D1
+      // Don't fail the signup if Beehiiv is down — email is already saved in D1
     }
   }
   // ───────────────────────────────────────────────────────────────────
