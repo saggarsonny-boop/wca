@@ -98,13 +98,17 @@
     <div class="container">
 
       <div class="directory-banner">
-        <strong>⚖️ For Criminal Defense Law Firms:</strong> WCA is an intake optimizer. By asking your clients to fill out the Case File and complete the Mitigation Workbook before review, you eliminate paralegal intake overhead. We list selected firms for <strong>12 months free</strong>. To apply for inclusion or claim a listing, contact us at <a href="mailto:saggarsonny@gmail.com">saggarsonny@gmail.com</a>.
+        <strong>⚖️ For Criminal Defense Law Firms:</strong> WCA is an intake optimizer. By asking your clients to fill out the Case File and complete the Mitigation Workbook before review, you eliminate paralegal intake overhead. We list selected firms for <strong>12 months free</strong>. To apply for inclusion, please complete the self-evaluation application form below.
       </div>
+
+      <p class="text-soft" style="font-size: 0.85rem; font-style: italic; margin-bottom: 1.5rem; text-align: right;">
+        * The listings below are sample curated profiles. Active profiles are published once verified.
+      </p>
 
       <!-- Curated Firm 1 -->
       <div class="firm-card">
         <div class="firm-header">
-          <h3 class="firm-name">Federal Defense Partners Group</h3>
+          <h3 class="firm-name">Federal Defense Partners Group <span style="font-size:0.75rem; font-weight:normal; font-style:italic; color:var(--text-soft); font-family:var(--font-sans);">[Sample Profile]</span></h3>
           <span class="firm-location">USA — Mid-West / Missouri</span>
         </div>
         <div class="firm-details">
@@ -113,7 +117,7 @@
           </div>
           <div>
             <strong>Contact Reference:</strong> St. Louis & Kansas City Offices.<br>
-            <span style="font-size: 0.85rem;">Apply for direct links and details.</span>
+            <span style="font-size: 0.85rem;">Apply below for direct links and details.</span>
           </div>
         </div>
       </div>
@@ -121,7 +125,7 @@
       <!-- Curated Firm 2 -->
       <div class="firm-card">
         <div class="firm-header">
-          <h3 class="firm-name">Eastern Seaboard White-Collar Counsel</h3>
+          <h3 class="firm-name">Eastern Seaboard White-Collar Counsel <span style="font-size:0.75rem; font-weight:normal; font-style:italic; color:var(--text-soft); font-family:var(--font-sans);">[Sample Profile]</span></h3>
           <span class="firm-location">USA — New York & Washington D.C.</span>
         </div>
         <div class="firm-details">
@@ -130,7 +134,7 @@
           </div>
           <div>
             <strong>Contact Reference:</strong> Manhattan & D.C. Offices.<br>
-            <span style="font-size: 0.85rem;">Apply for direct links and details.</span>
+            <span style="font-size: 0.85rem;">Apply below for direct links and details.</span>
           </div>
         </div>
       </div>
@@ -138,7 +142,7 @@
       <!-- Curated Firm 3 -->
       <div class="firm-card">
         <div class="firm-header">
-          <h3 class="firm-name">West Coast Criminal Defense LLP</h3>
+          <h3 class="firm-name">West Coast Criminal Defense LLP <span style="font-size:0.75rem; font-weight:normal; font-style:italic; color:var(--text-soft); font-family:var(--font-sans);">[Sample Profile]</span></h3>
           <span class="firm-location">USA — California & Pacific Northwest</span>
         </div>
         <div class="firm-details">
@@ -147,7 +151,7 @@
           </div>
           <div>
             <strong>Contact Reference:</strong> Los Angeles & San Francisco Offices.<br>
-            <span style="font-size: 0.85rem;">Apply for direct links and details.</span>
+            <span style="font-size: 0.85rem;">Apply below for direct links and details.</span>
           </div>
         </div>
       </div>
@@ -155,7 +159,7 @@
       <!-- Curated Firm 4 -->
       <div class="firm-card">
         <div class="firm-header">
-          <h3 class="firm-name">Crown Court Advocacy & Solicitors</h3>
+          <h3 class="firm-name">Crown Court Advocacy & Solicitors <span style="font-size:0.75rem; font-weight:normal; font-style:italic; color:var(--text-soft); font-family:var(--font-sans);">[Sample Profile]</span></h3>
           <span class="firm-location">United Kingdom — England & Wales</span>
         </div>
         <div class="firm-details">
@@ -164,9 +168,78 @@
           </div>
           <div>
             <strong>Contact Reference:</strong> Central London Office.<br>
-            <span style="font-size: 0.85rem;">Apply for direct links and details.</span>
+            <span style="font-size: 0.85rem;">Apply below for direct links and details.</span>
           </div>
         </div>
+      </div>
+
+      <!-- Law Firm Application Form -->
+      <div id="apply-form-container" style="background:#FAF8F5; border:1px solid var(--border); border-radius:10px; padding:2rem; margin-top:4rem; box-shadow:0 4px 12px rgba(0,0,0,0.02);">
+        <h3 style="margin-bottom:0.4rem; font-size:1.25rem;">Apply for Curated Directory Listing</h3>
+        <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Join our directory of approved defense counsel. All listing profiles remain free for the first 12 months. Please fill out the self-evaluation fields below.</p>
+        
+        <form id="apply-form" novalidate>
+          <div style="display:grid; grid-template-columns:1fr; gap:1.25rem; margin-bottom:1.5rem;">
+            
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.25rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-soft); margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:0.05em;">Law Firm / Practice Name *</label>
+                <input type="text" id="firm-name" required placeholder="e.g. Partners Defense LLP" style="width:100%; padding:0.65rem 0.9rem; border:1px solid var(--border); border-radius:4px; font-size:0.95rem; font-family:var(--font-sans); background:var(--bg); color:var(--text);">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-soft); margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:0.05em;">Contact Email Address *</label>
+                <input type="email" id="contact-email" required placeholder="e.g. counsel@defensepartners.com" style="width:100%; padding:0.65rem 0.9rem; border:1px solid var(--border); border-radius:4px; font-size:0.95rem; font-family:var(--font-sans); background:var(--bg); color:var(--text);">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.25rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-soft); margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:0.05em;">Jurisdictions & States Licensed</label>
+                <input type="text" id="jurisdictions" placeholder="e.g. Missouri, Illinois, Federal (8th Circuit)" style="width:100%; padding:0.65rem 0.9rem; border:1px solid var(--border); border-radius:4px; font-size:0.95rem; font-family:var(--font-sans); background:var(--bg); color:var(--text);">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-soft); margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:0.05em;">Primary Specialties & Focus Areas</label>
+                <input type="text" id="specialties" placeholder="e.g. Securities Fraud, Sentencing Mitigation" style="width:100%; padding:0.65rem 0.9rem; border:1px solid var(--border); border-radius:4px; font-size:0.95rem; font-family:var(--font-sans); background:var(--bg); color:var(--text);">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:1.25rem;">
+              <div>
+                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-soft); margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:0.05em;">Number of Attorneys</label>
+                <input type="number" id="lawyer-count" min="1" placeholder="e.g. 5" style="width:100%; padding:0.65rem 0.9rem; border:1px solid var(--border); border-radius:4px; font-size:0.95rem; font-family:var(--font-sans); background:var(--bg); color:var(--text);">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-soft); margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:0.05em;">Combined Years in Practice</label>
+                <input type="number" id="experience-years" min="1" placeholder="e.g. 45" style="width:100%; padding:0.65rem 0.9rem; border:1px solid var(--border); border-radius:4px; font-size:0.95rem; font-family:var(--font-sans); background:var(--bg); color:var(--text);">
+              </div>
+              <div>
+                <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-soft); margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:0.05em;">Typical Initial Retainer</label>
+                <select id="retainer-range" style="width:100%; padding:0.65rem 0.9rem; border:1px solid var(--border); border-radius:4px; font-size:0.95rem; font-family:var(--font-sans); background:var(--bg); color:var(--text);">
+                  <option value="">-- Select Option --</option>
+                  <option value="under_5k">Under $5,000</option>
+                  <option value="5k_10k">$5,000 to $10,000</option>
+                  <option value="10k_25k">$10,000 to $25,000</option>
+                  <option value="over_25k">Over $25,000</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label style="display:block; font-size:0.8rem; font-weight:600; color:var(--text-soft); margin-bottom:0.35rem; text-transform:uppercase; letter-spacing:0.05em;">Self-Evaluation: Why should clients hire your firm? *</label>
+              <textarea id="self-evaluation" required rows="5" placeholder="Detail your core strengths, past success stories, client-centric policies, or what sets your practice apart. This information helps us verify your listing profile." style="width:100%; padding:0.65rem 0.9rem; border:1px solid var(--border); border-radius:4px; font-size:0.95rem; font-family:var(--font-sans); background:var(--bg); color:var(--text); resize:vertical;"></textarea>
+            </div>
+            
+          </div>
+
+          <div style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+            <button type="submit" class="btn btn-hold" id="btn-submit-app">
+              <span class="btn-hold__text">Press & Hold to Submit Application</span>
+              <div class="btn-hold__progress"></div>
+            </button>
+            <span id="app-status" style="font-size:0.9rem; font-weight:500;"></span>
+          </div>
+
+        </form>
       </div>
 
     </div>
@@ -181,7 +254,100 @@
   </div>
 </footer>
 
-<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script>
+document.getElementById("yr").textContent = new Date().getFullYear();
+
+(function() {
+  const btn = document.getElementById("btn-submit-app");
+  const status = document.getElementById("app-status");
+  const form = document.getElementById("apply-form");
+
+  let holdTimer = null;
+  let isHolding = false;
+
+  btn.addEventListener("mousedown", startHold);
+  btn.addEventListener("touchstart", startHold, { passive: true });
+
+  window.addEventListener("mouseup", cancelHold);
+  window.addEventListener("touchend", cancelHold);
+
+  function startHold(e) {
+    if (btn.classList.contains("success")) return;
+    
+    // Check form validation before holding
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    
+    isHolding = true;
+    btn.classList.add("holding");
+    status.textContent = "Verifying human...";
+    status.style.color = "var(--text-soft)";
+
+    holdTimer = setTimeout(async () => {
+      isHolding = false;
+      btn.classList.remove("holding");
+      btn.classList.add("success");
+      btn.querySelector(".btn-hold__text").textContent = "✓ Verified";
+      status.textContent = "Submitting application...";
+      await submitForm();
+    }, 1500);
+  }
+
+  function cancelHold() {
+    if (!isHolding) return;
+    isHolding = false;
+    btn.classList.remove("holding");
+    clearTimeout(holdTimer);
+    status.textContent = "Hold cancelled.";
+    status.style.color = "#8b2020";
+    setTimeout(() => { if (!isHolding && !btn.classList.contains("success")) status.textContent = ""; }, 2000);
+  }
+
+  async function submitForm() {
+    const payload = {
+      firm_name: document.getElementById("firm-name").value,
+      contact_email: document.getElementById("contact-email").value,
+      jurisdictions: document.getElementById("jurisdictions").value,
+      specialties: document.getElementById("specialties").value,
+      lawyer_count: document.getElementById("lawyer-count").value,
+      experience_years: document.getElementById("experience-years").value,
+      retainer_range: document.getElementById("retainer-range").value,
+      self_evaluation: document.getElementById("self-evaluation").value
+    };
+
+    try {
+      const r = await fetch("/api/attorneys/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (r.ok) {
+        status.textContent = "Application submitted successfully! We will contact you shortly.";
+        status.style.color = "#2a6e3f";
+        form.reset();
+        setTimeout(() => {
+          btn.classList.remove("success");
+          btn.querySelector(".btn-hold__text").textContent = "Press & Hold to Submit Application";
+          status.textContent = "";
+        }, 5000);
+      } else {
+        const err = await r.json();
+        status.textContent = err.error || "Submission failed. Please try again.";
+        status.style.color = "#8b2020";
+        btn.classList.remove("success");
+        btn.querySelector(".btn-hold__text").textContent = "Press & Hold to Submit Application";
+      }
+    } catch (_) {
+      status.textContent = "Network error. Please check your connection.";
+      status.style.color = "#8b2020";
+      btn.classList.remove("success");
+      btn.querySelector(".btn-hold__text").textContent = "Press & Hold to Submit Application";
+    }
+  }
+})();
+</script>
 <script src="/js/wca-translate.js"></script>
 </body>
 </html>

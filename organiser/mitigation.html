@@ -11,11 +11,12 @@
   <style>
     @media print {
       body { background: #fff; color: #000; font-family: Georgia, serif; }
-      .org-sidebar, .site-header, #logout-btn, button, .text-soft, .save-bar, h2, h4, pre { display: none !important; }
+      .org-sidebar, .site-header, #logout-btn, button, .text-soft, .save-bar, h2, h4, pre, .no-print { display: none !important; }
       .org-layout { display: block; }
       .org-main { padding: 0; max-width: 100%; }
       textarea { border: none !important; background: transparent !important; padding: 0 !important; color: #000 !important; font-size: 1rem !important; resize: none !important; box-shadow: none !important; pointer-events: none !important; height: auto !important; }
       .case-field { border-bottom: 1px solid #ccc; padding-bottom: 0.5rem; margin-bottom: 1.5rem; page-break-inside: avoid; }
+      .print-only-header { display: block !important; }
     }
   </style>
 </head>
@@ -49,6 +50,18 @@
   </aside>
 
   <main class="org-main">
+    <!-- Print-Only Header Block -->
+    <div class="print-only-header" style="display:none; margin-bottom:2rem; font-family:'Times New Roman', Georgia, serif; border-bottom:2px double #000; padding-bottom:0.8rem;">
+      <h2 style="text-align:center; font-size:14pt; font-weight:bold; margin-bottom:0.25rem; font-family:'Times New Roman', Georgia, serif;">PRESENTENCE REPORT (PSR) MITIGATION BRIEF</h2>
+      <div style="display:flex; justify-content:space-between; margin-top:1rem; font-size:10.5pt; font-style:italic;">
+        <span><strong>Defendant / Inmate:</strong> <span class="print-inmate-name">Loading...</span></span>
+        <span><strong>Date Generated:</strong> <span class="print-report-date"></span></span>
+      </div>
+      <div style="text-align:center; font-size:9pt; font-weight:bold; color:#853030; margin-top:0.75rem; text-transform:uppercase; letter-spacing:1px; border-top:1px solid #ccc; padding-top:0.4rem;">
+        PRIVILEGED & CONFIDENTIAL — CASE PREPARATION PORTAL
+      </div>
+    </div>
+
     <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Mitigation Workbook</h1>
     <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.75rem;">Prepare for your Presentence Report (PSR) and sentencing. Everything is encrypted and private.</p>
 
@@ -151,6 +164,11 @@ Guidelines for Writing a Letter of Support:
     "mitigation_character_letters"
   ];
 
+  // Set print date
+  try {
+    document.querySelector(".print-report-date").textContent = new Date().toLocaleDateString(undefined, {month: 'long', day: 'numeric', year: 'numeric'});
+  } catch (_) {}
+
   // Load existing data from case-file endpoint (shares same encrypted record)
   const load = await fetch("/api/organiser/case-file");
   let existingPayload = {};
@@ -158,11 +176,24 @@ Guidelines for Writing a Letter of Support:
     const { data } = await load.json();
     if (data) {
       existingPayload = data;
+      const printName = data.inmate_name || data.case_name || user.email;
+      try {
+        document.querySelector(".print-inmate-name").textContent = printName;
+      } catch (_) {}
+
       FIELDS.forEach(f => {
         const el = form.elements[f];
         if (el && data[f] != null) el.value = data[f];
       });
+    } else {
+      try {
+        document.querySelector(".print-inmate-name").textContent = user.email;
+      } catch (_) {}
     }
+  } else {
+    try {
+      document.querySelector(".print-inmate-name").textContent = user.email;
+    } catch (_) {}
   }
 
   form.addEventListener("submit", async function (e) {
