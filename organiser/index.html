@@ -46,6 +46,33 @@
     <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Your workspace</h1>
     <p id="user-email" class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;"></p>
 
+    <!-- Case Readiness Score / Progress Tracker -->
+    <div id="readiness-tracker-card" style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 1rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <div>
+          <h2 style="font-size: 1.15rem; margin: 0; font-family: var(--font-serif); font-weight: 600;">Case Readiness Profile</h2>
+          <p class="text-soft" style="font-size: 0.8rem; margin: 0.15rem 0 0 0;">Keep compiling your case elements to reach 100% preparation.</p>
+        </div>
+        <div style="text-align: right;">
+          <span id="readiness-percentage" style="font-size: 1.75rem; font-weight: 700; color: var(--accent); line-height: 1;">0%</span>
+          <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-soft); display: block;">Prepared</span>
+        </div>
+      </div>
+      
+      <!-- Progress Bar Graphic -->
+      <div style="width: 100%; height: 10px; background: var(--bg-alt); border-radius: 5px; overflow: hidden; border: 1px solid rgba(0,0,0,0.03);">
+        <div id="readiness-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent), #4f73b3); border-radius: 5px; transition: width 0.8s ease-out;"></div>
+      </div>
+      
+      <!-- Tasks Completed Breakdown -->
+      <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.75rem; font-weight: 500; color: var(--text-soft); border-top: 1px solid var(--border); padding-top: 0.75rem;">
+        <span id="readiness-stat-case-file">📄 Case File Details: <strong style="color:var(--text)">Checking...</strong></span>
+        <span id="readiness-stat-mitigation">✍️ Personal Statement: <strong style="color:var(--text)">Checking...</strong></span>
+        <span id="readiness-stat-allocution">📣 Allocution Outline: <strong style="color:var(--text)">Checking...</strong></span>
+        <span id="readiness-stat-dates">📅 Sentencing Date: <strong style="color:var(--text)">Checking...</strong></span>
+      </div>
+    </div>
+
     <div class="org-grid">
 
       <a href="/organiser/case-file.html" class="org-card">
@@ -341,6 +368,62 @@
     return (s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
 
+  // Calculate Case Readiness Score
+  async function loadReadiness() {
+    try {
+      let totalScore = 0;
+      
+      // 1. Fetch case file
+      const cfRes = await fetch("/api/organiser/case-file");
+      if (cfRes.ok) {
+        const { data } = await cfRes.json();
+        if (data) {
+          if (data.inmate_name && data.case_number) {
+            totalScore += 25;
+            document.getElementById("readiness-stat-case-file").innerHTML = '📄 Case File Details: <strong style="color:#2a6e3f">Complete</strong>';
+          } else {
+            document.getElementById("readiness-stat-case-file").innerHTML = '📄 Case File Details: <strong style="color:#a51d24">Pending</strong>';
+          }
+          if (data.mitigation_statement && data.mitigation_statement.length > 50) {
+            totalScore += 25;
+            document.getElementById("readiness-stat-mitigation").innerHTML = '✍️ Personal Statement: <strong style="color:#2a6e3f">Complete</strong>';
+          } else {
+            document.getElementById("readiness-stat-mitigation").innerHTML = '✍️ Personal Statement: <strong style="color:#a51d24">Pending</strong>';
+          }
+          if (data.mitigation_allocution && data.mitigation_allocution.length > 50) {
+            totalScore += 25;
+            document.getElementById("readiness-stat-allocution").innerHTML = '📣 Allocution Outline: <strong style="color:#2a6e3f">Complete</strong>';
+          } else {
+            document.getElementById("readiness-stat-allocution").innerHTML = '📣 Allocution Outline: <strong style="color:#a51d24">Pending</strong>';
+          }
+        } else {
+          document.getElementById("readiness-stat-case-file").innerHTML = '📄 Case File Details: <strong style="color:#a51d24">Pending</strong>';
+          document.getElementById("readiness-stat-mitigation").innerHTML = '✍️ Personal Statement: <strong style="color:#a51d24">Pending</strong>';
+          document.getElementById("readiness-stat-allocution").innerHTML = '📣 Allocution Outline: <strong style="color:#a51d24">Pending</strong>';
+        }
+      }
+      
+      // 2. Fetch dates
+      const datesRes = await fetch("/api/organiser/dates");
+      if (datesRes.ok) {
+        const dates = await datesRes.json();
+        if (dates && dates.length > 0) {
+          totalScore += 25;
+          document.getElementById("readiness-stat-dates").innerHTML = '📅 Sentencing Date: <strong style="color:#2a6e3f">Complete</strong>';
+        } else {
+          document.getElementById("readiness-stat-dates").innerHTML = '📅 Sentencing Date: <strong style="color:#a51d24">Pending</strong>';
+        }
+      }
+      
+      // Update UI
+      document.getElementById("readiness-percentage").textContent = `${totalScore}%`;
+      document.getElementById("readiness-bar").style.width = `${totalScore}%`;
+    } catch (e) {
+      console.error("Failed to load readiness details:", e);
+    }
+  }
+
+  loadReadiness();
   loadConnections();
   loadShareToken();
 })();

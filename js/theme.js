@@ -51,6 +51,16 @@
       if (svgText && svgText.textContent === "WCA") {
         svgText.textContent = "BCD";
       }
+
+      // Swap roadmap SVG image paths if they exist
+      const roadImg = document.querySelector('img[src="/assets/The_Road_Map.svg"]');
+      if (roadImg) {
+        roadImg.src = "/assets/The_Road_Map_BCD.svg";
+      }
+      const roadLinks = document.querySelectorAll('a[href="/assets/The_Road_Map.svg"]');
+      roadLinks.forEach(link => {
+        link.href = "/assets/The_Road_Map_BCD.svg";
+      });
     });
   }
 })();

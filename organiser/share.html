@@ -93,8 +93,30 @@
   </div>
 
   <div id="content-view" style="display:none;">
-    <h1 style="font-size:1.75rem; margin-bottom:0.25rem;">Case Organiser Report</h1>
-    <p id="owner-email" class="text-soft" style="font-size:0.9rem; margin-bottom:2rem;"></p>
+    <!-- PDF Customizer Control Panel (Hidden on Print) -->
+    <div class="no-print" style="background:#fff; border:1px solid var(--border); padding:1rem 1.25rem; border-radius:8px; margin-bottom:2rem; box-shadow:0 4px 12px rgba(0,0,0,0.02); display:flex; flex-direction:column; gap:0.75rem;">
+      <h4 style="margin:0; font-size:0.95rem; font-family:var(--font-serif); font-weight:600;">📋 Customize PDF Report Header</h4>
+      <div style="display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center; font-size:0.875rem;">
+        <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer;">
+          <input type="checkbox" id="chk-atty-brand" style="cursor:pointer;"> Enable Law Firm Letterhead
+        </label>
+        <div id="atty-brand-input-wrap" style="display:none; flex:1; min-width:240px; align-items:center; gap:0.5rem;">
+          <span class="text-soft">Header Text:</span>
+          <input type="text" id="txt-atty-title" placeholder="e.g. Law Offices of John Doe" style="flex:1; padding:0.35rem; border:1px solid var(--border); border-radius:4px; font-size:0.85rem;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Printable Header Wrapper (Swaps dynamic letterhead vs standard title) -->
+    <div id="printable-branding-header" style="display:none; margin-bottom:2.5rem; border-bottom:2px solid var(--text); padding-bottom:1rem; text-align:center;">
+      <h2 id="lbl-atty-brand-title" style="font-family:var(--font-serif); font-size:1.6rem; font-weight:700; margin:0 0 0.25rem 0; text-transform:uppercase; letter-spacing:0.05em;">DEFENSE COUNSEL DOSSIER</h2>
+      <span class="text-soft" style="font-size:0.85rem; font-weight:500;">CONFIDENTIAL ATTORNEY-CLIENT PRIVILEGED WORK PRODUCT</span>
+    </div>
+
+    <div id="default-report-title">
+      <h1 style="font-size:1.75rem; margin-bottom:0.25rem;">Case Organiser Report</h1>
+      <p id="owner-email" class="text-soft" style="font-size:0.9rem; margin-bottom:2rem;"></p>
+    </div>
 
     <!-- Inmate / Defendant Information -->
     <h3 style="font-size:1.15rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem; margin-bottom:1rem; font-family:var(--font-serif);">Inmate / Defendant Information</h3>
@@ -440,6 +462,39 @@
     if (cf.mitigation_character_letters) document.getElementById("mitigation-letters").textContent = cf.mitigation_character_letters;
     if (cf.mitigation_allocution) document.getElementById("mitigation-allocution").textContent = cf.mitigation_allocution;
     if (cf.mitigation_allocution_practice) document.getElementById("mitigation-allocution-practice").textContent = cf.mitigation_allocution_practice;
+
+    // Initialize PDF Attorney Branding Customizer
+    const chkAttyBrand = document.getElementById("chk-atty-brand");
+    const attyBrandInputWrap = document.getElementById("atty-brand-input-wrap");
+    const txtAttyTitle = document.getElementById("txt-atty-title");
+    const printableBrandingHeader = document.getElementById("printable-branding-header");
+    const lblAttyBrandTitle = document.getElementById("lbl-atty-brand-title");
+    const defaultReportTitle = document.getElementById("default-report-title");
+
+    const primaryAtty = cf.attorney_name_1;
+    if (primaryAtty) {
+      txtAttyTitle.value = `LAW OFFICES OF ${primaryAtty.toUpperCase()}`;
+      lblAttyBrandTitle.textContent = `LAW OFFICES OF ${primaryAtty.toUpperCase()}`;
+    } else {
+      txtAttyTitle.value = "DEFENSE COUNSEL WORK PRODUCT";
+      lblAttyBrandTitle.textContent = "DEFENSE COUNSEL WORK PRODUCT";
+    }
+
+    chkAttyBrand.addEventListener("change", function() {
+      if (this.checked) {
+        attyBrandInputWrap.style.display = "flex";
+        printableBrandingHeader.style.display = "block";
+        defaultReportTitle.style.display = "none";
+      } else {
+        attyBrandInputWrap.style.display = "none";
+        printableBrandingHeader.style.display = "none";
+        defaultReportTitle.style.display = "block";
+      }
+    });
+
+    txtAttyTitle.addEventListener("input", function() {
+      lblAttyBrandTitle.textContent = this.value.toUpperCase() || "CONFIDENTIAL DOSSIER";
+    });
   }
 
   function esc(s) {
