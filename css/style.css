@@ -727,3 +727,21 @@ body {
   }
 }
 
+/* ── Blue Collar Diner Theme Overrides ── */
+html.theme-bluecollar,
+body.theme-bluecollar {
+  --bg:        #ebedf0; /* Light industrial steel gray */
+  --bg-alt:    #d9dee4; /* Deeper steel block bg */
+  --text:      #0f172a; /* Slate dark text */
+  --text-soft: #475569; /* Muted slate gray */
+  --accent:    #b45309; /* Retro Diner Amber/Rust */
+  --accent-lt: #ffedd5; /* Soft amber tint */
+  --border:    #cbd5e1; /* Clear slate border */
+}
+
+/* Swap SVG logo fill for Blue Collar theme */
+html.theme-bluecollar svg rect,
+body.theme-bluecollar svg rect {
+  fill: #b45309 !important;
+}
+
