@@ -10,7 +10,7 @@ export async function onRequestPost({ request, env }) {
     if (plan === "lifetime") {
       priceId = env.STRIPE_PRICE_ID_LIFETIME;
     } else if (plan === "attorney") {
-      priceId = env.STRIPE_PRICE_ID_ATTORNEY || "price_1TnWjLPIZtoQZOG1UvF3o149"; // Fallback placeholder
+      priceId = env.STRIPE_PRICE_ID_ATTORNEY || "price_1TnrW3PIZtoQZOG13qoIxrSt"; // Fallback placeholder
     } else {
       priceId = env.STRIPE_PRICE_ID_MONTHLY;
     }

@@ -679,3 +679,22 @@ body {
   }
 }
 
+/* ── Landscape / Short height fixes ── */
+@media (max-height: 480px) and (max-width: 900px) {
+  .site-header {
+    position: relative !important;
+    padding: 0.5rem 0 !important;
+  }
+  .org-sidebar {
+    position: relative !important;
+    top: 0 !important;
+    padding: 0.25rem 0 !important;
+  }
+  .org-main {
+    padding: 1rem 0.75rem !important;
+  }
+  .site-nav {
+    gap: 1rem !important;
+  }
+}
+
