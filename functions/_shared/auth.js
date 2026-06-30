@@ -104,7 +104,7 @@ export async function requireActiveSubscription(request, env) {
     SELECT u.subscription_status 
     FROM organiser_attorney_clients c
     JOIN organiser_users u ON c.attorney_id = u.id
-    WHERE c.client_id = ? AND c.status = 'approved'
+    WHERE c.client_id = ? AND c.status = 'approved' AND c.is_active_slot = 1
     LIMIT 1
   `).bind(user.uid).first();
   

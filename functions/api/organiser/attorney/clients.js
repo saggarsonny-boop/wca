@@ -8,7 +8,7 @@ export async function onRequest({ request, env }) {
 
     const url = new URL(request.url);
 
-    // GET: List all clients linked to this attorney
+    // GET: List all clients and slot details
     if (request.method === "GET") {
       const clients = await env.DB.prepare(`
         SELECT 
@@ -17,6 +17,7 @@ export async function onRequest({ request, env }) {
           u.email as client_email, 
           c.linked_at, 
           c.status,
+          c.is_active_slot,
           u.share_token
         FROM organiser_attorney_clients c
         JOIN organiser_users u ON c.client_id = u.id
@@ -26,7 +27,7 @@ export async function onRequest({ request, env }) {
 
       const results = clients.results || [];
 
-      // If any approved client has no share_token, automatically generate and save one
+      // Auto-generate share tokens if missing for approved clients
       for (const row of results) {
         if (row.status === "approved" && !row.share_token) {
           const arr = new Uint8Array(24);
@@ -41,12 +42,62 @@ export async function onRequest({ request, env }) {
         }
       }
 
-      return json({ clients: results });
+      // Count active slots
+      const activeCount = await env.DB.prepare(
+        "SELECT COUNT(*) as count FROM organiser_attorney_clients WHERE attorney_id = ? AND is_active_slot = 1"
+      ).bind(attorney_id).first();
+
+      return json({ 
+        clients: results,
+        used_slots: activeCount?.count || 0,
+        firm_code: user.firm_code || null
+      });
     }
 
-    // DELETE: Attorney unlinks/revokes client
+    const body = await request.json();
+
+    // POST: Manage slot toggle (Revoke or restore active billing seat)
+    if (request.method === "POST") {
+      const { action, client_id } = body;
+      if (!action || !client_id) {
+        return err("Missing action or client_id", 400);
+      }
+
+      if (action === "toggle_slot") {
+        // Find current status
+        const link = await env.DB.prepare(
+          "SELECT is_active_slot FROM organiser_attorney_clients WHERE attorney_id = ? AND client_id = ?"
+        ).bind(attorney_id, client_id).first();
+
+        if (!link) {
+          return err("Link not found.", 404);
+        }
+
+        const next_state = link.is_active_slot === 1 ? 0 : 1;
+
+        // If activating, verify slots remain
+        if (next_state === 1) {
+          const activeCount = await env.DB.prepare(
+            "SELECT COUNT(*) as count FROM organiser_attorney_clients WHERE attorney_id = ? AND is_active_slot = 1"
+          ).bind(attorney_id).first();
+
+          if ((activeCount?.count || 0) >= 5) {
+            return err("You have reached your maximum limit of 5 active client slots. Please release another seat first.", 403);
+          }
+        }
+
+        await env.DB.prepare(
+          "UPDATE organiser_attorney_clients SET is_active_slot = ? WHERE attorney_id = ? AND client_id = ?"
+        ).bind(next_state, attorney_id, client_id).run();
+
+        return json({ ok: true, is_active_slot: next_state });
+      }
+
+      return err("Invalid action", 400);
+    }
+
+    // DELETE: Attorney unlinks/revokes client relation completely
     if (request.method === "DELETE") {
-      const body = await request.json();
       const { link_id } = body;
       if (!link_id) {
         return err("Missing link_id", 400);

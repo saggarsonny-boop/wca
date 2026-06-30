@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentencing Prep — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+  <style>
+    .prep-card {
+      background: #FAF8F5;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    }
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .score-row select {
+      padding: 0.4rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+    .psr-accordion-btn {
+      width: 100%;
+      text-align: left;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .psr-accordion-content {
+      padding: 1rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      margin-bottom: 1rem;
+      display: none;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">Dashboard</a>
+      <a href="/organiser/case-file.html">Case File</a>
+      <a href="/organiser/mitigation.html">Mitigation Workbook</a>
+      <a href="/organiser/allocution.html">Allocution Prep</a>
+      <a href="/organiser/dates.html">Dates</a>
+      <a href="/organiser/checklists.html">Checklists</a>
+      <a href="/organiser/calculator.html">Release Calculator</a>
+      <a href="/organiser/sentencing-prep.html" class="active">Sentencing Prep</a>
+      <span class="sidebar-label">Resources</span>
+      <a href="/organiser/links.html">Links</a>
+      <a href="/organiser/documents.html">Documents</a>
+      <span class="sidebar-label">Guide</span>
+      <a href="/organiser/ai.html">Ask a question</a>
+      <span class="sidebar-label">Partners</span>
+      <a href="/organiser/attorney.html">Defense Counsel Portal</a>
+    </nav>
+  </aside>
+
+  <main class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Sentencing Prep Dashboard</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:2rem;">Calculate security score metrics and review pre-sentence interview guidelines.</p>
+
+    <!-- BOP Security Score Calculator -->
+    <div class="prep-card">
+      <h3 style="font-family:var(--font-serif); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">🏢 BOP Custody Score Sheet</h3>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1.5rem;">Estimate your Bureau of Prisons (BOP) security points. Camps (Minimum Security) generally require a point score under 12 (males) or 16 (females).</p>
+      
+      <div id="custody-calculator">
+        <div class="score-row">
+          <span>Age of Defendant</span>
+          <select id="score-age">
+            <option value="0">55 years or older (0 pts)</option>
+            <option value="2" selected>36 - 54 years (2 pts)</option>
+            <option value="4">25 - 35 years (4 pts)</option>
+            <option value="8">24 years or younger (8 pts)</option>
+          </select>
+        </div>
+        
+        <div class="score-row">
+          <span>Education Level</span>
+          <select id="score-edu">
+            <option value="0">High School Graduate / GED (0 pts)</option>
+            <option value="1">No High School Diploma / GED (1 pt)</option>
+          </select>
+        </div>
+
+        <div class="score-row">
+          <span>Prior Criminal History</span>
+          <select id="score-history">
+            <option value="0">None / Category I (0 pts)</option>
+            <option value="2">Category II (2 pts)</option>
+            <option value="4">Category III (4 pts)</option>
+            <option value="6">Category IV or higher (6 pts)</option>
+          </select>
+        </div>
+
+        <div class="score-row">
+          <span>History of Violence</span>
+          <select id="score-violence">
+            <option value="0">None (0 pts)</option>
+            <option value="2">Minor / Historic (2 pts)</option>
+            <option value="4">Serious / Recent (4 pts)</option>
+          </select>
+        </div>
+
+        <div class="score-row">
+          <span>Substance Abuse History (Within 5 years)</span>
+          <select id="score-substance">
+            <option value="0">None (0 pts)</option>
+            <option value="1">Documented Drug/Alcohol History (1 pt)</option>
+          </select>
+        </div>
+
+        <div class="score-row" style="border-bottom:none; margin-top:1.5rem; background:var(--bg-alt); padding:1rem; border-radius:6px;">
+          <div>
+            <strong style="font-size:1.05rem;">Estimated Security Points:</strong>
+            <span class="text-soft" style="display:block; font-size:0.8rem;">(Subject to BOP SENTRY review)</span>
+          </div>
+          <div style="font-size:1.75rem; font-weight:700; color:#2c4a7c; font-family:var(--font-serif);" id="score-total">3 Points</div>
+        </div>
+
+        <div id="designation-notice" style="margin-top:1rem; padding:0.75rem 1rem; border-radius:4px; font-weight:600; font-size:0.9rem;">
+          Evaluating designation...
+        </div>
+      </div>
+    </div>
+
+    <!-- PSR Interview Prep Checklist -->
+    <div class="prep-card">
+      <h3 style="font-family:var(--font-serif); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.5rem;">📋 PSR Pre-Sentence Interview Guide</h3>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1.5rem;">The Pre-Sentence Report (PSR) is the single most important document determining your custody conditions and programs. Prepare for the interview using these guidelines:</p>
+
+      <div class="psr-accordion">
+        <button class="psr-accordion-btn">1. Offense Conduct & Responsibility <span>▼</span></button>
+        <div class="psr-accordion-content">
+          <p><strong>The Guideline:</strong> Express genuine remorse for your actions. Do not minimize your role, blame co-conspirators, or complain about prosecuting agencies. The probation officer tracks acceptance of responsibility to justify your 3-level guideline reduction.</p>
+        </div>
+
+        <button class="psr-accordion-btn">2. Family & Social History <span>▼</span></button>
+        <div class="psr-accordion-content">
+          <p><strong>The Guideline:</strong> Detail your family support structure, children, and marriages. If you have close family ties, this justifies placement recommendations near your home municipality (the BOP's 500-mile rule).</p>
+        </div>
+
+        <button class="psr-accordion-btn">3. Physical & Mental Health <span>▼</span></button>
+        <div class="psr-accordion-content">
+          <p><strong>The Guideline:</strong> Document any mental health history, anxiety, depression, or physical conditions. If you have documented diagnoses, it helps secure placement at facilities with medical capabilities (BOP Care Levels 2-4) and access to counseling.</p>
+        </div>
+
+        <button class="psr-accordion-btn">4. Substance Abuse & RDAP Eligibility <span>▼</span></button>
+        <div class="psr-accordion-content">
+          <p><strong>The Guideline:</strong> If you have a history of drug or alcohol abuse, you must disclose it honestly. Documenting this history in the PSR is **mandatory** to qualify for the Residential Drug Abuse Program (RDAP), which can reduce your sentence by up to 12 months.</p>
+        </div>
+
+        <button class="psr-accordion-btn">5. Financial Condition & Fines <span>▼</span></button>
+        <div class="psr-accordion-content">
+          <p><strong>The Guideline:</strong> Provide a complete, honest ledger of assets and liabilities. The probation officer uses this to calculate fine ranges and set restitution payment plans. Concealing assets will block your acceptance of responsibility points.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-soft no-print" style="font-size:0.75rem; border-top:1px solid var(--border); padding-top:1rem; margin-top:3rem; line-height: 1.5;">
+      <strong>Legal Disclaimer:</strong> White Collar Academy is a case organization and management system. We do not provide legal advice, representation, or sentencing predictions. All calculations, guides, checklists, workbook sections, and AI responses are for general informational purposes only. Always review and verify all calculations, dates, narrative drafts, and materials with your defense counsel.
+    </p>
+  </main>
+</div>
+
+<script>
+(async function() {
+  const resp = await fetch("/api/auth/me");
+  if (!resp.ok) { window.location.href = "/organiser/login.html"; return; }
+  const user = await resp.json();
+
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/organiser/login.html";
+  });
+
+  // Accordion toggle logic
+  document.querySelectorAll(".psr-accordion-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+      const content = this.nextElementSibling;
+      const isVisible = content.style.display === "block";
+      
+      // Close all first
+      document.querySelectorAll(".psr-accordion-content").forEach(c => c.style.display = "none");
+      document.querySelectorAll(".psr-accordion-btn span").forEach(s => s.textContent = "▼");
+
+      if (!isVisible) {
+        content.style.display = "block";
+        this.querySelector("span").textContent = "▲";
+      }
+    });
+  });
+
+  // BOP Calculator logic
+  const ageSelect = document.getElementById("score-age");
+  const eduSelect = document.getElementById("score-edu");
+  const histSelect = document.getElementById("score-history");
+  const violSelect = document.getElementById("score-violence");
+  const subsSelect = document.getElementById("score-substance");
+  const totalVal = document.getElementById("score-total");
+  const noticeBox = document.getElementById("designation-notice");
+
+  function calcTotal() {
+    const total = parseInt(ageSelect.value) + 
+                  parseInt(eduSelect.value) + 
+                  parseInt(histSelect.value) + 
+                  parseInt(violSelect.value) + 
+                  parseInt(subsSelect.value);
+
+    totalVal.textContent = `${total} Points`;
+
+    if (total <= 11) {
+      noticeBox.textContent = "✓ Eligible for Minimum Security (Federal Prison Camp)";
+      noticeBox.style.background = "#e1f5ee";
+      noticeBox.style.color = "#085041";
+    } else if (total <= 15) {
+      noticeBox.textContent = "Eligible for Low Security Facility";
+      noticeBox.style.background = "#fff3cd";
+      noticeBox.style.color = "#856404";
+    } else {
+      noticeBox.textContent = "Medium / High Security Designation (Points >= 16)";
+      noticeBox.style.background = "#f8d7da";
+      noticeBox.style.color = "#721c24";
+    }
+  }
+
+  [ageSelect, eduSelect, histSelect, violSelect, subsSelect].forEach(s => {
+    s.addEventListener("change", calcTotal);
+  });
+
+  // Calculate once on load
+  calcTotal();
+
+})();
+</script>
+<script src="/js/wca-translate.js"></script>
+</body>
+</html>

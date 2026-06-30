@@ -38,6 +38,16 @@
     }
     .status-badge--approved { background: #e1f5ee; color: #085041; }
     .status-badge--pending { background: #fff3cd; color: #856404; }
+    
+    .sponsor-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+    }
+    .sponsor-badge--active { background: #d4edda; color: #155724; }
+    .sponsor-badge--paused { background: #f8d7da; color: #721c24; }
   </style>
 </head>
 <body>
@@ -63,6 +73,7 @@
       <a href="/organiser/dates.html">Dates</a>
       <a href="/organiser/checklists.html">Checklists</a>
       <a href="/organiser/calculator.html">Release Calculator</a>
+      <a href="/organiser/sentencing-prep.html">Sentencing Prep</a>
       <span class="sidebar-label">Resources</span>
       <a href="/organiser/links.html">Links</a>
       <a href="/organiser/documents.html">Documents</a>
@@ -74,6 +85,22 @@
   <main class="org-main">
     <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Defense Counsel Portal</h1>
     <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.75rem;">Manage and review client case files in a secure, unified intake environment.</p>
+
+    <!-- Firm Code & Seats Tracker Card -->
+    <div style="background:#FAF8F5; padding:1.5rem; border-radius:8px; border:1px solid var(--border); margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center; gap:2rem; flex-wrap:wrap;">
+      <div>
+        <h3 style="font-size:1.1rem; margin-bottom:0.25rem; font-family:var(--font-serif); display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+          🔑 Your Firm Code: 
+          <span id="firm-code-label" style="font-family:monospace; background:var(--bg-alt); padding:0.2rem 0.5rem; border-radius:4px; font-size:1rem; letter-spacing:0.05em;">LOADING...</span>
+          <button id="btn-copy-code" class="btn btn--outline" style="font-size:0.75rem; padding:0.25rem 0.5rem; display:none;">📋 Copy Code</button>
+        </h3>
+        <p class="text-soft" style="font-size:0.85rem; margin-bottom:0;">Share this code with up to 5 clients to unlock their secure case folders sponsored under your firm subscription.</p>
+      </div>
+      <div style="text-align:right; min-width:180px;">
+        <span style="font-size:0.8rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-soft); display:block; margin-bottom:0.2rem;">Seat Capacity Usage</span>
+        <div style="font-size:1.4rem; font-weight:700; color:#2c4a7c; font-family:var(--font-serif);" id="seats-usage-label">0 / 5 Clients</div>
+      </div>
+    </div>
 
     <!-- Invite Client Card -->
     <div style="background:var(--bg-alt); padding:1.5rem; border-radius:8px; border:1px solid var(--border); margin-bottom:2.5rem;">
@@ -109,12 +136,13 @@
               <th>Client Email</th>
               <th>Date Requested</th>
               <th>Status</th>
+              <th>Sponsorship Slot</th>
               <th style="text-align:right;">Actions</th>
             </tr>
           </thead>
           <tbody id="clients-tbody">
             <tr>
-              <td colspan="4" style="color:var(--text-soft); padding:1.5rem; text-align:center;">Loading clients list...</td>
+              <td colspan="5" style="color:var(--text-soft); padding:1.5rem; text-align:center;">Loading clients list...</td>
             </tr>
           </tbody>
         </table>
@@ -142,17 +170,40 @@
   const inviteBtn = document.getElementById("btn-invite");
   const inviteStatus = document.getElementById("invite-status");
   const clientsTbody = document.getElementById("clients-tbody");
+  
+  const firmCodeLabel = document.getElementById("firm-code-label");
+  const btnCopyCode = document.getElementById("btn-copy-code");
+  const seatsUsageLabel = document.getElementById("seats-usage-label");
 
   // Load clients list
   async function loadClients() {
     try {
       const r = await fetch("/api/organiser/attorney/clients");
       if (r.ok) {
-        const { clients } = await r.json();
+        const { clients, used_slots, firm_code } = await r.json();
+        
+        // Render firm code & usage labels
+        if (firm_code) {
+          firmCodeLabel.textContent = firm_code;
+          btnCopyCode.style.display = "inline-block";
+          
+          btnCopyCode.onclick = () => {
+            navigator.clipboard.writeText(firm_code).then(() => {
+              btnCopyCode.textContent = "✔️ Copied!";
+              setTimeout(() => { btnCopyCode.textContent = "📋 Copy Code"; }, 2000);
+            });
+          };
+        } else {
+          firmCodeLabel.textContent = "Active Subscription Required";
+          btnCopyCode.style.display = "none";
+        }
+        
+        seatsUsageLabel.textContent = `${used_slots} / 5 Clients`;
+
         if (clients.length === 0) {
           clientsTbody.innerHTML = `
             <tr>
-              <td colspan="4" style="color:var(--text-soft); padding:2rem; text-align:center;">No clients invited or active yet.</td>
+              <td colspan="5" style="color:var(--text-soft); padding:2rem; text-align:center;">No clients invited or active yet.</td>
             </tr>
           `;
           return;
@@ -175,13 +226,30 @@
           statusTd.innerHTML = `<span class="status-badge ${statusClass}">${c.status}</span>`;
           tr.appendChild(statusTd);
 
+          // Sponsorship status column
+          const sponsorTd = document.createElement("td");
+          if (c.status === "approved") {
+            const spBadgeClass = c.is_active_slot === 1 ? "sponsor-badge--active" : "sponsor-badge--paused";
+            const spText = c.is_active_slot === 1 ? "✓ Sponsoring" : "Paused (Read-Only)";
+            sponsorTd.innerHTML = `<span class="sponsor-badge ${spBadgeClass}">${spText}</span>`;
+          } else {
+            sponsorTd.innerHTML = `<span style="color:var(--text-soft); font-size:0.85rem;">—</span>`;
+          }
+          tr.appendChild(sponsorTd);
+
           const actionTd = document.createElement("td");
           actionTd.style.textAlign = "right";
           
           let actionHtml = "";
           if (c.status === "approved") {
             actionHtml += `<a href="/organiser/share.html?token=${c.share_token}" target="_blank" class="btn btn--outline" style="font-size:0.8rem; padding:0.35rem 0.75rem; margin-right:0.5rem; text-decoration:none;">👁️ View Binder</a>`;
+            
+            // Toggle Sponsorship Slot button
+            const toggleText = c.is_active_slot === 1 ? "Suspend Access" : "Activate Access";
+            const toggleStyle = c.is_active_slot === 1 ? "color:#856404;" : "color:#155724; font-weight:600;";
+            actionHtml += `<button class="btn btn--outline btn-toggle-slot" data-client-id="${c.client_id}" style="font-size:0.8rem; padding:0.35rem 0.75rem; margin-right:0.5rem; border-color:#ded9cf; ${toggleStyle}">${toggleText}</button>`;
           }
+          
           actionHtml += `<button class="btn btn--outline btn-revoke" data-link-id="${c.link_id}" style="font-size:0.8rem; padding:0.35rem 0.75rem; color:#8b2020; border-color:#ded9cf;">Unlink</button>`;
           actionTd.innerHTML = actionHtml;
           tr.appendChild(actionTd);
@@ -189,11 +257,29 @@
           clientsTbody.appendChild(tr);
         });
 
+        // Add toggle action triggers
+        document.querySelectorAll(".btn-toggle-slot").forEach(btn => {
+          btn.addEventListener("click", async function() {
+            const clientId = this.getAttribute("data-client-id");
+            const toggleRes = await fetch("/api/organiser/attorney/clients", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ action: "toggle_slot", client_id: clientId })
+            });
+            if (toggleRes.ok) {
+              loadClients();
+            } else {
+              const errData = await toggleRes.json();
+              alert(errData.error || "Could not toggle client access.");
+            }
+          });
+        });
+
         // Add revoke action triggers
         document.querySelectorAll(".btn-revoke").forEach(btn => {
           btn.addEventListener("click", async function() {
             const linkId = this.getAttribute("data-link-id");
-            if (confirm("Are you sure you want to remove this client link? This action will immediately revoke your dashboard access.")) {
+            if (confirm("Are you sure you want to remove this client link completely?")) {
               const delRes = await fetch("/api/organiser/attorney/clients", {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
@@ -209,14 +295,14 @@
       } else {
         clientsTbody.innerHTML = `
           <tr>
-            <td colspan="4" style="color:#8b2020; padding:1.5rem; text-align:center;">Failed to load clients list.</td>
+            <td colspan="5" style="color:#8b2020; padding:1.5rem; text-align:center;">Failed to load clients list.</td>
           </tr>
         `;
       }
     } catch (_) {
       clientsTbody.innerHTML = `
         <tr>
-          <td colspan="4" style="color:#8b2020; padding:1.5rem; text-align:center;">Network error loading clients.</td>
+          <td colspan="5" style="color:#8b2020; padding:1.5rem; text-align:center;">Network error loading clients.</td>
         </tr>
       `;
     }

@@ -30,6 +30,18 @@
   <section class="section">
     <div class="container">
 
+      <!-- Attorney Firm Code Activation Card -->
+      <div style="background:#FAF8F5; border:1px solid var(--border); padding:1.5rem; border-radius:10px; margin-bottom:2.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.02);">
+        <h3 style="margin-bottom:0.4rem; font-size:1.1rem; display:flex; align-items:center; gap:0.5rem; font-family:var(--font-serif);">🔑 Have an Attorney Firm Code?</h3>
+        <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.25rem;">If your defense counsel has provided a firm code, enter it below to instantly unlock your workspace sponsored under their license.</p>
+        
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+          <input type="text" id="firm-code-input" placeholder="e.g. FIRM-XXXXX" style="padding:0.6rem 0.9rem; border:1px solid var(--border); border-radius:4px; font-size:0.95rem; font-family:monospace; min-width:200px; text-transform:uppercase;">
+          <button type="button" id="btn-apply-code" class="btn" style="font-size:0.875rem; padding:0.55rem 1.5rem;">Apply Code</button>
+          <span id="code-status" style="font-size:0.9rem; font-weight:500;"></span>
+        </div>
+      </div>
+
       <div class="pricing-grid">
 
         <div class="price-card price-card--featured">
@@ -169,6 +181,49 @@
   document.getElementById("btn-monthly").addEventListener("click", () => startCheckout("monthly"));
   document.getElementById("btn-lifetime").addEventListener("click", () => startCheckout("lifetime"));
   document.getElementById("btn-attorney").addEventListener("click", () => startCheckout("attorney"));
+
+  // Apply Attorney Firm Code
+  const btnApplyCode = document.getElementById("btn-apply-code");
+  const codeInput = document.getElementById("firm-code-input");
+  const codeStatus = document.getElementById("code-status");
+
+  btnApplyCode.addEventListener("click", async () => {
+    const code = codeInput.value.trim();
+    if (!code) {
+      codeStatus.textContent = "Please enter a code.";
+      codeStatus.style.color = "#8b2020";
+      return;
+    }
+
+    btnApplyCode.disabled = true;
+    codeStatus.textContent = "Verifying...";
+    codeStatus.style.color = "var(--text-soft)";
+
+    try {
+      const resp = await fetch("/api/organiser/attorney/redeem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code })
+      });
+
+      const data = await resp.json();
+      if (resp.ok) {
+        codeStatus.textContent = data.message || "Unlocked successfully!";
+        codeStatus.style.color = "#2a6e3f";
+        setTimeout(() => {
+          window.location.href = "/organiser/";
+        }, 1500);
+      } else {
+        codeStatus.textContent = data.error || "Failed to verify code.";
+        codeStatus.style.color = "#8b2020";
+        btnApplyCode.disabled = false;
+      }
+    } catch {
+      codeStatus.textContent = "Network error. Please try again.";
+      codeStatus.style.color = "#8b2020";
+      btnApplyCode.disabled = false;
+    }
+  });
 })();
 </script>
 
