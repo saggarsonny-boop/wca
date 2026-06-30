@@ -60,22 +60,21 @@
     });
   }
 
-  // Register PWA manifest dynamically
-  const manifestLink = document.createElement("link");
-  manifestLink.rel = "manifest";
-  manifestLink.href = "/manifest.json";
-  document.head.appendChild(manifestLink);
+  // Register PWA manifest dynamically after DOM load
+  document.addEventListener("DOMContentLoaded", () => {
+    const manifestLink = document.createElement("link");
+    manifestLink.rel = "manifest";
+    manifestLink.href = "/manifest.json";
+    if (document.head) {
+      document.head.appendChild(manifestLink);
+    }
 
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
+    if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(err => {
         console.error("PWA Service Worker registration failed:", err);
       });
-    });
-  }
+    }
 
-  // Dynamic cross-linking loop in footers & dynamic UDS buttons injection
-  document.addEventListener("DOMContentLoaded", () => {
     // 1. Cross-linking loop in footers
     const footerLinks = document.querySelector(".site-footer span:last-child");
     if (footerLinks) {
@@ -97,12 +96,13 @@
     // 2. Find any print/pdf button and dynamically inject UDS export options
     const pdfButtons = Array.from(document.querySelectorAll("button")).filter(btn => {
       const txt = btn.textContent;
-      return txt.includes("Download PDF") || txt.includes("Print / Save Timeline") || txt.includes("Print Report");
+      const onClickStr = btn.getAttribute("onclick") || "";
+      return txt.includes("Download PDF") || txt.includes("Print / Save Timeline") || txt.includes("Print Report") || onClickStr.includes("print");
     });
     
     pdfButtons.forEach(pdfBtn => {
       // Avoid duplicate injections
-      if (pdfBtn.nextSibling && pdfBtn.nextSibling.id === "btn-export-uds") return;
+      if (pdfBtn.parentNode.querySelector("#btn-export-uds")) return;
       
       const udsBtn = document.createElement("button");
       udsBtn.type = "button";
