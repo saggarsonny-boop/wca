@@ -13,6 +13,24 @@
         .replace(/White Collar/g, "Blue Collar")
         .replace(/white collar/g, "blue collar");
       
+      // Swap meta tags and OG links for Blue Collar Diner
+      try {
+        const ogUrl = document.querySelector('meta[property="og:url"]');
+        if (ogUrl) ogUrl.setAttribute("content", window.location.href);
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle) ogTitle.setAttribute("content", ogTitle.getAttribute("content").replace(/White Collar Academy/g, "Blue Collar Diner"));
+        const ogDesc = document.querySelector('meta[property="og:description"]');
+        if (ogDesc) ogDesc.setAttribute("content", ogDesc.getAttribute("content").replace(/White Collar Academy/g, "Blue Collar Diner"));
+        const twitterUrl = document.querySelector('meta[property="twitter:url"]');
+        if (twitterUrl) twitterUrl.setAttribute("content", window.location.href);
+        const twitterTitle = document.querySelector('meta[property="twitter:title"]');
+        if (twitterTitle) twitterTitle.setAttribute("content", twitterTitle.getAttribute("content").replace(/White Collar Academy/g, "Blue Collar Diner"));
+        const twitterDesc = document.querySelector('meta[property="twitter:description"]');
+        if (twitterDesc) twitterDesc.setAttribute("content", twitterDesc.getAttribute("content").replace(/White Collar Academy/g, "Blue Collar Diner"));
+      } catch (e) {
+        console.error("Meta updates failed:", e);
+      }
+      
       // Traverse DOM safely (rejecting script, style, input, textarea tags)
       const walker = document.createTreeWalker(
         document.body, 
