@@ -10,13 +10,13 @@
 }
 
 :root {
-  --bg:        #fafaf8;
-  --bg-alt:    #f0ede8;
+  --bg:        #f4f1ea; /* Warm premium parchment cream */
+  --bg-alt:    #eae6dd; /* Deeper card-stock block bg */
   --text:      #1a1a18;
   --text-soft: #555550;
   --accent:    #2c4a7c;
-  --accent-lt: #e8edf5;
-  --border:    #dedad4;
+  --accent-lt: #e2e8f0; /* Soft accent blue */
+  --border:    #ded9cf; /* Soft warm border */
   --max-w:     720px;
   --max-w-wide: 960px;
 
@@ -399,7 +399,7 @@ strong { font-weight: 600; }
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--accent);
-  background: #fff;
+  background: #FAF8F5;
   border: 1px solid var(--accent);
   border-radius: 3px;
   padding: 0.1rem 0.4rem;
@@ -472,7 +472,7 @@ strong { font-weight: 600; }
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 1.25rem 1.5rem;
-  background: #fff;
+  background: #FAF8F5;
 }
 
 .chapter-card__header {

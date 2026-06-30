@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mitigation Workbook — WCA Case Organiser</title>
+  <title>Allocution Prep — WCA Case Organiser</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
@@ -35,8 +35,8 @@
       <span class="sidebar-label">Your case</span>
       <a href="/organiser/">Dashboard</a>
       <a href="/organiser/case-file.html">Case File</a>
-      <a href="/organiser/mitigation.html" class="active">Mitigation Workbook</a>
-      <a href="/organiser/allocution.html">Allocution Prep</a>
+      <a href="/organiser/mitigation.html">Mitigation Workbook</a>
+      <a href="/organiser/allocution.html" class="active">Allocution Prep</a>
       <a href="/organiser/dates.html">Dates</a>
       <a href="/organiser/checklists.html">Checklists</a>
       <a href="/organiser/calculator.html">Release Calculator</a>
@@ -49,64 +49,29 @@
   </aside>
 
   <main class="org-main">
-    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Mitigation Workbook</h1>
-    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.75rem;">Prepare for your Presentence Report (PSR) and sentencing. Everything is encrypted and private.</p>
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Allocution Prep & Outlines</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.75rem;">Your allocution is your personal address to the judge at the sentencing hearing. Plan your outline and delivery details below.</p>
 
     <div style="background:var(--bg-alt); padding:1rem; border-radius:6px; margin-bottom:2rem; font-size:0.9rem; border-left:3px solid var(--accent);">
-      <strong>PSR Mitigation Guide</strong><br>
-      The probation officer's report is the primary source the judge and Bureau of Prisons use. Complete these sections to prepare your personal statement, track character letters, and document your medical history.
+      <strong>Allocution Guide</strong><br>
+      This is your final opportunity to state your remorse, accept responsibility, and describe your path to rehabilitation directly to the judge. Keep it brief (typically under 3 to 5 minutes), clear, and future-focused. Avoid minimizing your actions or re-arguing details of the case.
     </div>
 
-    <form id="mitigation-form" novalidate>
-
-      <h2 style="font-size:1.25rem; margin-top:2rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">1. Personal Statement</h2>
-      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Draft your statement of responsibility. Avoid excuses. Focus on acceptance, remorse, and what you have learned.</p>
-      
-      <div class="case-field">
-        <label>My Personal Statement</label>
-        <textarea name="mitigation_statement" rows="12" placeholder="Write your statement here. Keep it plain, honest, and direct."></textarea>
-      </div>
-
-      <h2 style="font-size:1.25rem; margin-top:3rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">2. Medical and Mental Health History</h2>
-      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Crucial for prison placement and RDAP program eligibility. Document all diagnoses, medications, and treatments.</p>
+    <form id="allocution-form" novalidate>
 
       <div class="case-field">
-        <label>Diagnoses & Conditions</label>
-        <textarea name="mitigation_medical_conditions" rows="4" placeholder="List all physical and mental health conditions diagnosed by a professional."></textarea>
+        <label>My Allocution Outline / Statement</label>
+        <span class="text-soft" style="font-size:0.8rem; display:block; margin-bottom:0.4rem;">Draft the actual words or key bullet points you will speak at the podium.</span>
+        <textarea name="mitigation_allocution" rows="12" placeholder="Example outline:&#10;1. Address the judge ('Honorable Judge [Name]')&#10;2. State clearly that you accept responsibility for your actions&#10;3. Express sincere remorse for the impact on victims and family&#10;4. Describe steps taken since the offense to rehabilitate&#10;5. Outline your plans for post-sentence life and productivity"></textarea>
       </div>
 
       <div class="case-field">
-        <label>Medications & Treatments</label>
-        <textarea name="mitigation_medications" rows="4" placeholder="List current medications, dosages, and ongoing therapies."></textarea>
+        <label>Practice & Delivery Notes</label>
+        <span class="text-soft" style="font-size:0.8rem; display:block; margin-bottom:0.4rem;">Notes on pacing, tone, eye contact, and feedback from mock sessions with your attorney or family.</span>
+        <textarea name="mitigation_allocution_practice" rows="5" placeholder="e.g. Read slowly. Breathe after section 2. Make eye contact. Attorney suggests shortening section 3 by two sentences."></textarea>
       </div>
 
-      <h2 style="font-size:1.25rem; margin-top:3rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">3. Character Letters Tracker</h2>
-      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Track who is writing letters on your behalf. Copy the template below to guide your writers.</p>
-
-      <div class="case-field">
-        <label>Letter Writers & Status</label>
-        <textarea name="mitigation_character_letters" rows="6" placeholder="Example:&#10;John Doe (Employer) - Draft received&#10;Jane Smith (Neighbor) - Requested 6/20"></textarea>
-      </div>
-
-      <div style="background:#fff; border:1px solid var(--border); padding:1rem; border-radius:6px; margin-top:1rem;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
-          <h4 style="font-size:0.9rem; margin:0;">Character Letter Guidelines</h4>
-          <button type="button" id="copy-template-btn" class="btn btn--outline" style="font-size:0.75rem; padding:0.25rem 0.5rem;">📋 Copy Instructions</button>
-        </div>
-        <pre id="template-text" style="white-space:pre-wrap; font-family:var(--font-sans); font-size:0.825rem; color:var(--text-soft); line-height:1.45; background:var(--bg-alt); padding:0.75rem; border-radius:4px; max-height:200px; overflow-y:auto;">
-Guidelines for Writing a Letter of Support:
-
-1. Introduce yourself and explain your relationship to the defendant (e.g. coworker, neighbor, friend). Mention how long you have known them.
-2. State clearly that you are aware of the conviction. Do not minimize the offense or criticize the prosecution or judge.
-3. Describe the defendant's character, highlighting specific examples of honesty, helpfulness, or responsibility.
-4. Describe how they reacted upon finding out about the offense (remorse, taking responsibility).
-5. Address the letter to "Honorable [Judge's Last Name]" and sign it with your name, title, and contact details.
-        </pre>
-      </div>
-
-
-
-      <div style="margin-top:2.5rem; display:flex; justify-content:space-between; align-items:center; margin-top:3rem;">
+      <div class="save-bar" style="margin-top:2.5rem; display:flex; justify-content:space-between; align-items:center;">
         <div>
           <button type="submit" class="btn">Save changes</button>
           <span id="save-status" style="font-size:0.875rem; margin-left:1rem;"></span>
@@ -144,12 +109,9 @@ Guidelines for Writing a Letter of Support:
     window.location.href = "/organiser/login.html";
   });
 
-  const form = document.getElementById("mitigation-form");
+  const form = document.getElementById("allocution-form");
   const saveStatus = document.getElementById("save-status");
-  const FIELDS = [
-    "mitigation_statement", "mitigation_medical_conditions", "mitigation_medications", 
-    "mitigation_character_letters"
-  ];
+  const FIELDS = ["mitigation_allocution", "mitigation_allocution_practice"];
 
   // Load existing data from case-file endpoint (shares same encrypted record)
   const load = await fetch("/api/organiser/case-file");
@@ -172,7 +134,7 @@ Guidelines for Writing a Letter of Support:
     const btn = form.querySelector("button[type=submit]");
     btn.disabled = true;
 
-    // Merge workbook details into existing encrypted payload
+    // Merge allocution prep details into existing encrypted payload
     FIELDS.forEach(f => {
       existingPayload[f] = form.elements[f]?.value || "";
     });
@@ -192,15 +154,6 @@ Guidelines for Writing a Letter of Support:
     }
     btn.disabled = false;
     setTimeout(() => { saveStatus.textContent = ""; }, 3000);
-  });
-
-  document.getElementById("copy-template-btn").addEventListener("click", () => {
-    const text = document.getElementById("template-text").textContent.trim();
-    navigator.clipboard.writeText(text).then(() => {
-      const copyBtn = document.getElementById("copy-template-btn");
-      copyBtn.textContent = "✔️ Copied!";
-      setTimeout(() => { copyBtn.textContent = "📋 Copy Instructions"; }, 2000);
-    });
   });
 })();
 </script>
