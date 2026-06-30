@@ -747,3 +747,11 @@ body.theme-bluecollar svg rect {
   fill: #b45309 !important;
 }
 
+/* Custom print watermark for Blue Collar Diner theme */
+@media print {
+  html.theme-bluecollar body::after,
+  body.theme-bluecollar body::after {
+    content: "Compiled securely on Blue Collar Diner (https://bluecollardiner.com) | Case Organiser Dossier" !important;
+  }
+}
+
