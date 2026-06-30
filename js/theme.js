@@ -5,7 +5,13 @@
     
     document.addEventListener("DOMContentLoaded", () => {
       // Update document title
-      document.title = document.title.replace(/White Collar Academy/g, "Blue Collar Diner").replace(/WCA/g, "BCD");
+      document.title = document.title
+        .replace(/White Collar Academy/g, "Blue Collar Diner")
+        .replace(/WCA/g, "BCD")
+        .replace(/White-Collar/g, "Blue-Collar")
+        .replace(/white-collar/g, "blue-collar")
+        .replace(/White Collar/g, "Blue Collar")
+        .replace(/white collar/g, "blue collar");
       
       // Traverse DOM and replace texts
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -13,8 +19,16 @@
       while (node = walker.nextNode()) {
         node.nodeValue = node.nodeValue
           .replace(/White Collar Academy/g, "Blue Collar Diner")
+          .replace(/white collar academy/g, "blue collar diner")
+          .replace(/WHITE COLLAR ACADEMY/g, "BLUE COLLAR DINER")
           .replace(/WCA Case Organiser/g, "Diner Case Organiser")
-          .replace(/White Collar/g, "Blue Collar");
+          .replace(/WCA/g, "BCD")
+          .replace(/White-Collar/g, "Blue-Collar")
+          .replace(/white-collar/g, "blue-collar")
+          .replace(/White Collar/g, "Blue Collar")
+          .replace(/white collar/g, "blue collar")
+          .replace(/WHITE COLLAR/g, "BLUE COLLAR")
+          .replace(/paralegal intake/g, "administrative intake");
       }
 
       // Swap Logo SVG text if exists
