@@ -18,10 +18,11 @@ export async function onRequestPost({ request, env }) {
 
     // Check subscription status via Stripe customer lookup or invitation
     // For now: open registration; Stripe webhook will update subscription_status
+    const origin = new URL(request.url).hostname;
     const { hash, salt } = await hashPassword(password);
     const result = await env.DB.prepare(
-      "INSERT INTO organiser_users (email, password_hash, password_salt, subscription_status, trial_ends_at, created_at) VALUES (?, ?, ?, 'trial', datetime('now', '+7 days'), datetime('now')) RETURNING id"
-    ).bind(emailLower, hash, salt).first();
+      "INSERT INTO organiser_users (email, password_hash, password_salt, subscription_status, trial_ends_at, origin_domain, created_at) VALUES (?, ?, ?, 'trial', datetime('now', '+7 days'), ?, datetime('now')) RETURNING id"
+    ).bind(emailLower, hash, salt, origin).first();
 
     const token = await signJWT({ uid: result.id, email: emailLower }, env.JWT_SECRET || "wca-dev-fallback-secret-set-jwt-secret-in-production");
     return json({ ok: true }, 200, { "Set-Cookie": sessionCookie(token) });

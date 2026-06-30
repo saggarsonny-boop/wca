@@ -18,6 +18,7 @@ export async function onRequestPost({ request, env }) {
     if (!priceId) return err("Plan not available.", 400);
 
     const origin = new URL(request.url).origin;
+    const originHost = new URL(request.url).hostname;
 
     const params = new URLSearchParams({
       "line_items[0][price]": priceId,
@@ -26,6 +27,7 @@ export async function onRequestPost({ request, env }) {
       success_url: `${origin}/organiser/`,
       cancel_url: `${origin}/organiser/subscribe.html`,
       "metadata[user_id]": String(user.uid),
+      "metadata[origin_domain]": originHost,
       "customer_email": user.email,
     });
 
