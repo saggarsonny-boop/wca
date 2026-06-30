@@ -180,8 +180,23 @@
     try {
       const r = await fetch("/api/organiser/attorney/clients");
       if (r.ok) {
-        const { clients, used_slots, firm_code } = await r.json();
+        const { clients, used_slots, firm_code, needs_subscription } = await r.json();
         
+        if (needs_subscription) {
+          firmCodeLabel.innerHTML = `<a href="/organiser/subscribe.html" class="btn" style="font-size:0.85rem; padding:0.35rem 0.85rem; text-decoration:none; display:inline-block; vertical-align:middle; line-height:1.2;">Subscribe to Attorney Plan ($149/mo)</a>`;
+          btnCopyCode.style.display = "none";
+          seatsUsageLabel.textContent = "0 / 5 Clients";
+          clientsTbody.innerHTML = `
+            <tr>
+              <td colspan="5" style="color:var(--text-soft); padding:2rem; text-align:center;">
+                An active subscription is required to invite and manage sponsored clients. <br><br>
+                <a href="/organiser/subscribe.html" class="btn" style="padding:0.5rem 1.2rem;">Upgrade to Attorney Plan</a>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
         // Render firm code & usage labels
         if (firm_code) {
           firmCodeLabel.textContent = firm_code;
@@ -194,7 +209,7 @@
             });
           };
         } else {
-          firmCodeLabel.textContent = "Active Subscription Required";
+          firmCodeLabel.innerHTML = `<a href="/organiser/subscribe.html" class="btn" style="font-size:0.85rem; padding:0.35rem 0.85rem; text-decoration:none; display:inline-block; vertical-align:middle; line-height:1.2;">Subscribe to Attorney Plan ($149/mo)</a>`;
           btnCopyCode.style.display = "none";
         }
         
