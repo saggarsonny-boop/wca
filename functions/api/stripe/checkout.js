@@ -6,9 +6,14 @@ export async function onRequestPost({ request, env }) {
     const user = await requireAuth(request, env);
     const { plan } = await request.json(); // "monthly" or "lifetime"
 
-    const priceId = plan === "lifetime"
-      ? env.STRIPE_PRICE_ID_LIFETIME
-      : env.STRIPE_PRICE_ID_MONTHLY;
+    let priceId = "";
+    if (plan === "lifetime") {
+      priceId = env.STRIPE_PRICE_ID_LIFETIME;
+    } else if (plan === "attorney") {
+      priceId = env.STRIPE_PRICE_ID_ATTORNEY || "price_1TnWjLPIZtoQZOG1UvF3o149"; // Fallback placeholder
+    } else {
+      priceId = env.STRIPE_PRICE_ID_MONTHLY;
+    }
 
     if (!priceId) return err("Plan not available.", 400);
 
