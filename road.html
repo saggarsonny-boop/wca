@@ -78,15 +78,19 @@
   <section class="section" style="padding-top: 0;">
     <div class="container">
       
-      <div class="road-container">
+      <div class="road-container" style="position: relative; display: inline-block; max-width: 100%; margin: 2rem 0; padding: 0;">
         <!-- Interactive Diagram Display -->
-        <a href="/assets/The_Road_Map.svg" target="_blank" title="Click to view full resolution map">
-          <img src="/assets/The_Road_Map.svg" alt="The Road Through the Criminal Process Map" class="road-image">
+        <a href="/assets/The_Road_Map.png" target="_blank" title="Click to view full resolution map" style="display: block; position: relative; max-width: 100%;">
+          <img src="/assets/The_Road_Map.png" alt="The Road Through the Criminal Process Map" class="road-image" style="max-width: 100%; height: auto; display: block; border-radius: 8px;">
+          <!-- Dynamic Domain Watermark Overlay -->
+          <div id="road-watermark-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background: #ede8dc; display: flex; align-items: center; justify-content: center; font-family: 'Lora', Georgia, serif; font-size: 1rem; color: #4a4a46; border-radius: 0 0 8px 8px;">
+            whitecollaracademy.com
+          </div>
         </a>
 
-        <div class="road-actions">
-          <a href="/assets/The_Road_Map.svg" target="_blank" class="btn btn--outline">🔍 View Full Size Map</a>
-          <a href="/assets/The_Road_Map.svg" download class="btn">📥 Download Map (SVG)</a>
+        <div class="road-actions" style="padding: 1.5rem;">
+          <a href="/assets/The_Road_Map.png" target="_blank" class="btn btn--outline">🔍 View Full Size Map</a>
+          <a href="/assets/The_Road_Map.png" download class="btn">📥 Download Map (PNG)</a>
         </div>
       </div>
 

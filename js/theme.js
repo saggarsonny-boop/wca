@@ -52,15 +52,45 @@
         svgText.textContent = "BCD";
       }
 
-      // Swap roadmap SVG image paths if they exist
-      const roadImg = document.querySelector('img[src="/assets/The_Road_Map.svg"]');
-      if (roadImg) {
-        roadImg.src = "/assets/The_Road_Map_BCD.svg";
+      // Update roadmap watermark overlay text if exists
+      const watermark = document.getElementById("road-watermark-overlay");
+      if (watermark) {
+        watermark.textContent = "bluecollardiner.com";
       }
-      const roadLinks = document.querySelectorAll('a[href="/assets/The_Road_Map.svg"]');
-      roadLinks.forEach(link => {
-        link.href = "/assets/The_Road_Map_BCD.svg";
+    });
+  }
+
+  // Register PWA manifest dynamically
+  const manifestLink = document.createElement("link");
+  manifestLink.rel = "manifest";
+  manifestLink.href = "/manifest.json";
+  document.head.appendChild(manifestLink);
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(err => {
+        console.error("PWA Service Worker registration failed:", err);
       });
     });
   }
+
+  // Dynamic cross-linking loop in footers
+  document.addEventListener("DOMContentLoaded", () => {
+    const footerLinks = document.querySelector(".site-footer span:last-child");
+    if (footerLinks) {
+      const dot = document.createTextNode(" · ");
+      const link = document.createElement("a");
+      if (window.location.hostname.includes("bluecollardiner") || window.location.search.includes("theme=bluecollar")) {
+        link.href = "https://whitecollaracademy.com";
+        link.textContent = "White Collar Academy";
+      } else {
+        link.href = "https://bluecollardiner.com";
+        link.textContent = "Blue Collar Diner";
+      }
+      link.style.opacity = "0.75";
+      link.className = "no-print";
+      footerLinks.appendChild(dot);
+      footerLinks.appendChild(link);
+    }
+  });
 })();

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline — White Collar Academy</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .offline-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      margin: 4rem auto;
+      max-width: 500px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+  </div>
+</header>
+
+<main class="container">
+  <div class="offline-card">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🔌</div>
+    <h1 style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 0.75rem;">You are currently offline</h1>
+    <p class="text-soft" style="font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.6;">
+      It looks like your internet connection is down. Once you are back online, you can reload the page to continue organizing your case.
+    </p>
+    <button type="button" onclick="window.location.reload()" class="btn" style="padding: 0.6rem 2rem;">Retry Connection</button>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container" style="text-align: center;">
+    <span>© White Collar Academy. General information only.</span>
+  </div>
+</footer>
+
+<script src="/js/wca-translate.js"></script>
+</body>
+</html>
