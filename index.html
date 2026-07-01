@@ -65,7 +65,11 @@
         </div>
 
         <div class="hero__portrait">
-          <picture><source srcset="/assets/portrait.webp" type="image/webp"><img src="./assets/portrait.jpg" alt="Sonny Saggar" class="portrait" loading="eager"></picture>
+          <picture>
+            <source srcset="./assets/portrait.avif" type="image/avif" fetchpriority="high" />
+            <source srcset="./assets/portrait.webp" type="image/webp" fetchpriority="high" />
+            <img src="./assets/portrait.jpg" alt="Sonny Saggar" class="portrait" loading="eager" fetchpriority="high" />
+          </picture>
         </div>
 
       </div>
