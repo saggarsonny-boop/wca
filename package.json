@@ -6,11 +6,17 @@
     "optimize-images": "node scripts/optimize-images.js",
     "lhci:collect": "lhci collect --url=https://whitecollaracademy.com --numberOfRuns=1",
     "lhci:assert": "lhci assert",
-    "test": "npm run lhci:collect && npm run lhci:assert"
+    "test": "npm run lhci:collect && npm run lhci:assert",
+    "build:css": "postcss css/style.css -o css/style.min.css && csso css/style.min.css -o css/style.min.css",
+    "critical": "node scripts/generate-critical.js"
   },
   "devDependencies": {
     "@lhci/cli": "^0.10.0",
-    "axe-cli": "^4.5.0",
-    "sharp": "^0.33.0"
+    "axe-cli": "3.2.1",
+    "sharp": "^0.33.0",
+    "postcss-cli": "^9.1.0",
+    "csso-cli": "^2.0.0",
+    "critical": "^4.0.0",
+    "purgecss": "^5.0.0"
   }
 }

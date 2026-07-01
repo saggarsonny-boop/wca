@@ -1,0 +1,21 @@
+{
+  "name": "Blue Collar Diner",
+  "short_name": "BCD",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2c4a7c",
+  "icons": [
+    {
+      "src": "./assets/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "64x64"
+    },
+    {
+      "src": "./assets/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "180x180",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,24 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <base href="./">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About Sonny Saggar — White Collar Academy</title>
-  <meta name="description" content="Sonny Saggar is a physician trained at Oxford and Barts who went through the federal system himself and writes about what he found.">
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Blue Collar Diner | About</title>
+  <meta name="description" content="Blue Collar Diner offers hearty, home‑cooked meals for the working class.">
+  <meta property="og:title" content="Blue Collar Diner">
+  <meta property="og:description" content="Hearty, home‑cooked meals for the working class.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bluecollardiner.com/about.html">
+  <meta property="og:image" content="https://bluecollardiner.com/assets/og-image.jpg">
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="manifest" href="./manifest.json">
+  <style>/* Critical CSS placeholder */</style>
+  <link rel="stylesheet" href="./css/style.css">
+  <script>
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('./js/service-worker.js');
+    }
+  </script>
 </head>
 <body>
 
 <header class="site-header">
   <div class="container">
-    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <a href="./" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
     <nav class="site-nav" aria-label="Main navigation">
-      <a href="/">Home</a>
-      <a href="/about.html" aria-current="page">About</a>
-      <a href="/chapters.html">Free Chapters</a>
-      <a href="/writing.html">Writing</a>
-      <a href="/course.html">The Course</a>
+      <a href="./">Home</a>
+      <a href="./about.html" aria-current="page">About</a>
+      <a href="./chapters.html">Free Chapters</a>
+      <a href="./writing.html">Writing</a>
+      <a href="./course.html">The Course</a>
     </nav>
   </div>
 </header>
@@ -38,7 +51,7 @@
         <div class="portrait-col">
           <picture>
             <source srcset="/assets/portrait.webp" type="image/webp">
-            <img src="/assets/portrait.jpg" alt="Sonny Saggar" class="portrait" style="width:160px;height:160px;" loading="lazy">
+            <img src="./assets/portrait.jpg" alt="Sonny Saggar" class="portrait" style="width:160px;height:160px;" loading="lazy">
           </picture>
         </div>
 
@@ -57,7 +70,7 @@
 
           <p>Everything on this site is general information. It reflects one person's reading, research, and experience. It is not legal advice and should not be treated as such. If you are facing federal charges, you need a criminal defense attorney. This site can help you understand what your attorney is talking about, but it is not a substitute for one.</p>
 
-          <p><a href="/writing.html">Read the published research and essays →</a></p>
+          <p><a href="./writing.html">Read the published research and essays →</a></p>
 
         </div>
       </div>
@@ -90,12 +103,12 @@
 <footer class="site-footer">
   <div class="container">
     <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
-    <span><a href="/about.html">About</a> · <a href="/writing.html">Writing</a> · <a href="/privacy.html">Privacy</a></span>
+    <span><a href="./about.html">About</a> · <a href="./writing.html">Writing</a> · <a href="./privacy.html">Privacy</a></span>
   </div>
 </footer>
 
 <script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
-<script src="/js/subscribe.js"></script>
+<script src="./js/subscribe.js"></script>
 
 </body>
 </html>
