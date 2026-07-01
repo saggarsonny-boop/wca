@@ -1,0 +1,16 @@
+{
+  "name": "whitecollaracademy",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "optimize-images": "node scripts/optimize-images.js",
+    "lhci:collect": "lhci collect --url=https://whitecollaracademy.com --numberOfRuns=1",
+    "lhci:assert": "lhci assert",
+    "test": "npm run lhci:collect && npm run lhci:assert"
+  },
+  "devDependencies": {
+    "@lhci/cli": "^0.10.0",
+    "axe-cli": "^4.5.0",
+    "sharp": "^0.33.0"
+  }
+}
