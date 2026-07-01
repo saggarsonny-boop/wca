@@ -8,36 +8,6 @@
     ],
     "operator": ">=",
     "passed": false,
-    "auditId": "apple-touch-icon",
-    "level": "error",
-    "url": "https://bluecollardiner.com/",
-    "auditTitle": "Does not provide a valid `apple-touch-icon`",
-    "auditDocumentationLink": "https://web.dev/apple-touch-icon/"
-  },
-  {
-    "name": "minScore",
-    "expected": 0.9,
-    "actual": 0,
-    "values": [
-      0
-    ],
-    "operator": ">=",
-    "passed": false,
-    "auditId": "color-contrast",
-    "level": "error",
-    "url": "https://bluecollardiner.com/",
-    "auditTitle": "Background and foreground colors do not have a sufficient contrast ratio.",
-    "auditDocumentationLink": "https://web.dev/color-contrast/"
-  },
-  {
-    "name": "minScore",
-    "expected": 0.9,
-    "actual": 0,
-    "values": [
-      0
-    ],
-    "operator": ">=",
-    "passed": false,
     "auditId": "csp-xss",
     "level": "error",
     "url": "https://bluecollardiner.com/",
@@ -47,47 +17,17 @@
   {
     "name": "minScore",
     "expected": 0.9,
-    "actual": 0.89,
-    "values": [
-      0.89
-    ],
-    "operator": ">=",
-    "passed": false,
-    "auditId": "first-contentful-paint",
-    "level": "warn",
-    "url": "https://bluecollardiner.com/",
-    "auditTitle": "First Contentful Paint",
-    "auditDocumentationLink": "https://web.dev/first-contentful-paint/"
-  },
-  {
-    "name": "minScore",
-    "expected": 0.9,
-    "actual": 0.29,
-    "values": [
-      0.29
-    ],
-    "operator": ">=",
-    "passed": false,
-    "auditId": "largest-contentful-paint",
-    "level": "warn",
-    "url": "https://bluecollardiner.com/",
-    "auditTitle": "Largest Contentful Paint",
-    "auditDocumentationLink": "https://web.dev/lighthouse-largest-contentful-paint/"
-  },
-  {
-    "name": "minScore",
-    "expected": 0.9,
     "actual": 0,
     "values": [
       0
     ],
     "operator": ">=",
     "passed": false,
-    "auditId": "maskable-icon",
+    "auditId": "errors-in-console",
     "level": "error",
     "url": "https://bluecollardiner.com/",
-    "auditTitle": "Manifest doesn't have a maskable icon",
-    "auditDocumentationLink": "https://web.dev/maskable-icon-audit/"
+    "auditTitle": "Browser errors were logged to the console",
+    "auditDocumentationLink": "https://web.dev/errors-in-console/"
   },
   {
     "name": "minScore",
@@ -95,6 +35,35 @@
     "actual": 0,
     "values": [
       0
+    ],
+    "operator": ">=",
+    "passed": false,
+    "auditId": "inspector-issues",
+    "level": "error",
+    "url": "https://bluecollardiner.com/",
+    "auditTitle": "Issues were logged in the `Issues` panel in Chrome Devtools"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0,
+    "values": [
+      0
+    ],
+    "operator": ">=",
+    "passed": false,
+    "auditId": "installable-manifest",
+    "level": "error",
+    "url": "https://bluecollardiner.com/",
+    "auditTitle": "Web app manifest or service worker do not meet the installability requirements",
+    "auditDocumentationLink": "https://web.dev/installable-manifest/"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.84,
+    "values": [
+      0.84
     ],
     "operator": ">=",
     "passed": false,
@@ -103,36 +72,6 @@
     "url": "https://bluecollardiner.com/",
     "auditTitle": "Max Potential First Input Delay",
     "auditDocumentationLink": "https://web.dev/lighthouse-max-potential-fid/"
-  },
-  {
-    "name": "maxLength",
-    "expected": 0,
-    "actual": 1,
-    "values": [
-      1
-    ],
-    "operator": "<=",
-    "passed": false,
-    "auditId": "modern-image-formats",
-    "level": "warn",
-    "url": "https://bluecollardiner.com/",
-    "auditTitle": "Serve images in next-gen formats",
-    "auditDocumentationLink": "https://web.dev/uses-webp-images/"
-  },
-  {
-    "name": "minScore",
-    "expected": 0.9,
-    "actual": 0,
-    "values": [
-      0
-    ],
-    "operator": ">=",
-    "passed": false,
-    "auditId": "non-composited-animations",
-    "level": "error",
-    "url": "https://bluecollardiner.com/",
-    "auditTitle": "Avoid non-composited animations",
-    "auditDocumentationLink": "https://web.dev/non-composited-animations"
   },
   {
     "name": "minScore",
@@ -158,11 +97,11 @@
     ],
     "operator": ">=",
     "passed": false,
-    "auditId": "splash-screen",
+    "auditId": "service-worker",
     "level": "error",
     "url": "https://bluecollardiner.com/",
-    "auditTitle": "Is not configured for a custom splash screen",
-    "auditDocumentationLink": "https://web.dev/splash-screen/"
+    "auditTitle": "Does not register a service worker that controls page and `start_url`",
+    "auditDocumentationLink": "https://web.dev/service-worker/"
   },
   {
     "name": "minScore",
@@ -173,82 +112,52 @@
     ],
     "operator": ">=",
     "passed": false,
-    "auditId": "themed-omnibox",
+    "auditId": "splash-screen",
     "level": "error",
     "url": "https://bluecollardiner.com/",
-    "auditTitle": "Does not set a theme color for the address bar.",
-    "auditDocumentationLink": "https://web.dev/themed-omnibox/"
-  },
-  {
-    "name": "maxLength",
-    "expected": 0,
-    "actual": 1,
-    "values": [
-      1
-    ],
-    "operator": "<=",
-    "passed": false,
-    "auditId": "uses-long-cache-ttl",
-    "level": "warn",
-    "url": "https://bluecollardiner.com/",
-    "auditTitle": "Uses efficient cache policy on static assets",
-    "auditDocumentationLink": "https://web.dev/uses-long-cache-ttl/"
-  },
-  {
-    "name": "maxLength",
-    "expected": 0,
-    "actual": 1,
-    "values": [
-      1
-    ],
-    "operator": "<=",
-    "passed": false,
-    "auditId": "uses-optimized-images",
-    "level": "error",
-    "url": "https://bluecollardiner.com/",
-    "auditTitle": "Efficiently encode images",
-    "auditDocumentationLink": "https://web.dev/uses-optimized-images/"
-  },
-  {
-    "name": "maxLength",
-    "expected": 0,
-    "actual": 1,
-    "values": [
-      1
-    ],
-    "operator": "<=",
-    "passed": false,
-    "auditId": "uses-rel-preconnect",
-    "level": "error",
-    "url": "https://bluecollardiner.com/",
-    "auditTitle": "Preconnect to required origins",
-    "auditDocumentationLink": "https://web.dev/uses-rel-preconnect/"
-  },
-  {
-    "name": "maxLength",
-    "expected": 0,
-    "actual": 1,
-    "values": [
-      1
-    ],
-    "operator": "<=",
-    "passed": false,
-    "auditId": "uses-responsive-images",
-    "level": "error",
-    "url": "https://bluecollardiner.com/",
-    "auditTitle": "Properly size images",
-    "auditDocumentationLink": "https://web.dev/uses-responsive-images/"
+    "auditTitle": "Is not configured for a custom splash screen",
+    "auditDocumentationLink": "https://web.dev/splash-screen/"
   },
   {
     "name": "minScore",
     "expected": 0.9,
-    "actual": 0.79,
+    "actual": 0.74,
     "values": [
-      0.79
+      0.74
     ],
     "operator": ">=",
     "passed": false,
-    "auditProperty": "performance",
+    "auditId": "tap-targets",
+    "level": "error",
+    "url": "https://bluecollardiner.com/",
+    "auditTitle": "Tap targets are not sized appropriately",
+    "auditDocumentationLink": "https://web.dev/tap-targets/"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0,
+    "values": [
+      0
+    ],
+    "operator": ">=",
+    "passed": false,
+    "auditId": "unsized-images",
+    "level": "error",
+    "url": "https://bluecollardiner.com/",
+    "auditTitle": "Image elements do not have explicit `width` and `height`",
+    "auditDocumentationLink": "https://web.dev/optimize-cls/#images-without-dimensions"
+  },
+  {
+    "name": "minScore",
+    "expected": 0.9,
+    "actual": 0.83,
+    "values": [
+      0.83
+    ],
+    "operator": ">=",
+    "passed": false,
+    "auditProperty": "best-practices",
     "auditId": "categories",
     "level": "error",
     "url": "https://bluecollardiner.com/"

@@ -3,6 +3,8 @@ module.exports = {
     collect: {
       url: ['https://bluecollardiner.com'],
       numberOfRuns: 1,
+      // Emulate mobile device
+      settings: { emulatedFormFactor: 'mobile' },
       // No start server needed for static site
     },
     assert: {

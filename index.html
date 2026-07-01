@@ -7,12 +7,31 @@
   <title>Blue Collar Diner | Classic American Eats</title>
   <meta name="description" content="Blue Collar Diner offers hearty, home‑cooked meals for the working class. Enjoy classic American comfort food, fast service, and a welcoming atmosphere.">
   <meta name="theme-color" content="#2c4a7c">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'">
   <meta property="og:title" content="Blue Collar Diner">
   <meta property="og:description" content="Hearty, home‑cooked meals for the working class.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://bluecollardiner.com">
   <meta property="og:image" content="https://bluecollardiner.com/assets/og-image.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "Blue Collar Diner",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "123 Main Street",
+    "addressLocality": "Anytown",
+    "addressRegion": "USA",
+    "postalCode": "12345"
+  },
+  "servesCuisine": "American",
+  "openingHours": "Mo-Fr 08:00-18:00, Sa-Su 09:00-16:00",
+  "url": "https://bluecollardiner.com",
+  "menu": "https://bluecollardiner.com/menu",
+  "priceRange": "$"
+}
+</script>
   <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
   <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
   <link rel="manifest" href="./manifest.json">
@@ -68,7 +87,7 @@
           <picture>
             <source srcset="./assets/portrait.avif" type="image/avif" fetchpriority="high" />
             <source srcset="./assets/portrait.webp" type="image/webp" fetchpriority="high" />
-            <img src="./assets/portrait.jpg" alt="Sonny Saggar" class="portrait" loading="eager" fetchpriority="high" />
+            <img src="./assets/portrait.jpg" alt="Sonny Saggar" class="portrait" loading="eager" fetchpriority="high" width="1024" height="1024" />
           </picture>
         </div>
 
