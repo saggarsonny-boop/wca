@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="./">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Attorneys | Blue Collar Diner</title>
+  <meta name="description" content="Meet our team of experienced attorneys.">
+  <meta name="theme-color" content="#2c4a7c">
+  <link rel="stylesheet" href="/css/design-tokens.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="./" class="site-logo">Blue Collar Diner</a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="./">Home</a>
+        <a href="./about.html">About</a>
+        <a href="./attorneys.html" aria-current="page">Attorneys</a>
+        <a href="./contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="section">
+      <div class="container">
+        <h1>Our Attorneys</h1>
+        <p class="section__label">Meet the team</p>
+
+        <!-- Attorney 1 -->
+        <div class="attorney-card">
+          <img class="attorney-photo" src="./assets/attorney1.jpg" alt="Portrait of Attorney Name">
+          <div class="attorney-bio">
+            <h2>Attorney Name</h2>
+            <p>Bio and credentials go here.</p>
+          </div>
+        </div>
+
+        <!-- Attorney 2 -->
+        <div class="attorney-card">
+          <img class="attorney-photo" src="./assets/attorney2.jpg" alt="Portrait of Another Attorney">
+          <div class="attorney-bio">
+            <h2>Another Attorney</h2>
+            <p>Bio and credentials go here.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span id="yr"></span> Blue Collar Diner. All rights reserved.</span>
+      <span>
+        <a href="./about.html">About</a> ·
+        <a href="./attorneys.html">Attorneys</a> ·
+        <a href="./privacy.html">Privacy</a>
+      </span>
+    </div>
+  </footer>
+
+  <script defer>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+</body>
+</html>
