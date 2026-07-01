@@ -22,6 +22,8 @@
 
   --font-serif: Georgia, 'Times New Roman', serif;
   --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  
+  /* Custom colors for WCA/BCD toggle */
   --wca-blue: #2c4a7c;
   --bcd-burgundy: #8B1A1A;
   --bcd-cream: #D4A574;
@@ -109,15 +111,15 @@ strong { font-weight: 600; }
 
 .site-nav {
   display: flex;
-  gap: 2rem; /* increased for breathing room */
+  gap: 2rem;
   flex-wrap: wrap;
 }
 
 .site-nav a {
   color: var(--text-soft);
   text-decoration: none;
-  font-size: 0.95rem; /* adjusted for better readability */
-  padding: 0.5rem 0.25rem; /* tighter horizontal padding */
+  font-size: 0.95rem;
+  padding: 0.5rem 0.25rem;
   min-width: 48px;
   min-height: 44px;
   display: inline-flex;
@@ -213,7 +215,7 @@ strong { font-weight: 600; }
 /* ── Video embed ── */
 .video-wrap {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
   background: var(--bg-alt);
@@ -263,8 +265,6 @@ strong { font-weight: 600; }
   overflow: hidden;
   background: #fff;
 }
-
-.video-card__embed { /* contains the video-wrap */ }
 
 .video-card__body {
   padding: 1rem 1.25rem 1.25rem;
@@ -434,7 +434,7 @@ strong { font-weight: 600; }
   .about-layout .bio-col { flex: 1; }
 }
 
-/* ── Draft banner (visible only inside _draft/ pages) ── */
+/* ── Draft banner ── */
 .draft-banner {
   background: #fef3cd;
   border-bottom: 2px solid #f0c040;
@@ -527,9 +527,9 @@ strong { font-weight: 600; }
   font-size: 0.875rem;
 }
 
-/* ── Pricing (hidden by default until flag enabled) ── */
+/* ── Pricing (hidden by default) ── */
 .pricing-section {
-  display: none; /* FEATURE FLAG: change to display:block when ready to go live */
+  display: none;
 }
 
 /* ── Footer ── */
@@ -542,9 +542,9 @@ strong { font-weight: 600; }
 
 .site-footer .container {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.75rem;
+  align-items: flex-start;
 }
 
 @media (min-width: 600px) {
@@ -558,81 +558,32 @@ strong { font-weight: 600; }
 .site-footer a { color: var(--text-soft); }
 .site-footer a:hover { color: var(--text); }
 
+/* ── WCA ↔ BCD Toggle ── */
+.tenant-toggle {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.tenant-toggle a {
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 0.8rem;
+}
+
+.tenant-toggle a.active-wca {
+  background: var(--wca-blue);
+  color: #fff;
+}
+
+.tenant-toggle a.active-bcd {
+  background: var(--bcd-burgundy);
+  color: #fff;
+}
+
 /* ── Utility ── */
 .mt-1 { margin-top: 1rem; }
 .mt-2 { margin-top: 2rem; }
 .text-soft { color: var(--text-soft); }
-
-/* === WCA ↔ BCD TOGGLE === */
-.tenant-toggle {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-top: 1rem;
-}
-.tenant-toggle a {
-  padding: 0.25rem 1rem;
-  border-radius: 20px;
-  text-decoration: none;
-  font-size: 0.8rem;
-}
-.tenant-toggle a.active-wca {
-  background: var(--accent);
-  color: #fff;
-}
-.tenant-toggle a.active-bcd {
-  background: #8B1A1A;
-  color: #fff;
-}
-
-
-/* === WCA ↔ BCD TOGGLE === */
-.tenant-toggle {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-top: 1rem;
-}
-.tenant-toggle a {
-  padding: 0.25rem 1rem;
-  border-radius: 20px;
-  text-decoration: none;
-  font-size: 0.8rem;
-}
-.tenant-toggle a.active-wca {
-  background: var(--accent);
-  color: #fff;
-}
-.tenant-toggle a.active-bcd {
-  background: #8B1A1A;
-  color: #fff;
-}
-
-/* === CUSTOM COLORS === */
-:root {
-  --wca-blue: #2c4a7c;
-  --bcd-burgundy: #8B1A1A;
-  --bcd-cream: #D4A574;
-  --bcd-gold: #C9A84C;
-}
-
-/* === NAVIGATION SPACING === */
-.site-nav {
-  gap: 2rem;
-}
-.site-nav a {
-  padding: 0.5rem 0.25rem;
-  font-size: 0.95rem;
-}
-
-/* === FOOTER LINKS === */
-.site-footer .container {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-.footer-links {
-  display: flex;
-  gap: 1.5rem;
-}
