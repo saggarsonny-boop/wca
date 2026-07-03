@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Structured Federal Justice Data — White Collar Academy</title>
+  <meta name="description" content="Tables, timelines, and structured data outlining federal sentencing zones, custody point thresholds, and case progression.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .data-table th, .data-table td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .data-table th {
+      background: var(--bg-alt);
+      font-family: var(--font-sans);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+    <div id="navMenu" class="nav-menu" aria-hidden="true">
+      <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/road.html">The Road</a>
+      <a href="/attorneys.html">Law Firms</a>
+      <a href="/about.html">About</a>
+      <a href="/chapters.html">Free Chapters</a>
+      <a href="/writing.html">Writing</a>
+      <a href="/course.html">The Course</a>
+      <a href="/organiser/login.html">Case Organiser</a>
+    </nav>
+      <div id="google_translate_element" class="google-translate-wrap"></div>
+    </div>
+  </div>
+</header>
+
+<section class="ask-anything-section">
+  <div class="ask-anything-container">
+    <h2 class="ask-anything-title">Ask anything. Say anything.</h2>
+    <p class="ask-anything-subtitle">Looking for something? Just ask, we'll find it.</p>
+    <div class="ask-anything-input-wrapper">
+      <input type="text" id="askAnythingInput" class="ask-anything-input" placeholder="e.g. The Road, free chapters..." aria-label="Search this site" autocomplete="off">
+      <button id="askAnythingBtn" class="ask-anything-btn" aria-label="Search">→</button>
+    </div>
+    <div id="askAnythingResults" class="ask-anything-results"></div>
+  </div>
+</section>
+
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+  <div class="tldr-summary">
+    <h2>TL;DR Summary</h2>
+    <p>This data reference page compiles structured information regarding the federal sentencing table zones, custody security point criteria, and case progression timelines for quick lookup.</p>
+  </div>
+
+  <article>
+    <h1>Federal Justice Reference Data</h1>
+    <p>The federal criminal justice system uses quantitative point thresholds to determine sentencing ranges, custody levels, and supervision guidelines.</p>
+
+    <section style="margin-top: 2rem;">
+      <h2>Federal Sentencing Zones & Sentencing Options</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Zone</th>
+            <th>Guideline Range (Months)</th>
+            <th>Sentencing Options & Requirements</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Zone A</strong></td>
+            <td>0 to 6 months</td>
+            <td>Probation only, no confinement required.</td>
+          </tr>
+          <tr>
+            <td><strong>Zone B</strong></td>
+            <td>1 to 12 months</td>
+            <td>Probation with intermittent confinement, community confinement, or home detention.</td>
+          </tr>
+          <tr>
+            <td><strong>Zone C</strong></td>
+            <td>10 to 18 months</td>
+            <td>Split sentence: at least half of the minimum range served in prison, remainder in home/community confinement.</td>
+          </tr>
+          <tr>
+            <td><strong>Zone D</strong></td>
+            <td>12+ months</td>
+            <td>Incarceration required for the full term (no probation options).</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section style="margin-top: 2rem;">
+      <h2>Federal BOP Security Level Points Thresholds</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Security Level</th>
+            <th>Male Points Threshold</th>
+            <th>Female Points Threshold</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Minimum (Camp)</strong></td>
+            <td>0 to 11 points</td>
+            <td>0 to 15 points</td>
+          </tr>
+          <tr>
+            <td><strong>Low Security</strong></td>
+            <td>12 to 15 points</td>
+            <td>16 to 30 points</td>
+          </tr>
+          <tr>
+            <td><strong>Medium Security</strong></td>
+            <td>16 to 23 points</td>
+            <td>31+ points (High/Medium combined)</td>
+          </tr>
+          <tr>
+            <td><strong>High Security</strong></td>
+            <td>24+ points</td>
+            <td>N/A (FCI / Camp placements)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/sponsor">Sponsor a Prison Library</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/wca-translate.js"></script>
+<script src="/data/search-index.js"></script>
+<script src="/js/ask-anything.js"></script>
+<script src="/js/nav-toggle.js"></script>
+</body>
+</html>

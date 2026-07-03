@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Knowledge Base — White Collar Academy</title>
+  <meta name="description" content="Structured outline and deep knowledge base covering the federal criminal justice system and post-sentence stacks.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+    <div id="navMenu" class="nav-menu" aria-hidden="true">
+      <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/road.html">The Road</a>
+      <a href="/attorneys.html">Law Firms</a>
+      <a href="/about.html">About</a>
+      <a href="/chapters.html">Free Chapters</a>
+      <a href="/writing.html">Writing</a>
+      <a href="/course.html">The Course</a>
+      <a href="/organiser/login.html">Case Organiser</a>
+    </nav>
+      <div id="google_translate_element" class="google-translate-wrap"></div>
+    </div>
+  </div>
+</header>
+
+<section class="ask-anything-section">
+  <div class="ask-anything-container">
+    <h2 class="ask-anything-title">Ask anything. Say anything.</h2>
+    <p class="ask-anything-subtitle">Looking for something? Just ask, we'll find it.</p>
+    <div class="ask-anything-input-wrapper">
+      <input type="text" id="askAnythingInput" class="ask-anything-input" placeholder="e.g. The Road, free chapters..." aria-label="Search this site" autocomplete="off">
+      <button id="askAnythingBtn" class="ask-anything-btn" aria-label="Search">→</button>
+    </div>
+    <div id="askAnythingResults" class="ask-anything-results"></div>
+  </div>
+</section>
+
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+  <div class="tldr-summary">
+    <h2>TL;DR Summary</h2>
+    <p>White Collar Academy provides a structured map of the federal criminal justice system. This page serves as a comprehensive knowledge outline of key topics, including Presentence Reports (PSR), Sentencing Guidelines, collateral professional licensing exclusions, and supervised release reentry.</p>
+  </div>
+
+  <article>
+    <h1>Core Knowledge Base</h1>
+    <p>Navigating the federal criminal justice system requires understanding multiple parallel processes. This knowledge base maps each phase from investigation to restoration.</p>
+
+    <section style="margin-top: 2rem;">
+      <h2>1. The First Week & Investigation</h2>
+      <p>The initial shock of a federal investigation requires immediate, calm containment. Defendants must learn to communicate securely, preserve assets, and establish productive relationships with specialized defense counsel.</p>
+    </section>
+
+    <section style="margin-top: 2rem;">
+      <h2>2. Presentence Investigation & Report (PSR)</h2>
+      <p>The Presentence Report (PSR) is the most critical document governing your placement and release options. Prepared by a U.S. Probation Officer, the PSR outlines custody points, medical history, and offense characteristics that determine custody levels and program eligibility (like RDAP).</p>
+    </section>
+
+    <section style="margin-top: 2rem;">
+      <h2>3. Federal Sentencing Guidelines</h2>
+      <p>Sentencing is determined by the intersection of Offense Level (based on loss amounts or characteristics) and Criminal History Category. Judges consult the advisory sentencing table to determine guideline ranges, zones (A, B, C, or D), and options for departures or variances.</p>
+    </section>
+
+    <section style="margin-top: 2rem;">
+      <h2>4. The Incarceration Stack & Exclusions</h2>
+      <p>For licensed professionals, the court's sentence is only part of the impact. Convictions trigger professional licensing board suspensions, DEA registration revocations, and federal HHS-OIG exclusions that affect the ability to practice long after supervised release.</p>
+    </section>
+
+    <section style="margin-top: 2rem;">
+      <h2>5. Reentry & Restoration</h2>
+      <p>Supervised release is a transitional phase focused on rebuilding life. Reentry requires secure housing, clear employment paths, and systematic efforts to rebuild credit, restore professional status, and support family relationships.</p>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/sponsor">Sponsor a Prison Library</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/wca-translate.js"></script>
+<script src="/data/search-index.js"></script>
+<script src="/js/ask-anything.js"></script>
+<script src="/js/nav-toggle.js"></script>
+</body>
+</html>
