@@ -22,9 +22,7 @@ export async function onRequestGet({ request, env }) {
   } catch (e) {
     if (e instanceof Response) return e;
     console.error("facilities error:", e.message, "\n", e.stack);
-    // TEMPORARY: exposing message/stack to diagnose a production-only 500.
-    // Remove debug_message/debug_stack once the cause is confirmed.
-    return json({ error: "Server error", debug_message: e.message, debug_stack: e.stack }, 500);
+    return err("Server error", 500);
   }
 }
 
