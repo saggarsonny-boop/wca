@@ -93,6 +93,33 @@
       });
     }
 
+    // PWA Install Prompt Listener
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const footer = document.querySelector(".site-footer .container");
+      if (footer && !document.getElementById("pwa-install-btn")) {
+        const installBtn = document.createElement("button");
+        installBtn.id = "pwa-install-btn";
+        installBtn.className = "btn btn--outline no-print";
+        installBtn.style.fontSize = "0.75rem";
+        installBtn.style.padding = "0.25rem 0.5rem";
+        installBtn.style.marginLeft = "0.5rem";
+        installBtn.textContent = "📲 Install App";
+        installBtn.addEventListener('click', async () => {
+          if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User choice outcome: ${outcome}`);
+            deferredPrompt = null;
+            installBtn.remove();
+          }
+        });
+        footer.appendChild(installBtn);
+      }
+    });
+
     // 1. Cross-linking loop in footers
     const footerLinks = document.querySelector(".site-footer span:last-child");
     if (footerLinks) {
