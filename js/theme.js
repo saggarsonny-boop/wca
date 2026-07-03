@@ -126,6 +126,45 @@
               if (cog) {
                 cog.style.display = "block";
               }
+
+              // Inject mobile floating admin cog
+              if (!document.getElementById("mobile-admin-cog")) {
+                const mobileCog = document.createElement("a");
+                mobileCog.id = "mobile-admin-cog";
+                mobileCog.href = "/organiser/admin.html";
+                mobileCog.className = "no-print";
+                mobileCog.textContent = "⚙️";
+                mobileCog.style.cssText = `
+                  display: flex;
+                  position: fixed;
+                  bottom: 80px;
+                  right: 16px;
+                  z-index: 9999;
+                  background: var(--accent);
+                  color: #fff;
+                  width: 44px;
+                  height: 44px;
+                  border-radius: 50%;
+                  align-items: center;
+                  justify-content: center;
+                  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                  font-size: 20px;
+                  text-decoration: none;
+                `;
+                
+                const mediaQuery = window.matchMedia("(max-width: 640px)");
+                function handleMedia(mq) {
+                  mobileCog.style.display = mq.matches ? "flex" : "none";
+                }
+                if (typeof mediaQuery.addEventListener === 'function') {
+                  mediaQuery.addEventListener("change", handleMedia);
+                } else if (typeof mediaQuery.addListener === 'function') {
+                  mediaQuery.addListener(handleMedia);
+                }
+                handleMedia(mediaQuery);
+                
+                document.body.appendChild(mobileCog);
+              }
             }
           }
         } catch (err) {
