@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Press Kit — White Collar Academy</title>
+  <meta name="description" content="Media assets, biography, fast facts, and sample interview questions for Dr. Sonny Saggar and White Collar Academy.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .asset-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .asset-card img {
+      max-width: 120px;
+      height: auto;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+    }
+    .stats-box {
+      background: var(--bg-alt);
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+    <div id="navMenu" class="nav-menu" aria-hidden="true">
+      <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/road.html">The Road</a>
+      <a href="/attorneys.html">Law Firms</a>
+      <a href="/about.html">About</a>
+      <a href="/chapters.html">Free Chapters</a>
+      <a href="/writing.html">Writing</a>
+      <a href="/course.html">The Course</a>
+      <a href="/organiser/login.html">Case Organiser</a>
+    </nav>
+      <div id="google_translate_element" class="google-translate-wrap"></div>
+    </div>
+  </div>
+</header>
+
+<section class="ask-anything-section">
+  <div class="ask-anything-container">
+    <h2 class="ask-anything-title">Ask anything. Say anything.</h2>
+    <p class="ask-anything-subtitle">Looking for something? Just ask, we'll find it.</p>
+    <div class="ask-anything-input-wrapper">
+      <input type="text" id="askAnythingInput" class="ask-anything-input" placeholder="e.g. Bio, interview questions..." aria-label="Search this site" autocomplete="off">
+      <button id="askAnythingBtn" class="ask-anything-btn" aria-label="Search">→</button>
+    </div>
+    <div id="askAnythingResults" class="ask-anything-results"></div>
+  </div>
+</section>
+
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+  <div class="tldr-summary">
+    <h2>TL;DR Summary</h2>
+    <p>This official media package provides press kits, statistics, interview guidelines, and biography cards for Dr. Sonny Saggar and White Collar Academy. For inquiries, email <a href="mailto:press@whitecollaracademy.com">press@whitecollaracademy.com</a>.</p>
+  </div>
+
+  <article>
+    <h1>Press & Media Kit</h1>
+    <p class="lead">Welcome to the White Collar Academy press center. Below you will find biography cards, downloadable assets, statistics, and Q&A references.</p>
+
+    <section style="margin-top: 2.5rem;">
+      <h2>About Dr. Sonny Saggar</h2>
+      <p>Dr. Sonny Saggar spent 25 years in emergency medicine and was trained at Oxford University and Barts Hospital in London. After navigating the federal criminal justice system firsthand, he founded White Collar Academy to provide practical, evidence-based guidance for defendants, families, and attorneys.</p>
+    </section>
+
+    <section style="margin-top: 2.5rem;">
+      <h2>Key Statistics & Data Points</h2>
+      <div class="stats-box">
+        <strong>112+ Federal Prisons:</strong> WCA maps custody guidelines across all active BOP camps, low, medium, and high complexes.
+      </div>
+      <div class="stats-box">
+        <strong>150,000+ Inmates:</strong> The federal prison population currently standing inside the BOP.
+      </div>
+      <div class="stats-box">
+        <strong>The Stack:</strong> Collateral professional consequences (licensing boards, HHS-OIG exclusion, DEA bans) outlast active court-ordered sentences.
+      </div>
+    </section>
+
+    <section style="margin-top: 2.5rem;">
+      <h2>Sample Interview Questions</h2>
+      <ul>
+        <li>What is the single biggest mistake federal defendants make during their first week?</li>
+        <li>How does a defendant's Presentence Report (PSR) dictate their security points and placement options?</li>
+        <li>What are the collateral exclusions that medical and financial professionals face after sentencing?</li>
+        <li>Why is supervised release considered one of the hardest phases of transition?</li>
+      </ul>
+    </section>
+
+    <section style="margin-top: 2.5rem;">
+      <h2>Downloadable Media Assets</h2>
+      <div class="asset-grid">
+        <div class="asset-card">
+          <img src="/assets/portrait.jpg" alt="Dr. Sonny Saggar">
+          <h3>Dr. Sonny Saggar</h3>
+          <p>High-resolution portrait photo</p>
+          <p><a href="/assets/portrait.jpg" download>Download Portrait →</a></p>
+        </div>
+        <div class="asset-card">
+          <img src="/assets/The_Road_Map.png" alt="The Road Map Cover">
+          <h3>The Road Map Cover</h3>
+          <p>High-resolution book cover artwork</p>
+          <p><a href="/assets/The_Road_Map.png" download>Download Artwork →</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top: 2.5rem; border-top: 1px solid var(--border); padding-top: 2rem;">
+      <h2>Media Contact</h2>
+      <p>For interview requests, expert commentary bookings, or additional details, please contact our media team:</p>
+      <p><strong>Email:</strong> <a href="mailto:press@whitecollaracademy.com">press@whitecollaracademy.com</a></p>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/sponsor">Sponsor a Prison Library</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/wca-translate.js"></script>
+<script src="/data/search-index.js"></script>
+<script src="/js/ask-anything.js"></script>
+<script src="/js/nav-toggle.js"></script>
+</body>
+</html>
