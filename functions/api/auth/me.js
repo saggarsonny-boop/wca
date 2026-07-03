@@ -5,7 +5,7 @@ export async function onRequestGet({ request, env }) {
   try {
     const user = await requireAuth(request, env);
     let row = await env.DB.prepare(
-      "SELECT email, subscription_status, trial_ends_at, stripe_customer_id, firm_code FROM organiser_users WHERE id = ?"
+      "SELECT email, subscription_status, trial_ends_at, stripe_customer_id, firm_code, role FROM organiser_users WHERE id = ?"
     ).bind(user.uid).first();
     if (!row) return json({ error: "User not found" }, 404);
 
@@ -39,7 +39,7 @@ export async function onRequestGet({ request, env }) {
       }
     }
 
-    const isAdmin = row.email.includes("admin") || row.email === "sonnysaggar@gmail.com";
+    const isAdmin = row.role === "admin" || row.email.includes("admin") || row.email === "sonnysaggar@gmail.com";
     return json({ uid: user.uid, role: isAdmin ? "admin" : "user", ...row });
   } catch (e) {
     if (e instanceof Response) return e;

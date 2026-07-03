@@ -133,26 +133,44 @@
         clearInterval(sidebarInterval);
         console.log("Sidebar found on attempt:", sidebarAttempts);
         
-        // 1. Inject Toggle Button
+        // 1. Inject Floating Toggle Button outside sidebar
         if (!document.getElementById("sidebar-toggle")) {
-          const toggleContainer = document.createElement("div");
-          toggleContainer.style.padding = "0.5rem 0.75rem";
-          toggleContainer.style.borderBottom = "1px solid var(--border)";
-          toggleContainer.innerHTML = `<button id="sidebar-toggle" class="sidebar-toggle-btn" style="width:100%;">📂 Toggle Sidebar</button>`;
-          sidebar.insertBefore(toggleContainer, sidebar.firstChild);
+          const toggleBtn = document.createElement("button");
+          toggleBtn.id = "sidebar-toggle";
+          toggleBtn.className = "sidebar-toggle-btn no-print";
+          toggleBtn.style.position = "fixed";
+          toggleBtn.style.top = "12px";
+          toggleBtn.style.left = "12px";
+          toggleBtn.style.zIndex = "9999";
+          toggleBtn.style.background = "var(--accent)";
+          toggleBtn.style.color = "#fff";
+          toggleBtn.style.border = "none";
+          toggleBtn.style.borderRadius = "4px";
+          toggleBtn.style.padding = "4px 8px";
+          toggleBtn.style.cursor = "pointer";
+          toggleBtn.textContent = "◀";
+          document.body.appendChild(toggleBtn);
           
-          // Bind toggle handler
-          const toggleBtn = document.getElementById("sidebar-toggle");
           const layout = document.querySelector(".org-layout");
-          if (toggleBtn && layout) {
+          
+          function updateToggleIcon() {
+            if (layout) {
+              const isCollapsed = layout.classList.contains("sidebar-collapsed");
+              toggleBtn.textContent = isCollapsed ? "▶" : "◀";
+            }
+          }
+
+          if (layout) {
             toggleBtn.addEventListener("click", () => {
               layout.classList.toggle("sidebar-collapsed");
               const collapsed = layout.classList.contains("sidebar-collapsed");
               localStorage.setItem("wca_sidebar_collapsed", collapsed ? "true" : "false");
+              updateToggleIcon();
             });
             if (localStorage.getItem("wca_sidebar_collapsed") === "true") {
               layout.classList.add("sidebar-collapsed");
             }
+            updateToggleIcon();
           }
         }
         
