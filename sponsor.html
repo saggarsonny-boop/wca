@@ -5,10 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sponsor a Prison Library — White Collar Academy</title>
   <meta name="description" content="Sponsor copies of The Road for a federal prison library. Give the gift of a map to someone who needs one.">
-  <!-- NOT YET LIVE: facilities table is empty, no verified BOP facility data has been added.
-       Do not link this page from nav or footer until _schema_sponsor.sql has real facility rows.
-       See _schema_sponsor.sql header comment. -->
-  <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/organiser.css">
@@ -98,6 +94,62 @@
         <button type="submit" class="btn" id="sponsor-submit">Continue to payment</button>
         <div id="sponsor-status" class="form-status" role="alert" aria-live="polite"></div>
       </form>
+
+      <p class="text-soft" style="margin-top:1.5rem; font-size:0.9rem;">
+        Don't see the facility you're looking for?
+        <a href="#" id="show-request-form">Request it</a>.
+      </p>
+
+      <div id="facility-request-wrap" style="display:none; margin-top:1rem; padding:1.25rem; background:var(--bg-alt); border-radius:6px; border:1px solid var(--border);">
+        <h3 style="font-size:1rem;">Request a facility</h3>
+        <form id="facility-request-form">
+          <div class="case-field">
+            <label for="req_facility_name">Facility name</label>
+            <input type="text" id="req_facility_name" name="facility_name" required placeholder="e.g. FCI Three Rivers">
+          </div>
+          <div class="case-field">
+            <label for="req_address">Address</label>
+            <input type="text" id="req_address" name="address">
+          </div>
+          <div class="case-field">
+            <label for="req_city">City</label>
+            <input type="text" id="req_city" name="city">
+          </div>
+          <div class="case-field">
+            <label for="req_state">State</label>
+            <input type="text" id="req_state" name="state" maxlength="2">
+          </div>
+          <div class="case-field">
+            <label for="req_zip">ZIP</label>
+            <input type="text" id="req_zip" name="zip">
+          </div>
+          <div class="case-field">
+            <label for="req_security_level">Security level (if known)</label>
+            <select id="req_security_level" name="security_level">
+              <option value="unknown">Not sure</option>
+              <option value="camp">Minimum (camp)</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="administrative">Administrative</option>
+            </select>
+          </div>
+          <div class="case-field">
+            <label for="req_requestor_email">Your email</label>
+            <input type="email" id="req_requestor_email" name="requestor_email" required>
+          </div>
+          <div class="case-field">
+            <label for="req_requestor_name">Your name (optional)</label>
+            <input type="text" id="req_requestor_name" name="requestor_name">
+          </div>
+          <div class="case-field">
+            <label for="req_notes">Notes</label>
+            <textarea id="req_notes" name="notes" rows="2"></textarea>
+          </div>
+          <button type="submit" class="btn btn--outline">Submit request</button>
+          <div id="facility-request-status" class="form-status" role="alert" aria-live="polite"></div>
+        </form>
+      </div>
     </div>
   </section>
 
@@ -147,6 +199,49 @@
 
   loadFacilities();
   loadTiers();
+
+  document.getElementById("show-request-form").addEventListener("click", function (e) {
+    e.preventDefault();
+    document.getElementById("facility-request-wrap").style.display = "block";
+  });
+
+  document.getElementById("facility-request-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const f = e.target;
+    const reqStatus = document.getElementById("facility-request-status");
+    reqStatus.textContent = "Submitting...";
+    reqStatus.className = "form-status";
+
+    try {
+      const r = await fetch("/api/sponsor/facility-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          facility_name: f.facility_name.value.trim(),
+          address: f.address.value.trim(),
+          city: f.city.value.trim(),
+          state: f.state.value.trim(),
+          zip: f.zip.value.trim(),
+          security_level: f.security_level.value,
+          requestor_email: f.requestor_email.value.trim(),
+          requestor_name: f.requestor_name.value.trim(),
+          notes: f.notes.value.trim()
+        })
+      });
+      const data = await r.json();
+      if (r.ok) {
+        reqStatus.textContent = data.message || "Submitted for review.";
+        reqStatus.className = "form-status form-status--ok";
+        f.reset();
+      } else {
+        reqStatus.textContent = data.error || "Could not submit request.";
+        reqStatus.className = "form-status form-status--err";
+      }
+    } catch {
+      reqStatus.textContent = "Network error. Please try again.";
+      reqStatus.className = "form-status form-status--err";
+    }
+  });
 
   form.addEventListener("submit", async function (e) {
     e.preventDefault();

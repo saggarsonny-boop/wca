@@ -47,3 +47,8 @@ bucket_name = "wca-documents"
 #   STRIPE_WEBHOOK_SECRET    Stripe webhook signing secret (whsec_...)
 #   STRIPE_PRICE_ID_MONTHLY  Stripe Price ID for $49/month plan
 #   STRIPE_PRICE_ID_LIFETIME Stripe Price ID for $497 one-time plan
+#
+# Road Sponsorship Program (reuses STRIPE_SECRET_KEY / STRIPE_WEBHOOK_SECRET above):
+#   SPONSOR_ADMIN_PASSWORD   Password for /sponsor-admin.html — separate from
+#                            organiser customer accounts, do not reuse a
+#                            customer-facing password for this
