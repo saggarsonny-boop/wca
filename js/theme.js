@@ -86,88 +86,104 @@
     });
   }
 
+  // 1. GLOBALLY BIND window.toggleSidebar IMMEDIATELY (no DOM dependency needed for declaration!)
+  window.toggleSidebar = function() {
+    const sidebar = document.querySelector('.org-sidebar');
+    if (sidebar) {
+      sidebar.classList.toggle('collapsed');
+      const icon = document.querySelector('#sidebarToggle .toggle-icon');
+      if (icon) {
+        icon.textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
+      }
+      localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed') ? 'true' : 'false');
+    }
+  };
+
   // Register PWA manifest dynamically after DOM load
   document.addEventListener("DOMContentLoaded", () => {
-    const manifestLink = document.createElement("link");
-    manifestLink.rel = "manifest";
-    manifestLink.href = "/manifest.json";
-    if (document.head) {
-      document.head.appendChild(manifestLink);
-    }
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(err => {
-        console.error("PWA Service Worker registration failed:", err);
-      });
-    }
-
-    // Sidebar toggle toggleSidebar function
-    window.toggleSidebar = function() {
+    // A. Apply initial sidebar collapsed state immediately
+    try {
+      const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
       const sidebar = document.querySelector('.org-sidebar');
-      if (sidebar) {
-        sidebar.classList.toggle('collapsed');
+      if (sidebar && isCollapsed) {
+        sidebar.classList.add('collapsed');
         const icon = document.querySelector('#sidebarToggle .toggle-icon');
-        if (icon) {
-          icon.textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
-        }
-        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed') ? 'true' : 'false');
+        if (icon) icon.textContent = '▶';
       }
-    };
-
-    // Load initial sidebar collapsed state
-    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
-    const sidebar = document.querySelector('.org-sidebar');
-    if (sidebar && isCollapsed) {
-      sidebar.classList.add('collapsed');
-      const icon = document.querySelector('#sidebarToggle .toggle-icon');
-      if (icon) icon.textContent = '▶';
+    } catch (e) {
+      console.warn("Failed to load initial sidebar state:", e);
     }
 
-    // Admin check to show admin-cog-link
-    async function checkAdminStatus() {
-      try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const user = await res.json();
-          if (user.role === "admin") {
-            const cog = document.getElementById("admin-cog-link");
-            if (cog) {
-              cog.style.display = "block";
+    // B. Check and reveal admin status
+    try {
+      async function checkAdminStatus() {
+        try {
+          const res = await fetch("/api/auth/me");
+          if (res.ok) {
+            const user = await res.json();
+            if (user.role === "admin") {
+              const cog = document.getElementById("admin-cog-link");
+              if (cog) {
+                cog.style.display = "block";
+              }
             }
           }
+        } catch (err) {
+          console.warn("Failed admin cog visibility check:", err);
         }
-      } catch (err) {
-        console.warn("Failed admin cog visibility check:", err);
       }
+      checkAdminStatus();
+    } catch (e) {
+      console.warn("Failed to schedule checkAdminStatus:", e);
     }
-    checkAdminStatus();
 
-    // PWA Install Prompt Listener
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      const footer = document.querySelector(".site-footer .container");
-      if (footer && !document.getElementById("pwa-install-btn")) {
-        const installBtn = document.createElement("button");
-        installBtn.id = "pwa-install-btn";
-        installBtn.className = "btn btn--outline no-print";
-        installBtn.style.fontSize = "0.75rem";
-        installBtn.style.padding = "0.25rem 0.5rem";
-        installBtn.style.marginLeft = "0.5rem";
-        installBtn.textContent = "📲 Install App";
-        installBtn.addEventListener('click', async () => {
-          if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User choice outcome: ${outcome}`);
-            deferredPrompt = null;
-            installBtn.remove();
-          }
-        });
-        footer.appendChild(installBtn);
+    // C. Try to run register PWA manifest
+    try {
+      const manifestLink = document.createElement("link");
+      manifestLink.rel = "manifest";
+      manifestLink.href = "/manifest.json";
+      if (document.head) {
+        document.head.appendChild(manifestLink);
       }
-    });
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(err => {
+          console.error("PWA Service Worker registration failed:", err);
+        });
+      }
+    } catch (e) {
+      console.warn("PWA Manifest registration failed:", e);
+    }
+
+    // D. Try to run PWA Install Prompt
+    try {
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const footer = document.querySelector(".site-footer .container");
+        if (footer && !document.getElementById("pwa-install-btn")) {
+          const installBtn = document.createElement("button");
+          installBtn.id = "pwa-install-btn";
+          installBtn.className = "btn btn--outline no-print";
+          installBtn.style.fontSize = "0.75rem";
+          installBtn.style.padding = "0.25rem 0.5rem";
+          installBtn.style.marginLeft = "0.5rem";
+          installBtn.textContent = "📲 Install App";
+          installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+              deferredPrompt.prompt();
+              const { outcome } = await deferredPrompt.userChoice;
+              console.log(`User choice outcome: ${outcome}`);
+              deferredPrompt = null;
+              installBtn.remove();
+            }
+          });
+          footer.appendChild(installBtn);
+        }
+      });
+    } catch (e) {
+      console.warn("PWA Install Prompt binding failed:", e);
+    }
 
     // 1. Cross-linking loop in footers
     const footerLinks = document.querySelector(".site-footer span:last-child");
