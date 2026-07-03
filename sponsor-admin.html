@@ -172,8 +172,8 @@
     .sponsorship-card .card-actions {
       margin-top: 10px;
       display: flex;
+      flex-direction: column;
       gap: 8px;
-      flex-wrap: wrap;
     }
 
     .status-badge {
@@ -188,13 +188,15 @@
     .status-badge.pending { background: #fef3c7; color: #92400e; }
     .status-badge.paid { background: #d1fae5; color: #065f46; }
     .status-badge.fulfilled { background: #dbeafe; color: #1e40af; }
+    .status-badge.shipped { background: #f3e8ff; color: #6b21a8; }
+    .status-badge.delivered { background: #d1fae5; color: #065f46; }
     .status-badge.cancelled { background: #fee2e2; color: #991b1b; }
     .status-badge.approved { background: #d1fae5; color: #065f46; }
     .status-badge.denied { background: #fee2e2; color: #991b1b; }
     .status-badge.duplicate { background: #f3f4f6; color: #4b5563; }
 
     .action-btn {
-      padding: 4px 14px;
+      padding: 6px 14px;
       border-radius: 4px;
       border: none;
       cursor: pointer;
@@ -208,6 +210,46 @@
     .action-btn.deny { background: #991b1b; color: #fff; }
     .action-btn.duplicate { background: #6b7280; color: #fff; }
     .action-btn.fulfill { background: #1e40af; color: #fff; }
+
+    .shipping-label-card {
+      margin-top: 12px;
+      padding: 12px 16px;
+      background: #fafafa;
+      border: 1px dashed #d0d0d0;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 13px;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    .tracking-input-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .tracking-input {
+      padding: 6px 12px;
+      font-size: 14px;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      min-width: 200px;
+      font-family: inherit;
+    }
+
+    .notes-input {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      margin-top: 8px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
 
     .empty-state {
       text-align: center;
@@ -390,6 +432,7 @@ function renderDashboard() {
   const pending = stats.pending || 0;
   const paid = stats.paid || 0;
   const fulfilled = stats.fulfilled || 0;
+  const shipped = stats.shipped || 0;
   const requestsPending = allRequests.filter(r => r.status === 'pending').length;
 
   const filteredSponsorships = filterSponsorships(allSponsorships);
@@ -407,6 +450,7 @@ function renderDashboard() {
         <div class="stat-box"><div class="number">${pending}</div><div class="label">Pending</div></div>
         <div class="stat-box"><div class="number">${paid}</div><div class="label">Paid</div></div>
         <div class="stat-box"><div class="number">${fulfilled}</div><div class="label">Fulfilled</div></div>
+        <div class="stat-box"><div class="number">${shipped}</div><div class="label">Shipped</div></div>
         <div class="stat-box"><div class="number">${requestsPending}</div><div class="label">Facility Requests</div></div>
       </div>
 
@@ -424,16 +468,27 @@ function renderDashboard() {
 
 function filterSponsorships(list) {
   const searchEl = document.getElementById('search-box');
-  if (!searchEl) return list;
-  const query = searchEl.value.toLowerCase().trim();
-  if (!query) return list;
+  const statusEl = document.getElementById('status-filter');
+  let filtered = list;
 
-  return list.filter(s => {
-    const name = (s.sponsor_name || '').toLowerCase();
-    const email = (s.sponsor_email || '').toLowerCase();
-    const facility = (s.facility_name || '').toLowerCase();
-    return name.includes(query) || email.includes(query) || facility.includes(query);
-  });
+  if (statusEl && statusEl.value) {
+    const val = statusEl.value;
+    filtered = filtered.filter(s => s.status === val);
+  }
+
+  if (searchEl) {
+    const query = searchEl.value.toLowerCase().trim();
+    if (query) {
+      filtered = filtered.filter(s => {
+        const name = (s.sponsor_name || '').toLowerCase();
+        const email = (s.sponsor_email || '').toLowerCase();
+        const facility = (s.facility_name || '').toLowerCase();
+        return name.includes(query) || email.includes(query) || facility.includes(query);
+      });
+    }
+  }
+
+  return filtered;
 }
 
 function filterRequests(list) {
@@ -450,45 +505,92 @@ function filterRequests(list) {
 }
 
 function renderSponsorshipsList(list) {
-  if (!list.length) {
-    return `
-      <input class="search-box" id="search-box" placeholder="Search by name, email, or facility..." oninput="refreshCurrentTab()">
-      <div class="empty-state">No sponsorships yet</div>
-    `;
-  }
+  const searchVal = document.getElementById('search-box') ? document.getElementById('search-box').value : '';
+  const filterVal = document.getElementById('status-filter') ? document.getElementById('status-filter').value : '';
 
   let html = `
-    <input class="search-box" id="search-box" placeholder="Search by name, email, or facility..." oninput="refreshCurrentTab()">
+    <div style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+      <input class="search-box" id="search-box" style="margin-bottom: 0; flex: 1;" placeholder="Search by name, email, or facility..." value="${escHtml(searchVal)}" oninput="refreshCurrentTab()">
+      <select id="status-filter" style="padding: 12px 16px; font-size: 16px; border: 1px solid #d0d0d0; border-radius: 6px; font-family: Georgia, serif; background: #fff;" onchange="refreshCurrentTab()">
+        <option value="" ${filterVal === '' ? 'selected' : ''}>All Statuses</option>
+        <option value="pending" ${filterVal === 'pending' ? 'selected' : ''}>Pending</option>
+        <option value="paid" ${filterVal === 'paid' ? 'selected' : ''}>Paid</option>
+        <option value="fulfilled" ${filterVal === 'fulfilled' ? 'selected' : ''}>Fulfilled</option>
+        <option value="shipped" ${filterVal === 'shipped' ? 'selected' : ''}>Shipped</option>
+        <option value="delivered" ${filterVal === 'delivered' ? 'selected' : ''}>Delivered</option>
+      </select>
+    </div>
   `;
+
+  if (!list.length) {
+    return html + `<div class="empty-state">No sponsorships matched filter</div>`;
+  }
 
   for (const s of list) {
     const amount = s.amount_cents ? (s.amount_cents / 100).toFixed(2) : '0.00';
     const status = s.status || 'pending';
     const name = escHtml(s.sponsor_name) || 'Anonymous';
     const email = escHtml(s.sponsor_email);
+    const phone = escHtml(s.sponsor_phone);
     const facility = escHtml(s.facility_name) || 'Unknown facility';
     const message = escHtml(s.message);
     const date = s.created_at ? new Date(s.created_at).toLocaleDateString() : '';
+
+    const address = escHtml(s.facility_address) || 'No Address Stored';
+    const city = escHtml(s.facility_city) || '';
+    const state = escHtml(s.facility_state) || '';
+    const zip = escHtml(s.facility_zip) || '';
+    const tracking = escHtml(s.tracking_number) || '';
+    const notes = escHtml(s.fulfillment_notes) || '';
+    const shippedDate = s.shipped_at ? new Date(s.shipped_at).toLocaleDateString() : '';
 
     html += `
       <div class="sponsorship-card">
         <div class="card-row">
           <div>
             <span class="card-name">${name}</span>
-            <span class="card-email">${email}</span>
+            <span class="card-email">${email} ${phone ? `| ${phone}` : ''}</span>
             ${s.is_anonymous ? ' 🔒' : ''}
           </div>
           <span class="status-badge ${status}">${status}</span>
         </div>
         <div class="card-details">
-          <span>${facility}</span>
           <span>$${amount}</span>
           <span>${s.book_count || 0} books</span>
-          <span>${date}</span>
+          <span>Order Date: ${date}</span>
         </div>
+
+        <div class="shipping-label-card">
+          <strong>SHIPPING LABEL:</strong><br>
+          ${facility}<br>
+          ${address}<br>
+          ${city}${city && state ? ', ' : ''}${state} ${zip}
+        </div>
+
         ${message ? `<div class="card-message">"${message}"</div>` : ''}
+        ${notes ? `<div class="card-message" style="border-left: 3px solid #1e40af; background: #eff6ff; padding: 6px 12px; font-style: normal; margin-top: 10px;"><strong>Fulfillment Note:</strong> "${notes}"</div>` : ''}
+
         <div class="card-actions">
-          ${status === 'paid' ? `<button class="action-btn fulfill" onclick="markFulfilled('${escHtml(s.id)}')">Mark Fulfilled</button>` : ''}
+          ${status === 'paid' ? `
+            <div>
+              <textarea id="notes-${s.id}" class="notes-input" placeholder="Add fulfillment notes (optional)...">${notes}</textarea>
+              <button class="action-btn fulfill" style="margin-top: 8px;" onclick="markFulfilled('${escHtml(s.id)}')">Mark Fulfilled</button>
+            </div>
+          ` : ''}
+
+          ${status === 'fulfilled' || status === 'paid' ? `
+            <div class="tracking-input-row">
+              <input id="tracking-${s.id}" class="tracking-input" placeholder="Enter tracking number" value="${tracking}">
+              <button class="action-btn fulfill" style="background:#10b981;" onclick="saveTracking('${escHtml(s.id)}')">Ship & Save Tracking</button>
+            </div>
+          ` : ''}
+
+          ${status === 'shipped' ? `
+            <div style="font-size:14px; color:#4b5563; margin-top:8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span><strong>📦 Tracking Number:</strong> <code>${tracking}</code> (Shipped on ${shippedDate})</span>
+              <button class="action-btn fulfill" style="background:#6b7280; padding: 2px 8px; font-size:11px;" onclick="editTracking('${escHtml(s.id)}', '${tracking}')">Update Tracking</button>
+            </div>
+          ` : ''}
         </div>
       </div>
     `;
@@ -538,7 +640,7 @@ function renderRequestsList(list) {
           <span>${date}</span>
         </div>
         ${notes ? `<div class="card-message">"${notes}"</div>` : ''}
-        <div class="card-actions">
+        <div class="card-actions" style="flex-direction: row; gap: 8px;">
           <button class="action-btn approve" onclick="approveRequest('${escHtml(r.id)}')">✅ Approve</button>
           <button class="action-btn deny" onclick="denyRequest('${escHtml(r.id)}')">❌ Deny</button>
           <button class="action-btn duplicate" onclick="markDuplicate('${escHtml(r.id)}')">📋 Duplicate</button>
@@ -552,11 +654,12 @@ function renderRequestsList(list) {
 
 async function markFulfilled(id) {
   if (!confirm('Mark this sponsorship as fulfilled?')) return;
+  const notes = document.getElementById('notes-' + id).value;
   try {
     const res = await fetch('/api/sponsor/admin', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, action: 'fulfill' })
+      body: JSON.stringify({ id, action: 'fulfill', notes })
     });
     if (res.ok) {
       checkAuthAndLoad();
@@ -566,6 +669,51 @@ async function markFulfilled(id) {
   } catch(e) {
     alert('Error: ' + e.message);
   }
+}
+
+async function saveTracking(id) {
+  const tracking_number = document.getElementById('tracking-' + id).value.trim();
+  if (!tracking_number) {
+    alert('Please enter a tracking number');
+    return;
+  }
+  try {
+    const res = await fetch('/api/sponsor/admin', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, action: 'ship', tracking_number })
+    });
+    if (res.ok) {
+      checkAuthAndLoad();
+    } else {
+      alert('Failed to save tracking');
+    }
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+function editTracking(id, currentTracking) {
+  const tracking_number = prompt('Update tracking number:', currentTracking);
+  if (tracking_number === null) return; // cancelled
+  if (!tracking_number.trim()) {
+    alert('Tracking number cannot be empty');
+    return;
+  }
+  
+  fetch('/api/sponsor/admin', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, action: 'ship', tracking_number: tracking_number.trim() })
+  }).then(res => {
+    if (res.ok) {
+      checkAuthAndLoad();
+    } else {
+      alert('Failed to update tracking');
+    }
+  }).catch(e => {
+    alert('Error: ' + e.message);
+  });
 }
 
 async function approveRequest(id) {
