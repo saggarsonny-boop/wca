@@ -50,6 +50,10 @@
   <main id="main-content" class="org-main">
     <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Family Support Panel</h1>
     <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Access-level: Limited View</p>
+    <!-- Trial Status Banner -->
+    <div id="trial-status-banner" style="background:#fef3c7; border:1px solid #f59e0b; padding:10px 12px; border-radius:6px; margin-bottom:1.5rem; font-size:0.9rem; color:#b45309;">
+      Checking subscription status...
+    </div>
 
     <!-- READINESS PROFILE -->
     <div style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
@@ -106,5 +110,34 @@
 
 <script src="/js/nav-toggle.js"></script>
 <a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
+<script>
+  function updateTrialStatus() {
+    const inviteDateKey = 'wca_family_invite_date';
+    let inviteDateStr = localStorage.getItem(inviteDateKey);
+    if (!inviteDateStr) {
+      inviteDateStr = new Date().toISOString();
+      localStorage.setItem(inviteDateKey, inviteDateStr);
+    }
+    const inviteDate = new Date(inviteDateStr);
+    const now = new Date();
+    const diffTime = (inviteDate.getTime() + 7 * 24 * 60 * 60 * 1000) - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    const banner = document.getElementById('trial-status-banner');
+    if (!banner) return;
+    if (diffDays > 0) {
+      banner.innerHTML = `⏳ <strong>Trial:</strong> ${diffDays} days remaining (Family/Friend 7-day free trial)`;
+      banner.style.background = '#fef3c7';
+      banner.style.color = '#b45309';
+      banner.style.borderColor = '#f59e0b';
+    } else {
+      banner.innerHTML = `⚠️ <strong>Trial expired</strong> - <a href="/organiser/subscribe.html" style="color:var(--accent); font-weight:600;">subscribe now</a> to maintain access ($9/month)`;
+      banner.style.background = '#fee2e2';
+      banner.style.color = '#b91c1c';
+      banner.style.borderColor = '#ef4444';
+    }
+  }
+  updateTrialStatus();
+</script>
 </body>
 </html>
