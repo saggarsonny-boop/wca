@@ -589,3 +589,21 @@
   outline: 3px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* ── Skip link (hidden until keyboard-focused, no layout impact otherwise) ── */
+.skip-link {
+  position: absolute;
+  top: -999px;
+  left: 1rem;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 4px;
+  z-index: 1000;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
