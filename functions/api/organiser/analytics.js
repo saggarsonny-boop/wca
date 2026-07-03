@@ -8,6 +8,9 @@ export async function onRequest({ request, env }) {
     const uid = user.uid;
 
     if (request.method === "GET") {
+      if (user.role !== "admin") {
+        return err("Unauthorized", 401);
+      }
       // Return counts aggregated by event_type and url
       const { results: totals } = await env.DB.prepare(
         "SELECT event_type, COUNT(*) as count FROM organiser_analytics GROUP BY event_type ORDER BY count DESC"

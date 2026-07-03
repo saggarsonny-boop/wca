@@ -117,6 +117,11 @@
   async function loadAnalytics() {
     try {
       const res = await fetch('/api/organiser/analytics');
+      if (res.status === 401) {
+        alert("Unauthorized access. Admin privileges required.");
+        window.location.href = "/organiser/login.html";
+        return;
+      }
       if (res.ok) {
         const { totals, pages } = await res.json();
         
