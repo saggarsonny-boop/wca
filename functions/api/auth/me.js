@@ -39,7 +39,8 @@ export async function onRequestGet({ request, env }) {
       }
     }
 
-    return json({ uid: user.uid, ...row });
+    const isAdmin = row.email.includes("admin") || row.email === "sonnysaggar@gmail.com";
+    return json({ uid: user.uid, role: isAdmin ? "admin" : "user", ...row });
   } catch (e) {
     if (e instanceof Response) return e;
     return json({ error: "Server error" }, 500);

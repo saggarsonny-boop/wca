@@ -101,6 +101,29 @@
       });
     }
 
+    // Admin check to inject cog link
+    async function injectAdminCog() {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const user = await res.json();
+          if (user.role === "admin") {
+            const nav = document.querySelector("nav[aria-label='Organiser navigation']");
+            if (nav && !document.getElementById("admin-cog-link")) {
+              const cog = document.createElement("a");
+              cog.id = "admin-cog-link";
+              cog.href = "/organiser/admin.html";
+              cog.textContent = "⚙️ Admin";
+              nav.appendChild(cog);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Failed admin cog injection check:", err);
+      }
+    }
+    injectAdminCog();
+
     // PWA Install Prompt Listener
     let deferredPrompt;
     
