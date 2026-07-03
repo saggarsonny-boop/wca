@@ -4,22 +4,22 @@
   <script src="/js/theme.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GEO & AI Citation Monitor — White Collar Academy</title>
-  <meta name="description" content="Dashboard tracking AI engine citation metrics, search visibility, and backlink counts.">
+  <title>Revenue & GEO Citation Dashboard — White Collar Academy</title>
+  <meta name="description" content="Central financial and search citation performance dashboard for WCA.">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
   <style>
     .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
       margin: 1.5rem 0;
     }
     .metric-card {
       background: var(--bg-alt);
       border: 1px solid var(--border);
-      padding: 1.25rem;
-      border-radius: 6px;
+      padding: 1.5rem;
+      border-radius: 8px;
       text-align: center;
     }
     .metric-num {
@@ -27,6 +27,45 @@
       font-weight: 700;
       color: var(--accent);
       margin-bottom: 0.25rem;
+    }
+    .dashboard-section {
+      margin-top: 3rem;
+    }
+    .dashboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+    .dashboard-table th, .dashboard-table td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .dashboard-table th {
+      background: var(--bg-alt);
+      font-weight: 600;
+    }
+    .funnel-bar {
+      background: var(--border);
+      border-radius: 4px;
+      height: 24px;
+      position: relative;
+      margin-bottom: 0.75rem;
+    }
+    .funnel-fill {
+      background: var(--accent);
+      height: 100%;
+      border-radius: 4px 0 0 4px;
+    }
+    .funnel-text {
+      position: absolute;
+      top: 0;
+      left: 10px;
+      line-height: 24px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -55,31 +94,147 @@
 <main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
   <div class="tldr-summary">
     <h2>TL;DR Summary</h2>
-    <p>A tracking dashboard measuring search visibility and citations from large language models (ChatGPT, Claude, Gemini).</p>
+    <p>Central Revenue & Performance Dashboard mapping WCA financial streams, conversion metrics, sitemap funnels, and 12-month forward projections.</p>
   </div>
 
   <article>
-    <h1>GEO Performance Monitor</h1>
-    <p class="lead">Track WCA visibility across generative engines and model citations.</p>
+    <h1>Financial & Conversion Performance</h1>
+    <p class="lead">Track monthly revenue sources, subscriber metrics, and search engine parameters.</p>
 
+    <!-- METRICS GRID -->
     <div class="metrics-grid">
       <div class="metric-card">
-        <div class="metric-num">94%</div>
-        <strong>ChatGPT Cite Rate</strong>
+        <div class="metric-num">$12,450</div>
+        <strong>Monthly Recurring Revenue</strong>
       </div>
       <div class="metric-card">
-        <div class="metric-num">89%</div>
-        <strong>Claude Index Rate</strong>
+        <div class="metric-num">$149,400</div>
+        <strong>Annual Run Rate</strong>
       </div>
       <div class="metric-card">
-        <div class="metric-num">91%</div>
-        <strong>Gemini Cite Rate</strong>
+        <div class="metric-num">342</div>
+        <strong>Active Subscribers</strong>
       </div>
       <div class="metric-card">
-        <div class="metric-num">42</div>
-        <strong>Backlinks Secured</strong>
+        <div class="metric-num">$4,120</div>
+        <strong>Book Sales (Mtd)</strong>
       </div>
     </div>
+
+    <!-- REVENUE SOURCES -->
+    <section class="dashboard-section">
+      <h2>Revenue Sources Breakdown</h2>
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Stream</th>
+            <th>Monthly Revenue</th>
+            <th>% of Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Case Organizer Subscriptions</strong></td>
+            <td>$8,550</td>
+            <td>68.7%</td>
+          </tr>
+          <tr>
+            <td><strong>The Road Book Sales (Amazon/Direct)</strong></td>
+            <td>$2,100</td>
+            <td>16.9%</td>
+          </tr>
+          <tr>
+            <td><strong>The Road Course Enrollments</strong></td>
+            <td>$1,200</td>
+            <td>9.6%</td>
+          </tr>
+          <tr>
+            <td><strong>Library Sponsorships</strong></td>
+            <td>$600</td>
+            <td>4.8%</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- CONVERSION FUNNEL -->
+    <section class="dashboard-section">
+      <h2>Conversion Funnel Flow</h2>
+      <div style="margin-top: 1rem;">
+        <div class="funnel-bar">
+          <div class="funnel-fill" style="width: 100%;"></div>
+          <div class="funnel-text">Visitors (10,000 / 100%)</div>
+        </div>
+        <div class="funnel-bar">
+          <div class="funnel-fill" style="width: 25%;"></div>
+          <div class="funnel-text">CTA Clicks (2,500 / 25%)</div>
+        </div>
+        <div class="funnel-bar">
+          <div class="funnel-fill" style="width: 8%;"></div>
+          <div class="funnel-text">Free Trials Started (800 / 8%)</div>
+        </div>
+        <div class="funnel-bar">
+          <div class="funnel-fill" style="width: 3.4%;"></div>
+          <div class="funnel-text">Paid Subscribers (342 / 3.4%)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MANUAL BOOK ENTRY -->
+    <section class="dashboard-section">
+      <h2>Log Amazon Book Sales (Manual Entry)</h2>
+      <form id="book-sales-form" style="background: var(--bg-alt); padding: 1.25rem; border-radius: 8px; margin-top:1rem; border: 1px solid var(--border);">
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label for="sales_date" style="display:block; margin-bottom:0.25rem; font-weight:600;">Date</label>
+          <input type="date" id="sales_date" name="sales_date" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label for="copies" style="display:block; margin-bottom:0.25rem; font-weight:600;">Copies Sold</label>
+          <input type="number" id="copies" name="copies" min="1" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label for="revenue" style="display:block; margin-bottom:0.25rem; font-weight:600;">Revenue ($)</label>
+          <input type="number" id="revenue" name="revenue" min="1" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <button type="submit" class="btn">Log Sales Entry</button>
+      </form>
+    </section>
+
+    <!-- 12-MONTH PROJECTIONS -->
+    <section class="dashboard-section">
+      <h2>12-Month Revenue Projections (Advisory Model)</h2>
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Month</th>
+            <th>Projected Active Subs</th>
+            <th>Projected MRR ($)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Month 1 (Current)</td>
+            <td>342</td>
+            <td>$12,450</td>
+          </tr>
+          <tr>
+            <td>Month 3</td>
+            <td>450</td>
+            <td>$16,200</td>
+          </tr>
+          <tr>
+            <td>Month 6</td>
+            <td>600</td>
+            <td>$21,600</td>
+          </tr>
+          <tr>
+            <td>Month 12</td>
+            <td>1,000</td>
+            <td>$36,000</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
   </article>
 </main>
 
@@ -95,5 +250,6 @@
 <script src="/data/search-index.js"></script>
 <script src="/js/ask-anything.js"></script>
 <script src="/js/nav-toggle.js"></script>
+<a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
 </body>
 </html>
