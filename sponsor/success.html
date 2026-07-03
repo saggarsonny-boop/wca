@@ -23,12 +23,33 @@
       <p class="lead" style="margin-top:0.75rem;">
         Your sponsorship is confirmed. Copies of The Road will be sent to the facility library you chose.
       </p>
-      <p class="text-soft" style="margin-top:1rem;">
+      
+      <div id="details" style="margin-top:1.5rem; display:none; padding:1.5rem; background:#f4f6f8; border-radius:8px; display:inline-block; text-align:left; color:#1a202c; border:1px solid #e2e8f0;">
+        <p style="margin:0 0 0.5rem 0;"><strong>Facility:</strong> <span id="facility-name"></span></p>
+        <p style="margin:0;"><strong>Sponsorship Tier:</strong> <span id="tier-name"></span></p>
+      </div>
+
+      <p class="text-soft" style="margin-top:1.5rem;">
         Stripe will send a payment receipt to your email.
+      </p>
+
+      <p style="margin-top:2rem;">
+        <a href="/sponsor.html" class="btn" style="text-decoration:none; display:inline-block; background:#2c4a7c; color:#fff; padding:0.75rem 1.5rem; border-radius:6px; font-weight:600;">Return to Sponsorship Map</a>
       </p>
     </div>
   </section>
 </main>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const facility = params.get("facility");
+  const tier = params.get("tier");
+  if (facility && tier) {
+    document.getElementById("facility-name").textContent = facility;
+    document.getElementById("tier-name").textContent = tier;
+    document.getElementById("details").style.display = "inline-block";
+  }
+</script>
 
 <footer class="site-footer">
   <div class="container">

@@ -32,20 +32,40 @@ export async function onRequestPost({ request, env }) {
       tier.amount_cents, tier.book_count, message || "", is_anonymous ? 1 : 0
     ).run();
 
+    const tierIdMap = {
+      1: "STRIPE_PRICE_ID_SINGLE_PAPERBACK",
+      2: "STRIPE_PRICE_ID_SMALL_SET_PAPERBACK",
+      3: "STRIPE_PRICE_ID_LIBRARY_SET_PAPERBACK",
+      4: "STRIPE_PRICE_ID_FULL_LIBRARY_PAPERBACK",
+      5: "STRIPE_PRICE_ID_SINGLE_HARDCOVER",
+      6: "STRIPE_PRICE_ID_SMALL_SET_HARDCOVER",
+      7: "STRIPE_PRICE_ID_LIBRARY_SET_HARDCOVER",
+      8: "STRIPE_PRICE_ID_FULL_LIBRARY_HARDCOVER",
+    };
+
+    const envVarName = tierIdMap[tier_id];
+    const priceId = envVarName ? env[envVarName] : null;
+    if (!priceId) {
+      console.error(`Missing Stripe Price ID for tier_id: ${tier_id} (Env var: ${envVarName})`);
+      return err(`Sponsorship tier is not configured correctly on the server.`, 500);
+    }
+
     const origin = new URL(request.url).origin;
 
     const params = new URLSearchParams({
-      "line_items[0][price_data][currency]": "usd",
-      "line_items[0][price_data][unit_amount]": String(tier.amount_cents),
-      "line_items[0][price_data][product_data][name]": `${tier.name} — ${facility.name}`,
-      "line_items[0][quantity]": "1",
       mode: "payment",
-      success_url: `${origin}/sponsor/success.html?id=${sponsorshipId}`,
+      success_url: `${origin}/sponsor/success.html?facility=${encodeURIComponent(facility.name)}&tier=${encodeURIComponent(tier.name)}`,
       cancel_url: `${origin}/sponsor.html`,
       customer_email: sponsor_email,
-      "metadata[type]": "sponsorship",
-      "metadata[sponsorship_id]": sponsorshipId,
+      "line_items[0][price]": priceId,
+      "line_items[0][quantity]": "1",
       "metadata[facility_id]": facility_id,
+      "metadata[tier_id]": String(tier_id),
+      "metadata[book_count]": String(tier.book_count),
+      "metadata[sponsor_name]": sponsor_name,
+      "metadata[sponsor_email]": sponsor_email,
+      "metadata[sponsorship_id]": sponsorshipId,
+      "metadata[type]": "sponsorship"
     });
 
     const resp = await fetch("https://api.stripe.com/v1/checkout/sessions", {
@@ -59,8 +79,8 @@ export async function onRequestPost({ request, env }) {
 
     if (!resp.ok) {
       const errBody = await resp.text();
-      console.error("Stripe sponsorship checkout error", resp.status, errBody);
-      return err("Could not start checkout. Please try again.", 503);
+      console.error("Stripe checkout session creation failed:", resp.status, errBody);
+      return err(`Stripe session creation failed: ${errBody}`, 503);
     }
 
     const session = await resp.json();
@@ -73,6 +93,6 @@ export async function onRequestPost({ request, env }) {
   } catch (e) {
     if (e instanceof Response) return e;
     console.error("sponsor checkout error", e);
-    return err("Server error", 500);
+    return err(e instanceof Error ? e.message : "Server error", 500);
   }
 }

@@ -1,237 +1,249 @@
-// Interactive US map for the Sponsor a Prison Library page.
-//
-// This is a schematic map, not a survey-accurate one: state positions come
-// from well-known approximate state centroid coordinates (lat/lon), and
-// facility markers are placed near their state's centroid with a small
-// deterministic offset (so multiple facilities in one state don't stack
-// exactly on top of each other). We don't have precise street-level
-// geocoding for every facility, so this deliberately doesn't pretend to.
-// It's for browsing/selecting a facility visually, not for real navigation.
+// Premium, clean state dropdown selector and facilities navigator.
+// Replaces the buggy SVG map with a highly functional and responsive design.
 (function () {
-  const STATE_CENTROIDS = {
-    AL: [32.8, -86.8], AZ: [34.2, -111.9], AR: [34.9, -92.4], CA: [37.2, -119.7],
-    CO: [39.0, -105.5], CT: [41.6, -72.7], DE: [39.0, -75.5], FL: [28.6, -81.5],
-    GA: [32.6, -83.4], ID: [44.2, -114.5], IL: [40.0, -89.2], IN: [39.9, -86.3],
-    IA: [42.0, -93.5], KS: [38.5, -98.4], KY: [37.5, -85.3], LA: [31.2, -92.0],
-    ME: [45.4, -69.0], MD: [39.0, -76.7], MA: [42.3, -71.8], MI: [44.3, -85.4],
-    MN: [46.3, -94.3], MS: [32.7, -89.7], MO: [38.5, -92.6], MT: [47.0, -109.6],
-    NE: [41.5, -99.8], NV: [39.3, -116.9], NH: [43.7, -71.6], NJ: [40.1, -74.7],
-    NM: [34.4, -106.1], NY: [42.9, -75.5], NC: [35.6, -79.4], ND: [47.5, -100.5],
-    OH: [40.3, -82.8], OK: [35.6, -97.5], OR: [44.0, -120.5], PA: [40.9, -77.8],
-    RI: [41.7, -71.6], SC: [33.9, -80.9], SD: [44.4, -100.2], TN: [35.9, -86.4],
-    TX: [31.5, -99.3], UT: [39.3, -111.7], VT: [44.0, -72.7], VA: [37.5, -78.5],
-    WA: [47.4, -120.5], WV: [38.6, -80.6], WI: [44.6, -89.9], WY: [43.0, -107.5],
-    DC: [38.9, -77.0]
-  };
-  // Alaska and Hawaii are drawn as fixed insets (standard US map convention)
-  // rather than their real, far-off coordinates.
-  const INSET_POSITIONS = {
-    AK: { x: 60, y: 480 },
-    HI: { x: 180, y: 480 }
+  const STATE_NAMES = {
+    AL: 'Alabama', AK: 'Alaska', AZ: 'Arizona', AR: 'Arkansas', CA: 'California',
+    CO: 'Colorado', CT: 'Connecticut', DE: 'Delaware', FL: 'Florida', GA: 'Georgia',
+    HI: 'Hawaii', ID: 'Idaho', IL: 'Illinois', IN: 'Indiana', IA: 'Iowa',
+    KS: 'Kansas', KY: 'Kentucky', LA: 'Louisiana', ME: 'Maine', MD: 'Maryland',
+    MA: 'Massachusetts', MI: 'Michigan', MN: 'Minnesota', MS: 'Mississippi',
+    MO: 'Missouri', MT: 'Montana', NE: 'Nebraska', NV: 'Nevada', NH: 'New Hampshire',
+    NJ: 'New Jersey', NM: 'New Mexico', NY: 'New York', NC: 'North Carolina',
+    ND: 'North Dakota', OH: 'Ohio', OK: 'Oklahoma', OR: 'Oregon', PA: 'Pennsylvania',
+    RI: 'Rhode Island', SC: 'South Carolina', SD: 'South Dakota', TN: 'Tennessee',
+    TX: 'Texas', UT: 'Utah', VT: 'Vermont', VA: 'Virginia', WA: 'Washington',
+    WV: 'West Virginia', WI: 'Wisconsin', WY: 'Wyoming', DC: 'District of Columbia'
   };
 
-  const VB_W = 960;
-  const VB_H = 560;
-  const LON_MIN = -125, LON_MAX = -66;
-  const LAT_MIN = 24, LAT_MAX = 49;
-
-  function project(lat, lon) {
-    const x = ((lon - LON_MIN) / (LON_MAX - LON_MIN)) * (VB_W - 60) + 30;
-    const y = ((LAT_MAX - lat) / (LAT_MAX - LAT_MIN)) * (VB_H - 80) + 20;
-    return { x, y };
-  }
-
-  // Lays facilities out in a small grid centered on the state, spaced far
-  // enough apart that pins don't overlap even when a state has a dozen-plus
-  // facilities (e.g. TX). List order is stable (already sorted by the API),
-  // so this is deterministic, not random.
-  function gridPositions(count, spacing) {
-    const cols = Math.ceil(Math.sqrt(count));
-    const rows = Math.ceil(count / cols);
-    const positions = [];
-    for (let i = 0; i < count; i++) {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      positions.push({
-        dx: (col - (cols - 1) / 2) * spacing,
-        dy: (row - (rows - 1) / 2) * spacing
-      });
+  const STYLE_BLOCK = `
+    .wca-map-container {
+      padding: 1.5rem;
+      background: var(--bg-alt, #f7fafc);
+      border-radius: 8px;
+      border: 1px solid var(--border, #e2e8f0);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
-    return positions;
-  }
-
-  function svgEl(tag, attrs) {
-    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
-    for (const k in attrs) el.setAttribute(k, attrs[k]);
-    return el;
-  }
+    .wca-map-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text, #1a202c);
+      margin: 0;
+    }
+    .wca-map-select-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+    .wca-map-select {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 6px;
+      border: 1px solid var(--border, #e2e8f0);
+      background: var(--bg, #ffffff);
+      color: var(--text, #1a202c);
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .wca-map-select:focus {
+      border-color: var(--accent, #2c4a7c);
+    }
+    .wca-map-clear-btn {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid var(--border, #e2e8f0);
+      background: var(--bg, #ffffff);
+      color: var(--text-soft, #718096);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .wca-map-clear-btn:hover {
+      background: var(--bg-alt, #f7fafc);
+      color: var(--text, #1a202c);
+    }
+    .wca-map-facilities-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 280px;
+      overflow-y: auto;
+      border: 1px solid var(--border, #e2e8f0);
+      border-radius: 6px;
+      background: var(--bg, #ffffff);
+      padding: 0.5rem;
+    }
+    .wca-map-facility-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      background: var(--bg-alt, #f7fafc);
+      cursor: pointer;
+      transition: background 0.2s;
+      border: 1px solid transparent;
+    }
+    .wca-map-facility-item:hover {
+      background: #edf2f7;
+      border-color: var(--border, #e2e8f0);
+    }
+    .wca-map-facility-name {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: var(--text, #1a202c);
+    }
+    .wca-map-facility-meta {
+      font-size: 0.8rem;
+      color: var(--text-soft, #718096);
+      background: var(--bg, #ffffff);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--border, #e2e8f0);
+      text-transform: capitalize;
+    }
+    .wca-map-placeholder {
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-soft, #718096);
+      font-size: 0.95rem;
+      border: 1px dashed var(--border, #e2e8f0);
+      border-radius: 6px;
+      background: var(--bg, #ffffff);
+    }
+  `;
 
   function initPrisonMap(containerId, facilities, onSelect) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
+    // Inject styles if not already present
+    if (!document.getElementById('wca-map-styles')) {
+      const style = document.createElement('style');
+      style.id = 'wca-map-styles';
+      style.textContent = STYLE_BLOCK;
+      document.head.appendChild(style);
+    }
+
+    // Group facilities by state
     const byState = {};
-    facilities.forEach((f) => {
+    facilities.forEach(f => {
       if (!f.state) return;
       (byState[f.state] = byState[f.state] || []).push(f);
     });
 
-    const svg = svgEl("svg", {
-      viewBox: `0 0 ${VB_W} ${VB_H}`,
-      class: "prison-map-svg",
-      role: "img",
-      "aria-label": "Map of US states with sponsorable federal facilities"
+    // Get sorted states list
+    const sortedStates = Object.keys(byState).sort((a, b) => {
+      const nameA = STATE_NAMES[a] || a;
+      const nameB = STATE_NAMES[b] || b;
+      return nameA.localeCompare(nameB);
     });
 
-    const statesLayer = svgEl("g", { class: "prison-map-states" });
-    const pinsLayer = svgEl("g", { class: "prison-map-pins" });
-    svg.appendChild(statesLayer);
-    svg.appendChild(pinsLayer);
+    // Build DOM
+    const wrapper = document.createElement('div');
+    wrapper.className = 'wca-map-container';
 
-    let zoomedState = null;
+    const title = document.createElement('h3');
+    title.className = 'wca-map-title';
+    title.textContent = 'Browse Facilities by State';
+    wrapper.appendChild(title);
 
-    function stateCenter(abbr) {
-      if (INSET_POSITIONS[abbr]) return INSET_POSITIONS[abbr];
-      const c = STATE_CENTROIDS[abbr];
-      return c ? project(c[0], c[1]) : null;
+    const selectRow = document.createElement('div');
+    selectRow.className = 'wca-map-select-row';
+
+    const select = document.createElement('select');
+    select.className = 'wca-map-select';
+    
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+    defaultOpt.textContent = 'Choose a State...';
+    select.appendChild(defaultOpt);
+
+    sortedStates.forEach(state => {
+      const opt = document.createElement('option');
+      opt.value = state;
+      const name = STATE_NAMES[state] || state;
+      const count = byState[state].length;
+      opt.textContent = name + ' (' + count + ' facilit' + (count > 1 ? 'ies' : 'y') + ')';
+      select.appendChild(opt);
+    });
+    selectRow.appendChild(select);
+
+    const clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.className = 'wca-map-clear-btn';
+    clearBtn.textContent = 'Clear Filter';
+    clearBtn.style.display = 'none';
+    selectRow.appendChild(clearBtn);
+
+    wrapper.appendChild(selectRow);
+
+    const listContainer = document.createElement('div');
+    wrapper.appendChild(listContainer);
+
+    function showPlaceholder() {
+      listContainer.innerHTML = '\n        <div class="wca-map-placeholder">\n          Select a state above to view and select available facilities.\n        </div>\n      ';
+      clearBtn.style.display = 'none';
     }
 
-    function renderStates() {
-      statesLayer.innerHTML = "";
-      const allAbbrs = new Set([...Object.keys(STATE_CENTROIDS), ...Object.keys(INSET_POSITIONS)]);
-      allAbbrs.forEach((abbr) => {
-        // While zoomed into a state, its facilities are shown as individual
-        // pins instead - skip drawing the summary circle so it doesn't sit
-        // underneath (and visually clump with) the pins.
-        if (zoomedState === abbr) return;
-        const pos = stateCenter(abbr);
-        if (!pos) return;
-        const count = (byState[abbr] || []).length;
-        const g = svgEl("g", {
-          class: "prison-map-state" + (count ? " has-facilities" : "") + (zoomedState === abbr ? " active" : ""),
-          tabindex: count ? "0" : "-1",
-          role: "button",
-          "aria-label": `${abbr}${count ? `, ${count} facility${count > 1 ? "ies" : ""}` : ""}`
-        });
-        const r = count ? 12 + Math.min(count, 10) : 6;
-        const circle = svgEl("circle", { cx: pos.x, cy: pos.y, r });
-        const label = svgEl("text", { x: pos.x, y: pos.y + 4, "text-anchor": "middle" });
-        label.textContent = abbr;
-        g.appendChild(circle);
-        g.appendChild(label);
-        if (count) {
-          g.addEventListener("click", () => selectState(abbr));
-          g.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectState(abbr); }
-          });
-        }
-        statesLayer.appendChild(g);
-      });
-    }
+    function renderFacilities(state) {
+      if (!state) {
+        showPlaceholder();
+        return;
+      }
 
-    function renderPins(abbr) {
-      pinsLayer.innerHTML = "";
-      const list = byState[abbr] || [];
-      const center = stateCenter(abbr);
-      if (!center) return;
-      const positions = gridPositions(list.length, 22);
-      list.forEach((f, i) => {
-        const off = positions[i];
-        const x = center.x + off.dx;
-        const y = center.y + off.dy;
-        const g = svgEl("g", {
-          class: "prison-map-pin",
-          tabindex: "0",
-          role: "button",
-          "aria-label": `Select ${f.name}`
-        });
-        const dot = svgEl("circle", { cx: x, cy: y, r: 6 });
-        g.appendChild(dot);
-        g.addEventListener("click", (e) => {
-          e.stopPropagation();
+      clearBtn.style.display = 'inline-block';
+      listContainer.innerHTML = '';
+
+      const list = document.createElement('div');
+      list.className = 'wca-map-facilities-list';
+
+      const stateFacilities = byState[state] || [];
+      stateFacilities.forEach(f => {
+        const item = document.createElement('div');
+        item.className = 'wca-map-facility-item';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'wca-map-facility-name';
+        nameSpan.textContent = f.name;
+
+        const typeSpan = document.createElement('span');
+        typeSpan.className = 'wca-map-facility-meta';
+        typeSpan.textContent = f.city + ', ' + f.state + ' (' + f.type + ')';
+
+        item.appendChild(nameSpan);
+        item.appendChild(typeSpan);
+
+        item.addEventListener('click', () => {
           onSelect(f.id);
         });
-        g.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onSelect(f.id); }
-        });
-        const title = svgEl("title", {});
-        title.textContent = f.name;
-        g.appendChild(title);
-        pinsLayer.appendChild(g);
+
+        list.appendChild(item);
       });
+
+      listContainer.appendChild(list);
     }
 
-    function selectState(abbr) {
-      zoomedState = abbr;
-      const center = stateCenter(abbr);
-      const zoomSize = 170;
-      svg.setAttribute(
-        "viewBox",
-        `${center.x - zoomSize} ${center.y - zoomSize} ${zoomSize * 2} ${zoomSize * 2}`
-      );
-      renderStates();
-      renderPins(abbr);
-      resetBtn.style.display = "inline-block";
-      stateLabel.textContent = `Facilities in ${abbr}`;
-    }
+    select.addEventListener('change', (e) => {
+      renderFacilities(e.target.value);
+    });
 
-    function resetZoom() {
-      zoomedState = null;
-      svg.setAttribute("viewBox", `0 0 ${VB_W} ${VB_H}`);
-      pinsLayer.innerHTML = "";
-      renderStates();
-      resetBtn.style.display = "none";
-      stateLabel.textContent = "Click a state to see its facilities";
-    }
+    clearBtn.addEventListener('click', () => {
+      select.value = '';
+      renderFacilities('');
+    });
 
-    const controls = document.createElement("div");
-    controls.className = "prison-map-controls";
+    // Initialize with placeholder
+    showPlaceholder();
 
-    const stateLabel = document.createElement("span");
-    stateLabel.className = "prison-map-state-label";
-    stateLabel.textContent = "Click a state to see its facilities";
-
-    const resetBtn = document.createElement("button");
-    resetBtn.type = "button";
-    resetBtn.className = "prison-map-reset";
-    resetBtn.textContent = "← All states";
-    resetBtn.style.display = "none";
-    resetBtn.addEventListener("click", resetZoom);
-
-    const zoomInBtn = document.createElement("button");
-    zoomInBtn.type = "button";
-    zoomInBtn.className = "prison-map-zoom-btn";
-    zoomInBtn.setAttribute("aria-label", "Zoom in");
-    zoomInBtn.textContent = "+";
-    const zoomOutBtn = document.createElement("button");
-    zoomOutBtn.type = "button";
-    zoomOutBtn.className = "prison-map-zoom-btn";
-    zoomOutBtn.setAttribute("aria-label", "Zoom out");
-    zoomOutBtn.textContent = "−";
-
-    function currentViewBox() {
-      return svg.getAttribute("viewBox").split(" ").map(Number);
-    }
-    function zoomBy(factor) {
-      const [x, y, w, h] = currentViewBox();
-      const nw = Math.max(80, Math.min(VB_W, w * factor));
-      const nh = Math.max(80 * (VB_H / VB_W), Math.min(VB_H, h * factor));
-      const cx = x + w / 2, cy = y + h / 2;
-      svg.setAttribute("viewBox", `${cx - nw / 2} ${cy - nh / 2} ${nw} ${nh}`);
-    }
-    zoomInBtn.addEventListener("click", () => zoomBy(0.75));
-    zoomOutBtn.addEventListener("click", () => zoomBy(1.33));
-
-    controls.appendChild(stateLabel);
-    controls.appendChild(zoomOutBtn);
-    controls.appendChild(zoomInBtn);
-    controls.appendChild(resetBtn);
-
-    container.innerHTML = "";
-    container.appendChild(controls);
-    container.appendChild(svg);
-
-    renderStates();
+    container.innerHTML = '';
+    container.appendChild(wrapper);
   }
 
   window.WCA_initPrisonMap = initPrisonMap;
