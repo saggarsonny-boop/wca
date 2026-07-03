@@ -69,7 +69,9 @@
 <header class="site-header">
   <div class="container">
     <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
-    <nav class="site-nav" aria-label="Main navigation">
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+    <div id="navMenu" class="nav-menu" aria-hidden="true">
+      <nav class="site-nav" aria-label="Main navigation">
       <a href="/" aria-current="page">Home</a>
       <a href="/road.html">The Road</a>
       <a href="/attorneys.html">Law Firms</a>
@@ -79,9 +81,30 @@
       <a href="/course.html">The Course</a>
       <a href="/organiser/login.html">Case Organiser</a>
     </nav>
+      <div id="google_translate_element" class="google-translate-wrap"></div>
+    </div>
   </div>
 </header>
 
+
+<section class="ask-anything-section">
+  <div class="ask-anything-container">
+    <h2 class="ask-anything-title">Ask anything. Say anything.</h2>
+    <p class="ask-anything-subtitle">Looking for something? Just ask, we'll find it.</p>
+    <div class="ask-anything-input-wrapper">
+      <input
+        type="text"
+        id="askAnythingInput"
+        class="ask-anything-input"
+        placeholder="e.g. The Road, free chapters, sponsor a library..."
+        aria-label="Search this site"
+        autocomplete="off"
+      >
+      <button id="askAnythingBtn" class="ask-anything-btn" aria-label="Search">→</button>
+    </div>
+    <div id="askAnythingResults" class="ask-anything-results"></div>
+  </div>
+</section>
 <main>
 
   <!-- ── HERO ──────────────────────────────────────────────────── -->
@@ -220,5 +243,8 @@
 <script src="/js/subscribe.js"></script>
 
 <script src="/js/wca-translate.js"></script>
+<script src="/data/search-index.js"></script>
+<script src="/js/ask-anything.js"></script>
+<script src="/js/nav-toggle.js"></script>
 </body>
 </html>
