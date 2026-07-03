@@ -433,6 +433,7 @@ function renderDashboard() {
   const paid = stats.paid || 0;
   const fulfilled = stats.fulfilled || 0;
   const shipped = stats.shipped || 0;
+  const delivered = stats.delivered || 0;
   const requestsPending = allRequests.filter(r => r.status === 'pending').length;
 
   const filteredSponsorships = filterSponsorships(allSponsorships);
@@ -451,7 +452,8 @@ function renderDashboard() {
         <div class="stat-box"><div class="number">${paid}</div><div class="label">Paid</div></div>
         <div class="stat-box"><div class="number">${fulfilled}</div><div class="label">Fulfilled</div></div>
         <div class="stat-box"><div class="number">${shipped}</div><div class="label">Shipped</div></div>
-        <div class="stat-box"><div class="number">${requestsPending}</div><div class="label">Facility Requests</div></div>
+        <div class="stat-box"><div class="number">${delivered}</div><div class="label">Delivered</div></div>
+        <div class="stat-box"><div class="number">${requestsPending}</div><div class="label">Requests</div></div>
       </div>
 
       <div class="admin-tabs">
