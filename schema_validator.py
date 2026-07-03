@@ -3,7 +3,7 @@ import re
 import json
 
 def validate_all():
-    wca_path = r"C:\Users\Sonny Saggar\.geminintigravity-ide\scratch\wca"
+    wca_path = r"C:\Users\Sonny Saggar\.gemini\antigravity-ide\scratch\wca"
     html_files = [f for f in os.listdir(wca_path) if f.endswith(".html")]
     
     print(f"Validating schemas for {len(html_files)} HTML pages...")
@@ -30,8 +30,7 @@ def validate_all():
                 print(f"FAILED: JSON-LD parse error in {filename}: {e}")
                 return False
                 
-    print("
-All JSON-LD schemas validated successfully!")
+    print("\nAll JSON-LD schemas validated successfully!")
     return True
 
 if __name__ == "__main__":
