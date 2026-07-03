@@ -9,9 +9,72 @@
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/organiser.css">
+  <style>
+    .role-banner {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .role-select {
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .compact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    @media (min-width: 600px) {
+      .compact-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .compact-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    .compact-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .compact-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .compact-card__icon {
+      font-size: 1.5rem;
+    }
+    .compact-card__content h3 {
+      font-size: 0.85rem;
+      margin: 0;
+      font-weight: 600;
+    }
+    .compact-card__content p {
+      font-size: 0.75rem;
+      margin: 0;
+      color: var(--text-soft);
+    }
+  </style>
 </head>
 <body>
-<a href="#main-content" class="skip-link">Skip to main content</a>
 
 <header class="site-header">
   <div class="container">
@@ -21,8 +84,7 @@
 </header>
 
 <div class="org-layout">
-
-        <aside class="org-sidebar">
+  <aside class="org-sidebar">
     <nav aria-label="Organiser navigation">
       <span class="sidebar-label">Your case</span>
       <a href="/organiser/" class="active">📊 Dashboard</a>
@@ -48,401 +110,234 @@
   </aside>
 
   <main id="main-content" class="org-main">
-
-    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Your workspace</h1>
-    <p id="user-email" class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;"></p>
+    <!-- ROLE FILTER SELECTION BANNER -->
+    <div class="role-banner">
+      <div>
+        <button id="sidebar-toggle" class="sidebar-toggle-btn" style="margin-right:1rem;">📂 Toggle Sidebar</button>
+      </div>
+      <div>
+        <strong>Smart Workspace</strong>
+        <span class="text-soft" style="font-size:0.8rem; display:block;">Filtering active case tools</span>
+      </div>
+      <div>
+        <label for="role-filter" style="font-size:0.8rem; font-weight:600; margin-right:0.25rem;">Active view:</label>
+        <select id="role-filter" class="role-select">
+          <option value="all">Show All Modules</option>
+          <option value="defendant">Defendant View</option>
+          <option value="family">Family View</option>
+          <option value="lawyer">Lawyer View</option>
+        </select>
+      </div>
+    </div>
 
     <!-- Case Readiness Score / Progress Tracker -->
-    <div id="readiness-tracker-card" style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 1rem;">
+    <div id="readiness-tracker-card" style="background: #fff; border: 1px solid var(--border); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 0.75rem;">
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
         <div>
-          <h2 style="font-size: 1.15rem; margin: 0; font-family: var(--font-serif); font-weight: 600;">Case Readiness Profile</h2>
-          <p class="text-soft" style="font-size: 0.8rem; margin: 0.15rem 0 0 0;">Keep compiling your case elements to reach 100% preparation.</p>
+          <h2 style="font-size: 1.05rem; margin: 0; font-family: var(--font-serif); font-weight: 600;">Case Readiness Profile</h2>
         </div>
         <div style="text-align: right;">
-          <span id="readiness-percentage" style="font-size: 1.75rem; font-weight: 700; color: var(--accent); line-height: 1;">0%</span>
-          <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-soft); display: block;">Prepared</span>
+          <span id="readiness-percentage" style="font-size: 1.5rem; font-weight: 700; color: var(--accent); line-height: 1;">0%</span>
         </div>
       </div>
       
-      <!-- Progress Bar Graphic -->
-      <div style="width: 100%; height: 10px; background: var(--bg-alt); border-radius: 5px; overflow: hidden; border: 1px solid rgba(0,0,0,0.03);">
-        <div id="readiness-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent), #4f73b3); border-radius: 5px; transition: width 0.8s ease-out;"></div>
-      </div>
-      
-      <!-- Tasks Completed Breakdown -->
-      <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; font-size: 0.75rem; font-weight: 500; color: var(--text-soft); border-top: 1px solid var(--border); padding-top: 0.75rem;">
-        <span id="readiness-stat-case-file">📄 Case File Details: <strong style="color:var(--text)">Checking...</strong></span>
-        <span id="readiness-stat-mitigation">✍️ Personal Statement: <strong style="color:var(--text)">Checking...</strong></span>
-        <span id="readiness-stat-allocution">📣 Allocution Outline: <strong style="color:var(--text)">Checking...</strong></span>
-        <span id="readiness-stat-dates">📅 Sentencing Date: <strong style="color:var(--text)">Checking...</strong></span>
+      <div style="width: 100%; height: 8px; background: var(--bg-alt); border-radius: 4px; overflow: hidden;">
+        <div id="readiness-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent), #4f73b3); border-radius: 4px; transition: width 0.8s ease-out;"></div>
       </div>
     </div>
 
-    <div class="org-grid">
-
-      <a href="/organiser/case-file.html" class="org-card">
-        <div class="org-card__icon">📋</div>
-        <h3>Case File <span style="font-size:0.75rem; color:#2a6e3f; font-weight:600; vertical-align:middle; background:#e8f5e9; padding:0.15rem 0.4rem; border-radius:3px; margin-left:0.25rem;">(The Road)</span></h3>
-        <p>Your basic facts, contacts, key numbers, and notes in one place.</p>
+    <!-- COMPACT CARD GRID -->
+    <div class="compact-grid" id="modules-grid">
+      <!-- 1 -->
+      <a href="/organiser/case-file.html" class="compact-card" data-roles="defendant">
+        <div class="compact-card__icon">📋</div>
+        <div class="compact-card__content">
+          <h3>Case File</h3>
+          <p>Key information logged</p>
+        </div>
       </a>
-
-      <a href="/organiser/mitigation.html" class="org-card">
-        <div class="org-card__icon">✍️</div>
-        <h3>Mitigation Workbook</h3>
-        <p>Prepare personal statements, track support letters, and document medical details.</p>
+      <!-- 2 -->
+      <a href="/organiser/dates.html" class="compact-card" data-roles="defendant,family">
+        <div class="compact-card__icon">📅</div>
+        <div class="compact-card__content">
+          <h3>Dates</h3>
+          <p>View timeline dates</p>
+        </div>
       </a>
-
-      <a href="/organiser/allocution.html" class="org-card">
-        <div class="org-card__icon">📣</div>
-        <h3>Allocution Prep</h3>
-        <p>Plan your address to the judge, outline key notes, and log mock delivery practice.</p>
+      <!-- 3 -->
+      <a href="/organiser/checklists.html" class="compact-card" data-roles="defendant">
+        <div class="compact-card__icon">✅</div>
+        <div class="compact-card__content">
+          <h3>Checklists</h3>
+          <p>Complete goals</p>
+        </div>
       </a>
-
-      <a href="/organiser/dates.html" class="org-card">
-        <div class="org-card__icon">📅</div>
-        <h3>Dates</h3>
-        <p>Hearings, deadlines, filing dates. Add them once and keep them visible.</p>
+      <!-- 4 -->
+      <a href="/organiser/documents.html" class="compact-card" data-roles="defendant,lawyer">
+        <div class="compact-card__icon">📄</div>
+        <div class="compact-card__content">
+          <h3>Documents</h3>
+          <p>Organize case files</p>
+        </div>
       </a>
-
-      <a href="/organiser/checklists.html" class="org-card">
-        <div class="org-card__icon">✅</div>
-        <h3>Checklists</h3>
-        <p>Stage-by-stage prompts so nothing gets missed.</p>
+      <!-- 5 -->
+      <a href="/organiser/ai.html" class="compact-card" data-roles="defendant">
+        <div class="compact-card__icon">🤖</div>
+        <div class="compact-card__content">
+          <h3>Ask a question</h3>
+          <p>AI case assistance</p>
+        </div>
       </a>
-
-      <a href="/organiser/calculator.html" class="org-card">
-        <div class="org-card__icon">🧮</div>
-        <h3>Release Calculator</h3>
-        <p>Project sentencing credits under GCT, RDAP, and First Step Act credits.</p>
+      <!-- 6 -->
+      <a href="/organiser/support-circle.html" class="compact-card" data-roles="defendant,family,lawyer">
+        <div class="compact-card__icon">💬</div>
+        <div class="compact-card__content">
+          <h3>Support Circle</h3>
+          <p>Connect with circle</p>
+        </div>
       </a>
-
-      <a href="/organiser/documents.html" class="org-card">
-        <div class="org-card__icon">📁</div>
-        <h3>Documents</h3>
-        <p>Store your PDFs and files privately. Up to 500 MB.</p>
+      <!-- 7 -->
+      <a href="/organiser/peer-support.html" class="compact-card" data-roles="defendant">
+        <div class="compact-card__icon">👥</div>
+        <div class="compact-card__content">
+          <h3>Peer Support</h3>
+          <p>Group connections</p>
+        </div>
       </a>
-
-      <a href="/organiser/links.html" class="org-card">
-        <div class="org-card__icon">🔗</div>
-        <h3>Links</h3>
-        <p>Curated resources on the federal process, all in one place.</p>
+      <!-- 8 -->
+      <a href="/organiser/family.html" class="compact-card" data-roles="family">
+        <div class="compact-card__icon">🏠</div>
+        <div class="compact-card__content">
+          <h3>Family Dashboard</h3>
+          <p>BOP visit planners</p>
+        </div>
       </a>
-
-      <a href="/organiser/ai.html" class="org-card">
-        <div class="org-card__icon">💬</div>
-        <h3>Ask a question</h3>
-        <p>Plain-language answers about how the process works. Not legal advice.</p>
+      <!-- 9 -->
+      <a href="/organiser/lawyer.html" class="compact-card" data-roles="lawyer">
+        <div class="compact-card__icon">⚖️</div>
+        <div class="compact-card__content">
+          <h3>Lawyer Dashboard</h3>
+          <p>Manage clients</p>
+        </div>
       </a>
-
-      <a href="/organiser/sentencing-prep.html" class="org-card">
-        <div class="org-card__icon">🏢</div>
-        <h3>Sentencing Prep</h3>
-        <p>Estimate BOP security points and review pre-sentence PSR interview guides.</p>
+      <!-- 10 -->
+      <a href="/organiser/case-workspace.html" class="compact-card" data-roles="defendant,family,lawyer">
+        <div class="compact-card__icon">📂</div>
+        <div class="compact-card__content">
+          <h3>Shared Workspace</h3>
+          <p>Timeline alignment</p>
+        </div>
       </a>
-
-      <a href="#" id="btn-export-pdf" class="org-card" style="border: 1px dashed var(--border); background: #fdfdfd;">
-        <div class="org-card__icon">🖨️</div>
-        <h3>Export Case File (PDF)</h3>
-        <p>Export all case file facts, legal history, timeline dates, and mitigation summaries to a printable PDF report.</p>
+      <!-- 11 -->
+      <a href="/organiser/attorney.html" class="compact-card" data-roles="lawyer">
+        <div class="compact-card__icon">⚖️</div>
+        <div class="compact-card__content">
+          <h3>Attorney Portal</h3>
+          <p>Review files</p>
+        </div>
       </a>
-
+      <!-- 12 -->
+      <a href="/organiser/calculator.html" class="compact-card" data-roles="defendant">
+        <div class="compact-card__icon">🧮</div>
+        <div class="compact-card__content">
+          <h3>Calculator</h3>
+          <p>Estimate guidelines</p>
+        </div>
+      </a>
+      <!-- 13 -->
+      <a href="/organiser/mitigation.html" class="compact-card" data-roles="defendant">
+        <div class="compact-card__icon">📝</div>
+        <div class="compact-card__content">
+          <h3>Mitigation Workbook</h3>
+          <p>Character portfolio</p>
+        </div>
+      </a>
+      <!-- 14 -->
+      <a href="/organiser/allocution.html" class="compact-card" data-roles="defendant">
+        <div class="compact-card__icon">🎤</div>
+        <div class="compact-card__content">
+          <h3>Allocution Prep</h3>
+          <p>Address the court</p>
+        </div>
+      </a>
+      <!-- 15 -->
+      <a href="/organiser/sentencing-prep.html" class="compact-card" data-roles="defendant">
+        <div class="compact-card__icon">⚖️</div>
+        <div class="compact-card__content">
+          <h3>Sentencing Prep</h3>
+          <p>Logistical roadmap</p>
+        </div>
+      </a>
+      <!-- 16 -->
+      <a href="/organiser/billing.html" class="compact-card" data-roles="defendant,family">
+        <div class="compact-card__icon">💳</div>
+        <div class="compact-card__content">
+          <h3>Billing & Payments</h3>
+          <p>Financial ledger</p>
+        </div>
+      </a>
+      <!-- 17 -->
+      <a href="/organiser/reminders.html" class="compact-card" data-roles="defendant,family">
+        <div class="compact-card__icon">🔔</div>
+        <div class="compact-card__content">
+          <h3>Reminders</h3>
+          <p>Deadlines list</p>
+        </div>
+      </a>
+      <!-- 18 -->
+      <a href="/organiser/resources.html" class="compact-card" data-roles="defendant,family,lawyer">
+        <div class="compact-card__icon">📚</div>
+        <div class="compact-card__content">
+          <h3>Resource Library</h3>
+          <p>Mitigation booklets</p>
+        </div>
+      </a>
     </div>
-
-    <!-- Share Link Row -->
-    <div style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:10px; margin-top:2.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.02);">
-      <h3 style="margin-bottom:0.4rem; font-size:1.1rem; display:flex; align-items:center; gap:0.5rem;">🔗 Share Case Workspace</h3>
-      <p class="text-soft" style="font-size:0.875rem; margin-bottom:1rem;">Generate a secure, read-only link to share your case file, dates, and mitigation workbook with your defense attorney or family members.</p>
-      
-      <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center;">
-        <button type="button" id="btn-gen-share" class="btn" style="font-size:0.875rem; padding:0.5rem 1.2rem;">Generate Share Link</button>
-        <button type="button" id="btn-rev-share" class="btn btn--outline" style="font-size:0.875rem; padding:0.5rem 1.2rem; display:none; border-color:#8b2020; color:#8b2020;">Revoke Access Links</button>
-        <span id="share-link-status" style="font-size:0.875rem; font-weight:500; color:var(--text-soft);"></span>
-      </div>
-
-      <div id="share-url-container" style="display:none; margin-top:1rem; background:var(--bg-alt); padding:0.75rem; border-radius:6px; display:flex; justify-content:space-between; align-items:center; gap:1rem;">
-        <input type="text" id="share-url-input" readonly style="flex:1; background:transparent; border:none; outline:none; font-family:monospace; font-size:0.85rem;" onclick="this.select()">
-        <button type="button" id="btn-copy-share" class="btn btn--outline" style="font-size:0.75rem; padding:0.25rem 0.5rem; white-space:nowrap;">📋 Copy Link</button>
-      </div>
-    </div>
-
-    <!-- Attorney Connections Row -->
-    <div id="attorney-connections-box" style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:10px; margin-top:2.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.02); display:none;">
-      <h3 style="margin-bottom:0.4rem; font-size:1.1rem; display:flex; align-items:center; gap:0.5rem;">💼 Attorney Connection Connections</h3>
-      <p class="text-soft" style="font-size:0.875rem; margin-bottom:1rem;">Approve or revoke connections with your defense counsel to share read-only progress views.</p>
-      <div id="connections-list" style="display:flex; flex-direction:column; gap:0.75rem;">
-        <!-- Connections lists -->
-      </div>
-    </div>
-  
-    <p class="text-soft no-print" style="font-size:0.75rem; border-top:1px solid var(--border); padding-top:1rem; margin-top:3rem; line-height: 1.5;">
-      <strong>Legal Disclaimer:</strong> White Collar Academy is a case organization and management system. We do not provide legal advice, representation, or sentencing predictions. All calculations, guides, checklists, workbook sections, and AI responses are for general informational purposes only. Always review and verify all calculations, dates, narrative drafts, and materials with your defense counsel.
-    </p>
-</main>
+  </main>
 </div>
 
+<script src="/js/nav-toggle.js"></script>
 <script>
-(async function () {
-  const resp = await fetch("/api/auth/me");
-  if (!resp.ok) { window.location.href = "/organiser/login.html"; return; }
-  const user = await resp.json();
-  document.getElementById("user-email").textContent = user.email;
+  // Filter modules based on selected role
+  const filterSelect = document.getElementById('role-filter');
+  const cards = document.querySelectorAll('.compact-card');
 
-  if (user.subscription_status === "trial") {
-    const trialEnds = user.trial_ends_at ? new Date(user.trial_ends_at) : null;
-    if (trialEnds && trialEnds < new Date()) {
-      window.location.href = "/organiser/subscribe.html";
-      return;
-    }
-    const banner = document.createElement("div");
-    banner.style.cssText = "background:#fef3cd;border:1px solid #f0c040;border-radius:4px;padding:0.75rem 1rem;margin-bottom:1.5rem;font-size:0.875rem;";
-    banner.innerHTML = 'You are in your free trial. <a href="/organiser/subscribe.html">Subscribe to keep access.</a>';
-    document.querySelector(".org-main h1").after(banner);
-  } else if (user.subscription_status !== "active" && user.subscription_status !== "lifetime") {
-    window.location.href = "/organiser/subscribe.html";
-    return;
-  }
-
-  document.getElementById("logout-btn").addEventListener("click", async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    window.location.href = "/organiser/login.html";
-  });
-
-  const btnGenShare = document.getElementById("btn-gen-share");
-  const btnRevShare = document.getElementById("btn-rev-share");
-  const btnCopyShare = document.getElementById("btn-copy-share");
-  const shareStatus = document.getElementById("share-link-status");
-  const shareContainer = document.getElementById("share-url-container");
-  const shareInput = document.getElementById("share-url-input");
-
-  function getShareLink(token) {
-    return `${window.location.origin}/organiser/share.html?token=${token}`;
-  }
-
-  async function loadShareToken() {
-    const r = await fetch("/api/organiser/share");
-    if (r.ok) {
-      const data = await r.json();
-      if (data.share_token) {
-        shareInput.value = getShareLink(data.share_token);
-        shareContainer.style.display = "flex";
-        btnGenShare.style.display = "none";
-        btnRevShare.style.display = "inline-block";
-        shareStatus.textContent = "Access link is active.";
+  function applyRoleFilter(role) {
+    localStorage.setItem('wca_preferred_role', role);
+    cards.forEach(card => {
+      const allowedRoles = card.getAttribute('data-roles').split(',');
+      if (role === 'all' || allowedRoles.includes(role)) {
+        card.style.display = 'flex';
       } else {
-        shareContainer.style.display = "none";
-        btnGenShare.style.display = "inline-block";
-        btnRevShare.style.display = "none";
-        shareStatus.textContent = "No active share links.";
+        card.style.display = 'none';
       }
-    }
-  }
-
-  btnGenShare.addEventListener("click", async () => {
-    shareStatus.textContent = "Generating...";
-    const r = await fetch("/api/organiser/share", { method: "POST" });
-    if (r.ok) {
-      loadShareToken();
-    } else {
-      shareStatus.textContent = "Failed to generate link.";
-    }
-  });
-
-  btnRevShare.addEventListener("click", async () => {
-    if (!confirm("Revoke all shared access links instantly? Anyone using the links will lose access immediately.")) return;
-    shareStatus.textContent = "Revoking...";
-    const r = await fetch("/api/organiser/share", { method: "DELETE" });
-    if (r.ok) {
-      loadShareToken();
-    } else {
-      shareStatus.textContent = "Failed to revoke link.";
-    }
-  });
-
-  btnCopyShare.addEventListener("click", () => {
-    shareInput.select();
-    navigator.clipboard.writeText(shareInput.value).then(() => {
-      btnCopyShare.textContent = "✔️ Copied!";
-      setTimeout(() => { btnCopyShare.textContent = "📋 Copy Link"; }, 2000);
     });
-  });
-
-  const btnExport = document.getElementById("btn-export-pdf");
-  btnExport.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const r = await fetch("/api/organiser/share");
-    if (r.ok) {
-      const data = await r.json();
-      let token = data.share_token;
-      if (!token) {
-        const postResp = await fetch("/api/organiser/share", { method: "POST" });
-        if (postResp.ok) {
-          const postData = await postResp.json();
-          token = postData.share_token;
-        }
-      }
-      if (token) {
-        window.open(`/organiser/share.html?token=${token}`, "_blank");
-      } else {
-        alert("Failed to compile case file report. Please try again.");
-      }
-    }
-  });
-
-  // Load attorney connection requests
-  const connBox = document.getElementById("attorney-connections-box");
-  const connList = document.getElementById("connections-list");
-
-  async function loadConnections() {
-    try {
-      const r = await fetch("/api/organiser/attorney/connections");
-      if (r.ok) {
-        const { connections } = await r.json();
-        if (connections.length === 0) {
-          connBox.style.display = "none";
-          return;
-        }
-
-        connBox.style.display = "block";
-        connList.innerHTML = "";
-
-        connections.forEach(c => {
-          const div = document.createElement("div");
-          div.style.cssText = "display:flex; justify-content:space-between; align-items:center; background:#FAF8F5; border:1px solid var(--border); padding:0.75rem 1rem; border-radius:6px; font-size:0.9rem; flex-wrap:wrap; gap:0.5rem;";
-
-          if (c.status === "pending") {
-            div.innerHTML = `
-              <span>Defense counsel (<strong>${esc(c.attorney_email)}</strong>) requests access to view your dashboard.</span>
-              <div>
-                <button class="btn btn-conn-approve" data-id="${c.id}" style="font-size:0.75rem; padding:0.35rem 0.75rem;">Approve</button>
-                <button class="btn btn--outline btn-conn-decline" data-id="${c.id}" style="font-size:0.75rem; padding:0.35rem 0.75rem; margin-left:0.5rem; color:#8b2020; border-color:#ded9cf;">Decline</button>
-              </div>
-            `;
-          } else {
-            div.innerHTML = `
-              <span>Linked Attorney: <strong>${esc(c.attorney_email)}</strong> (Has read-only access).</span>
-              <button class="btn btn--outline btn-conn-revoke" data-id="${c.id}" style="font-size:0.75rem; padding:0.35rem 0.75rem; color:#8b2020; border-color:#ded9cf;">Revoke Access</button>
-            `;
-          }
-          connList.appendChild(div);
-        });
-
-        // Event listeners
-        document.querySelectorAll(".btn-conn-approve").forEach(b => {
-          b.addEventListener("click", async function() {
-            const id = this.getAttribute("data-id");
-            const approveRes = await fetch("/api/organiser/attorney/connections", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ link_id: id, action: "approve" })
-            });
-            if (approveRes.ok) loadConnections();
-          });
-        });
-
-        document.querySelectorAll(".btn-conn-decline").forEach(b => {
-          b.addEventListener("click", async function() {
-            const id = this.getAttribute("data-id");
-            const declineRes = await fetch("/api/organiser/attorney/connections", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ link_id: id, action: "decline" })
-            });
-            if (declineRes.ok) loadConnections();
-          });
-        });
-
-        document.querySelectorAll(".btn-conn-revoke").forEach(b => {
-          b.addEventListener("click", async function() {
-            const id = this.getAttribute("data-id");
-            if (confirm("Revoke attorney read-only workspace access?")) {
-              const revokeRes = await fetch("/api/organiser/attorney/connections", {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ link_id: id })
-              });
-              if (revokeRes.ok) loadConnections();
-            }
-          });
-        });
-
-      }
-    } catch (_) {}
   }
 
-  function esc(s) {
-    return (s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-  }
+  filterSelect.addEventListener('change', (e) => {
+    applyRoleFilter(e.target.value);
+  });
 
-  // Calculate Case Readiness Score
+  // Load saved role preference
+  const savedRole = localStorage.getItem('wca_preferred_role') || 'all';
+  filterSelect.value = savedRole;
+  applyRoleFilter(savedRole);
+
+  // Load readiness dynamically
   async function loadReadiness() {
     try {
-      let totalScore = 0;
-      
-      // 1. Fetch case file
-      const cfRes = await fetch("/api/organiser/case-file");
-      if (cfRes.ok) {
-        const { data } = await cfRes.json();
-        if (data) {
-          if (data.inmate_name && data.case_number) {
-            totalScore += 25;
-            document.getElementById("readiness-stat-case-file").innerHTML = '📄 Case File Details: <strong style="color:#2a6e3f">Complete</strong>';
-          } else {
-            document.getElementById("readiness-stat-case-file").innerHTML = '📄 Case File Details: <strong style="color:#a51d24">Pending</strong>';
-          }
-          if (data.mitigation_statement && data.mitigation_statement.length > 50) {
-            totalScore += 25;
-            document.getElementById("readiness-stat-mitigation").innerHTML = '✍️ Personal Statement: <strong style="color:#2a6e3f">Complete</strong>';
-          } else {
-            document.getElementById("readiness-stat-mitigation").innerHTML = '✍️ Personal Statement: <strong style="color:#a51d24">Pending</strong>';
-          }
-          if (data.mitigation_allocution && data.mitigation_allocution.length > 50) {
-            totalScore += 25;
-            document.getElementById("readiness-stat-allocution").innerHTML = '📣 Allocution Outline: <strong style="color:#2a6e3f">Complete</strong>';
-          } else {
-            document.getElementById("readiness-stat-allocution").innerHTML = '📣 Allocution Outline: <strong style="color:#a51d24">Pending</strong>';
-          }
-        } else {
-          document.getElementById("readiness-stat-case-file").innerHTML = '📄 Case File Details: <strong style="color:#a51d24">Pending</strong>';
-          document.getElementById("readiness-stat-mitigation").innerHTML = '✍️ Personal Statement: <strong style="color:#a51d24">Pending</strong>';
-          document.getElementById("readiness-stat-allocution").innerHTML = '📣 Allocution Outline: <strong style="color:#a51d24">Pending</strong>';
-        }
+      const res = await fetch('/api/organiser/readiness');
+      if (res.ok) {
+        const data = await res.json();
+        const score = data.readiness_score;
+        document.getElementById('readiness-bar').style.width = score + '%';
+        document.getElementById('readiness-percentage').textContent = score + '%';
       }
-      
-      // 2. Fetch dates
-      const datesRes = await fetch("/api/organiser/dates");
-      if (datesRes.ok) {
-        const dates = await datesRes.json();
-        if (dates && dates.length > 0) {
-          totalScore += 25;
-          document.getElementById("readiness-stat-dates").innerHTML = '📅 Sentencing Date: <strong style="color:#2a6e3f">Complete</strong>';
-        } else {
-          document.getElementById("readiness-stat-dates").innerHTML = '📅 Sentencing Date: <strong style="color:#a51d24">Pending</strong>';
-        }
-      }
-      
-      // Update UI
-      document.getElementById("readiness-percentage").textContent = `${totalScore}%`;
-      document.getElementById("readiness-bar").style.width = `${totalScore}%`;
-    } catch (e) {
-      console.error("Failed to load readiness details:", e);
+    } catch (err) {
+      console.error('Failed to load readiness:', err);
     }
   }
-
   loadReadiness();
-  loadConnections();
-  loadShareToken();
-})();
 </script>
-
-<script src="/js/wca-translate.js"></script>
-  <!-- Mobile Bottom Navigation -->
-  <div class="mobile-bottom-nav">
-    <a href="/organiser/" class="active"><span>📊</span>Dashboard</a>
-    <a href="/organiser/case-file.html"><span>📋</span>Case File</a>
-    <a href="/organiser/dates.html"><span>📅</span>Dates</a>
-    <a href="/organiser/support-circle.html"><span>💬</span>Chat</a>
-    <a href="/organiser/peer-support.html"><span>👥</span>More</a>
-  </div>
 </body>
 </html>

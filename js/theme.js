@@ -103,6 +103,22 @@
 
     // PWA Install Prompt Listener
     let deferredPrompt;
+    
+    // Sidebar toggle initialization
+    const toggleBtn = document.getElementById("sidebar-toggle");
+    const layout = document.querySelector(".org-layout");
+    if (toggleBtn && layout) {
+      toggleBtn.addEventListener("click", () => {
+        layout.classList.toggle("sidebar-collapsed");
+        const collapsed = layout.classList.contains("sidebar-collapsed");
+        localStorage.setItem("wca_sidebar_collapsed", collapsed ? "true" : "false");
+      });
+      // Load saved state
+      if (localStorage.getItem("wca_sidebar_collapsed") === "true") {
+        layout.classList.add("sidebar-collapsed");
+      }
+    }
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
