@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start Here — White Collar Academy</title>
+  <meta name="description" content="Find the right tools, guides, and services for your role in the federal justice process.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .persona-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .persona-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      border-radius: 8px;
+    }
+    .persona-card h3 {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+    <div id="navMenu" class="nav-menu" aria-hidden="true">
+      <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/road.html">The Road</a>
+      <a href="/attorneys.html">Law Firms</a>
+      <a href="/about.html">About</a>
+      <a href="/chapters.html">Free Chapters</a>
+      <a href="/writing.html">Writing</a>
+      <a href="/course.html">The Course</a>
+      <a href="/organiser/login.html">Case Organiser</a>
+    </nav>
+      <div id="google_translate_element" class="google-translate-wrap"></div>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+  <div class="tldr-summary">
+    <h2>TL;DR Summary</h2>
+    <p>Welcome to White Collar Academy. Select your current status/role below to access the guides, books, and calculators tailored for your journey.</p>
+  </div>
+
+  <article>
+    <h1>Start Here</h1>
+    <p class="lead">Find the exact resources and tools you need based on your role.</p>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <h3>I am facing federal charges</h3>
+        <p>Take control of your timeline, organize documents securely, and prepare your presentence mitigation.</p>
+        <p><a href="/organiser/login.html" class="btn" style="text-decoration:none; display:inline-block; margin-top:0.5rem;">Launch Case Organizer →</a></p>
+      </div>
+
+      <div class="persona-card">
+        <h3>I am a family member</h3>
+        <p>Support your loved one, prepare communication plans, and understand the custody points structure.</p>
+        <p><a href="/road.html" class="btn" style="text-decoration:none; display:inline-block; margin-top:0.5rem;">Read The Road →</a></p>
+      </div>
+
+      <div class="persona-card">
+        <h3>I am a criminal defense attorney</h3>
+        <p>Reduce paralegal intake overhead by equipping your clients with our Mitigation Workbook.</p>
+        <p><a href="/attorneys.html" class="btn" style="text-decoration:none; display:inline-block; margin-top:0.5rem;">For Law Firms →</a></p>
+      </div>
+
+      <div class="persona-card">
+        <h3>I am a medical professional</h3>
+        <p>Address professional licensing boards, DEA registrations, and mandatory OIG Medicare exclusions.</p>
+        <p><a href="/about.html" class="btn" style="text-decoration:none; display:inline-block; margin-top:0.5rem;">About Dr. Saggar's Bio →</a></p>
+      </div>
+    </div>
+  </article>
+<div class="container">
+    <div class="footer-cta-banner">
+      <h3>Take control of your case with the Case Organizer</h3>
+      <p>Manage your documents, structure mitigation workbooks, and calculate custody points safely.</p>
+      <a href="/organiser/login.html" class="btn" style="text-decoration:none; display:inline-block;">Start Your Free Trial</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/sponsor">Sponsor a Prison Library</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/wca-translate.js"></script>
+<script src="/data/search-index.js"></script>
+<script src="/js/ask-anything.js"></script>
+<script src="/js/nav-toggle.js"></script>
+<a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
+</body>
+</html>

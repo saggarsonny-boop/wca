@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your WCA Dashboard — White Collar Academy</title>
+  <meta name="description" content="Manage your Case Organizer subscription and view course progress.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .dash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+    .dash-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      border-radius: 8px;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      background: #dcfce7;
+      color: #15803d;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+    <div id="navMenu" class="nav-menu" aria-hidden="true">
+      <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/road.html">The Road</a>
+      <a href="/attorneys.html">Law Firms</a>
+      <a href="/about.html">About</a>
+      <a href="/chapters.html">Free Chapters</a>
+      <a href="/writing.html">Writing</a>
+      <a href="/course.html">The Course</a>
+      <a href="/organiser/login.html" aria-current="page">Case Organiser</a>
+    </nav>
+      <div id="google_translate_element" class="google-translate-wrap"></div>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+  <div class="tldr-summary">
+    <h2>TL;DR Summary</h2>
+    <p>Manage your Case Organizer access, track course progress, and view billing logs on your dashboard.</p>
+  </div>
+
+  <article>
+    <h1>Your Account Dashboard</h1>
+    
+    <div class="dash-grid">
+      <div class="dash-card">
+        <h3>Case Organizer Access</h3>
+        <p style="margin-top:0.5rem; margin-bottom: 1rem;">Status: <span class="status-badge">Trial Active</span></p>
+        <p>Access case folders, mitigation workbooks, and sentencing guidelines calculators.</p>
+        <p><a href="/organiser/login.html" class="btn" style="text-decoration:none; display:inline-block; margin-top:0.5rem;">Open Organizer →</a></p>
+      </div>
+
+      <div class="dash-card">
+        <h3>The Road Course Progress</h3>
+        <p style="margin-top:0.5rem; margin-bottom: 1rem;">Completed: <strong>4 of 15 Chapters</strong></p>
+        <p>Track your self-paced journey and review reflective worksheets.</p>
+        <p><a href="/course.html" class="btn" style="text-decoration:none; display:inline-block; margin-top:0.5rem;">Resume Course →</a></p>
+      </div>
+    </div>
+  </article>
+<div class="container">
+    <div class="footer-cta-banner">
+      <h3>Take control of your case with the Case Organizer</h3>
+      <p>Manage your documents, structure mitigation workbooks, and calculate custody points safely.</p>
+      <a href="/organiser/login.html" class="btn" style="text-decoration:none; display:inline-block;">Start Your Free Trial</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/sponsor">Sponsor a Prison Library</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/wca-translate.js"></script>
+<script src="/data/search-index.js"></script>
+<script src="/js/ask-anything.js"></script>
+<script src="/js/nav-toggle.js"></script>
+<a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
+</body>
+</html>

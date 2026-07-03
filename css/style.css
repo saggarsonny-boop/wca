@@ -1054,3 +1054,66 @@ body.theme-bluecollar svg rect {
   color: var(--text-soft);
 }
 
+/* Floating CTA Widget */
+.floating-cta {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.85rem 1.25rem;
+  border-radius: 30px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.floating-cta:hover {
+  transform: translateY(-2px);
+  color: #fff;
+  opacity: 0.9;
+}
+
+/* Footer CTA banner */
+.footer-cta-banner {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 3rem 0 1rem 0;
+  text-align: center;
+}
+.footer-cta-banner h3 {
+  font-family: var(--font-serif);
+  margin-bottom: 0.5rem;
+}
+.footer-cta-banner p {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  margin-bottom: 1rem;
+}
+
+/* Testimonial slider */
+.testimonial-slider {
+  margin: 2rem 0;
+  background: var(--bg-alt);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.testimonial-quote {
+  font-style: italic;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+.testimonial-author {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
