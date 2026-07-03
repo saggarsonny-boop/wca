@@ -126,12 +126,30 @@
     const banner = document.getElementById('trial-status-banner');
     if (!banner) return;
     if (diffDays > 0) {
-      banner.innerHTML = `⏳ <strong>Trial:</strong> ${diffDays} days remaining (Family/Friend 7-day free trial)`;
+      banner.innerHTML = `
+        <strong>⏳ Trial: ${diffDays} days remaining</strong><br>
+        <div style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-soft); line-height:1.5;">
+          Your family access includes:<br>
+          • Support Circle Chat<br>
+          • Family Dashboard<br>
+          • Visitor Planner<br>
+          <span style="font-weight:600; display:block; margin-top:0.5rem; color:#b45309;">Upgrade to continue after trial ends.</span>
+        </div>
+      `;
       banner.style.background = '#fef3c7';
       banner.style.color = '#b45309';
       banner.style.borderColor = '#f59e0b';
     } else {
-      banner.innerHTML = `⚠️ <strong>Trial expired</strong> - <a href="/organiser/subscribe.html" style="color:var(--accent); font-weight:600;">subscribe now</a> to maintain access ($9/month)`;
+      banner.innerHTML = `
+        <strong>⚠️ Trial expired - subscribe now</strong><br>
+        <div style="font-size:0.85rem; margin-top:0.5rem; color:var(--text-soft); line-height:1.5;">
+          Your family access has ended.<br>
+          <a href="/organiser/subscribe.html" style="color:var(--accent); font-weight:600; text-decoration:underline;">Click here to upgrade</a> and continue using:<br>
+          • Support Circle Chat<br>
+          • Family Dashboard<br>
+          • Visitor Planner
+        </div>
+      `;
       banner.style.background = '#fee2e2';
       banner.style.color = '#b91c1c';
       banner.style.borderColor = '#ef4444';
