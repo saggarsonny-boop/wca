@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Federal Process Glossary — White Collar Academy</title>
+  <meta name="description" content="Definitions for federal criminal defense terms, BOP terminology, and professional exclusions.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .glossary-term {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-top: 1.5rem;
+    }
+    .glossary-def {
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+      color: var(--text-soft);
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+    <div id="navMenu" class="nav-menu" aria-hidden="true">
+      <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/road.html">The Road</a>
+      <a href="/attorneys.html">Law Firms</a>
+      <a href="/about.html">About</a>
+      <a href="/chapters.html">Free Chapters</a>
+      <a href="/writing.html">Writing</a>
+      <a href="/course.html">The Course</a>
+      <a href="/organiser/login.html">Case Organiser</a>
+    </nav>
+      <div id="google_translate_element" class="google-translate-wrap"></div>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+  <div class="tldr-summary">
+    <h2>TL;DR Summary</h2>
+    <p>A reference dictionary defining federal sentencing guidelines, BOP custody levels, mitigation workbooks, and healthcare exclusion terms.</p>
+  </div>
+
+  <article>
+    <h1>Federal Justice Glossary</h1>
+    <p>A list of key terms frequently encountered in the federal process.</p>
+
+    <div class="glossary-term">Presentence Report (PSR)</div>
+    <div class="glossary-def">A document prepared by a U.S. Probation Officer analyzing the defendant's background, offense details, and criminal history to determine advisory sentencing guideline ranges.</div>
+
+    <div class="glossary-term">RDAP (Residential Drug Abuse Program)</div>
+    <div class="glossary-def">An intensive treatment program in the BOP that can yield up to a 12-month sentence reduction for eligible non-violent defendants.</div>
+
+    <div class="glossary-term">HHS-OIG Exclusion</div>
+    <div class="glossary-def">An administrative action placing providers on the LEIE database, preventing them from billing or receiving payment under Medicare and Medicaid.</div>
+
+    <div class="glossary-term">Mitigation Workbook</div>
+    <div class="glossary-def">A structured narrative compiled by a defendant mapping out character references, personal history, and remediation details for sentencing judges.</div>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/sponsor">Sponsor a Prison Library</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/wca-translate.js"></script>
+<script src="/data/search-index.js"></script>
+<script src="/js/ask-anything.js"></script>
+<script src="/js/nav-toggle.js"></script>
+</body>
+</html>

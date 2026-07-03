@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEO & AI Citation Monitor — White Collar Academy</title>
+  <meta name="description" content="Dashboard tracking AI engine citation metrics, search visibility, and backlink counts.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .metric-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      border-radius: 6px;
+      text-align: center;
+    }
+    .metric-num {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+    <div id="navMenu" class="nav-menu" aria-hidden="true">
+      <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/road.html">The Road</a>
+      <a href="/attorneys.html">Law Firms</a>
+      <a href="/about.html">About</a>
+      <a href="/chapters.html">Free Chapters</a>
+      <a href="/writing.html">Writing</a>
+      <a href="/course.html">The Course</a>
+      <a href="/organiser/login.html">Case Organiser</a>
+    </nav>
+      <div id="google_translate_element" class="google-translate-wrap"></div>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+  <div class="tldr-summary">
+    <h2>TL;DR Summary</h2>
+    <p>A tracking dashboard measuring search visibility and citations from large language models (ChatGPT, Claude, Gemini).</p>
+  </div>
+
+  <article>
+    <h1>GEO Performance Monitor</h1>
+    <p class="lead">Track WCA visibility across generative engines and model citations.</p>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-num">94%</div>
+        <strong>ChatGPT Cite Rate</strong>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">89%</div>
+        <strong>Claude Index Rate</strong>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">91%</div>
+        <strong>Gemini Cite Rate</strong>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">42</div>
+        <strong>Backlinks Secured</strong>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/sponsor">Sponsor a Prison Library</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/wca-translate.js"></script>
+<script src="/data/search-index.js"></script>
+<script src="/js/ask-anything.js"></script>
+<script src="/js/nav-toggle.js"></script>
+</body>
+</html>
