@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lawyer Dashboard — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Defense Counsel Portal</span>
+      <a href="/organiser/lawyer.html" class="active">Client Overview</a>
+      <a href="/organiser/case-workspace.html">Shared Workspace</a>
+    </nav>
+  </aside>
+
+  <main id="main-content" class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Defense Counsel Dashboard</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Secure Client Oversight & Task Coordination</p>
+
+    <!-- CLIENT LIST -->
+    <section>
+      <h2>Active Client Directory</h2>
+      <table style="width:100%; border-collapse:collapse; margin-top:1rem; font-size:0.9rem; background:#fff; border:1px solid var(--border);">
+        <thead>
+          <tr style="background:var(--bg-alt); border-bottom:1px solid var(--border);">
+            <th style="padding:10px; text-align:left;">Client Name</th>
+            <th style="padding:10px; text-align:left;">Case Status</th>
+            <th style="padding:10px; text-align:center;">Readiness</th>
+            <th style="padding:10px; text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px;"><strong>Client #9482</strong></td>
+            <td style="padding:10px;">Pre-Sentencing (PSR Interview set)</td>
+            <td style="padding:10px; text-align:center;"><strong style="color:var(--accent)">75%</strong></td>
+            <td style="padding:10px; text-align:right;"><a href="/organiser/case-workspace.html" class="btn btn--outline" style="font-size:0.75rem; padding:4px 8px; text-decoration:none;">Open Workspace</a></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px;"><strong>Client #2241</strong></td>
+            <td style="padding:10px;">Plea Evaluation Phase</td>
+            <td style="padding:10px; text-align:center;"><strong style="color:var(--accent)">40%</strong></td>
+            <td style="padding:10px; text-align:right;"><a href="/organiser/case-workspace.html" class="btn btn--outline" style="font-size:0.75rem; padding:4px 8px; text-decoration:none;">Open Workspace</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- TASK ASSIGNMENT -->
+    <section style="margin-top:2.5rem; background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px;">
+      <h2>Dispatch Task to Client</h2>
+      <form id="assign-task-form" style="margin-top:1rem;">
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Select Client</label>
+          <select style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+            <option>Client #9482</option>
+            <option>Client #2241</option>
+          </select>
+        </div>
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Task Instruction</label>
+          <input type="text" placeholder="e.g. Request character references from employer" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <button type="submit" class="btn">Assign Task</button>
+      </form>
+    </section>
+  </main>
+</div>
+
+<script src="/js/nav-toggle.js"></script>
+<a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
+</body>
+</html>

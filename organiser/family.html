@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Family Dashboard — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+  <style>
+    .family-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .family-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.01);
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">Dashboard</a>
+      <span class="sidebar-label">Family Portal</span>
+      <a href="/organiser/family.html" class="active">Family Dashboard</a>
+      <a href="/organiser/case-workspace.html">Shared Workspace</a>
+      <span class="sidebar-label">Partners</span>
+      <a href="/organiser/attorney.html">Defense Counsel Portal</a>
+    </nav>
+  </aside>
+
+  <main id="main-content" class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Family Support Panel</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Access-level: Limited View</p>
+
+    <!-- READINESS PROFILE -->
+    <div style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+      <h2 style="font-size: 1.1rem; margin: 0; font-family: var(--font-serif); font-weight: 600;">Shared Case Progress</h2>
+      <div style="width: 100%; height: 10px; background: var(--bg-alt); border-radius: 5px; overflow: hidden; margin-top:0.75rem;">
+        <div style="width: 45%; height: 100%; background: var(--accent); border-radius: 5px;"></div>
+      </div>
+      <p style="font-size:0.8rem; color:var(--text-soft); margin-top:0.5rem; margin-bottom:0;">Case readiness score estimated at 45%.</p>
+    </div>
+
+    <div class="family-grid">
+      <!-- VISIT PLANNER -->
+      <div class="family-card">
+        <h3>BOP Visit Planner</h3>
+        <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Plan security visits, look up dress codes, and calendar check-ins.</p>
+        <form id="visit-form">
+          <input type="date" required style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; margin-bottom:0.5rem;">
+          <button type="submit" class="btn btn--outline" style="font-size:0.8rem; width:100%;">Schedule Visit</button>
+        </form>
+      </div>
+
+      <!-- COMMISSARY TRACKER -->
+      <div class="family-card">
+        <h3> commissary & Legal Expense Tracker</h3>
+        <table style="width:100%; font-size:0.85rem; border-collapse:collapse; margin-top:0.5rem;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="padding:4px 0; text-align:left;">Item</th>
+              <th style="padding:4px 0; text-align:right;">Amt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:4px 0;">Attorney Deposit</td>
+              <td style="padding:4px 0; text-align:right;">$2,500</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:4px 0;">Commissary Fund</td>
+              <td style="padding:4px 0; text-align:right;">$150</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- KIDS GUIDE -->
+      <div class="family-card">
+        <h3>Children's Explanation Guide</h3>
+        <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Find age-appropriate explanations and storybooks mapping structural separation to children.</p>
+        <a href="#" class="btn btn--outline" style="font-size:0.8rem; text-decoration:none; display:block; text-align:center;">Read Guide</a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="/js/nav-toggle.js"></script>
+<a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
+</body>
+</html>
