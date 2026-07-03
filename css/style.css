@@ -365,6 +365,97 @@ strong { font-weight: 600; }
   }
 }
 
+/* ── Prison sponsorship map ── */
+.prison-map-wrap {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-alt);
+}
+
+.prison-map-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+
+.prison-map-state-label {
+  color: var(--text-soft);
+  flex: 1;
+}
+
+.prison-map-reset,
+.prison-map-zoom-btn {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.prison-map-reset:hover,
+.prison-map-zoom-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.prison-map-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 960 / 560;
+  touch-action: pan-y pinch-zoom;
+}
+
+.prison-map-state circle {
+  fill: var(--border);
+  stroke: var(--bg);
+  stroke-width: 1;
+}
+
+.prison-map-state.has-facilities circle {
+  fill: var(--accent-lt);
+  stroke: var(--accent);
+  cursor: pointer;
+}
+
+.prison-map-state.has-facilities:hover circle,
+.prison-map-state.active circle {
+  fill: var(--accent);
+}
+
+.prison-map-state text {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  fill: var(--text-soft);
+  pointer-events: none;
+}
+
+.prison-map-state.has-facilities text,
+.prison-map-state.active text {
+  fill: var(--text);
+  font-weight: 600;
+}
+
+.prison-map-pin circle {
+  fill: var(--accent);
+  stroke: #fff;
+  stroke-width: 1.5;
+  cursor: pointer;
+}
+
+.prison-map-pin:hover circle,
+.prison-map-pin:focus circle {
+  fill: #b45309;
+}
+
 /* ── Hero ── */
 .hero {
   padding: 4rem 0 3rem;

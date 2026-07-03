@@ -74,6 +74,8 @@
     <div class="container" style="max-width:640px;">
       <h2>Sponsor a facility</h2>
 
+      <div class="prison-map-wrap" id="prison-map"></div>
+
       <form id="sponsor-form" novalidate>
         <div class="case-field">
           <label for="facility">Facility</label>
@@ -204,6 +206,14 @@
       }
       facilitySelect.innerHTML = '<option value="">Select a facility</option>' +
         data.facilities.map(f => `<option value="${f.id}">${f.name} (${f.state})</option>`).join("");
+
+      if (window.WCA_initPrisonMap) {
+        window.WCA_initPrisonMap("prison-map", data.facilities, function (facilityId) {
+          facilitySelect.value = facilityId;
+          facilitySelect.dispatchEvent(new Event("change"));
+          facilitySelect.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+      }
     } catch {
       facilitySelect.innerHTML = '<option value="">Could not load facilities</option>';
     }
@@ -310,5 +320,6 @@
 <script src="/data/search-index.js"></script>
 <script src="/js/ask-anything.js"></script>
 <script src="/js/nav-toggle.js"></script>
+<script src="/js/prison-map.js"></script>
 </body>
 </html>
