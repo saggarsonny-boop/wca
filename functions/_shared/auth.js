@@ -88,12 +88,13 @@ function unauthorized() {
 export async function requireActiveSubscription(request, env) {
   const user = await requireAuth(request, env);
   const dbUser = await env.DB.prepare(
-    "SELECT subscription_status, trial_ends_at FROM organiser_users WHERE id = ?"
+    "SELECT subscription_status, trial_ends_at, role FROM organiser_users WHERE id = ?"
   ).bind(user.uid).first();
 
   if (!dbUser) throw unauthorized();
 
   const status = dbUser.subscription_status;
+  user.role = dbUser.role || "user";
 
   if (status === "active" || status === "lifetime") {
     return user;
