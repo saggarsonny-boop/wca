@@ -1,4 +1,12 @@
 (function() {
+  // Dynamically load analytics tracker
+  const analyticsScript = document.createElement("script");
+  analyticsScript.src = "/js/analytics.js";
+  analyticsScript.async = true;
+  if (document.head) {
+    document.head.appendChild(analyticsScript);
+  }
+
   const isBlueCollar = window.location.hostname.includes("bluecollardiner") || window.location.search.includes("theme=bluecollar");
   if (isBlueCollar) {
     document.documentElement.classList.add("theme-bluecollar");

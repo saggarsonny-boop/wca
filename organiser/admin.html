@@ -74,10 +74,82 @@
         </tbody>
       </table>
     </section>
+
+    <!-- ANALYTICS REPORTING CARD -->
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+      <h2>Usage & Telemetry Analytics</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1rem;">
+        <div>
+          <h3 style="font-size:0.95rem; margin-bottom:0.5rem; color:var(--accent);">Event Totals</h3>
+          <table style="width:100%; font-size:0.85rem; border-collapse:collapse;" id="analytics-totals-table">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); font-weight:600;">
+                <th style="padding:5px 0; text-align:left;">Event</th>
+                <th style="padding:5px 0; text-align:right;">Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="2" style="text-align:center; padding:10px; color:var(--text-soft);">Loading events...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h3 style="font-size:0.95rem; margin-bottom:0.5rem; color:var(--accent);">Top Visited Pages</h3>
+          <table style="width:100%; font-size:0.85rem; border-collapse:collapse;" id="analytics-pages-table">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border); font-weight:600;">
+                <th style="padding:5px 0; text-align:left;">Path</th>
+                <th style="padding:5px 0; text-align:right;">Hits</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="2" style="text-align:center; padding:10px; color:var(--text-soft);">Loading pages...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
 <script src="/js/nav-toggle.js"></script>
+<script>
+  async function loadAnalytics() {
+    try {
+      const res = await fetch('/api/organiser/analytics');
+      if (res.ok) {
+        const { totals, pages } = await res.json();
+        
+        const totalsBody = document.querySelector('#analytics-totals-table tbody');
+        if (totals.length === 0) {
+          totalsBody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:10px; color:var(--text-soft);">No events tracked yet.</td></tr>';
+        } else {
+          totalsBody.innerHTML = totals.map(t => `
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 0;"><strong>${t.event_type}</strong></td>
+              <td style="padding:6px 0; text-align:right;">${t.count}</td>
+            </tr>
+          `).join('');
+        }
+
+        const pagesBody = document.querySelector('#analytics-pages-table tbody');
+        if (pages.length === 0) {
+          pagesBody.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:10px; color:var(--text-soft);">No page hits recorded.</td></tr>';
+        } else {
+          pagesBody.innerHTML = pages.map(p => `
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 0;">${p.url}</td>
+              <td style="padding:6px 0; text-align:right;">${p.count}</td>
+            </tr>
+          `).join('');
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load telemetry stats:', err);
+    }
+  }
+  loadAnalytics();
+</script>
 <a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
   <!-- Mobile Bottom Navigation -->
   <div class="mobile-bottom-nav">
