@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /organiser/
+Disallow: /_draft/
+Disallow: /api/
+
+Sitemap: https://whitecollaracademy.com/sitemap.xml
