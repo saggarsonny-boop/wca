@@ -21,8 +21,10 @@ export async function requireSponsorAdmin(request, env) {
   return payload;
 }
 
-export function clearAdminCookie() {
-  return `${COOKIE_NAME}=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0`;
+export function clearAdminCookie(request) {
+  const isLocal = request && (request.url.includes("localhost") || request.url.includes("127.0.0.1"));
+  const secureFlag = isLocal ? "" : "; Secure";
+  return `${COOKIE_NAME}=; HttpOnly${secureFlag}; SameSite=Strict; Path=/; Max-Age=0`;
 }
 
 function unauthorized() {
