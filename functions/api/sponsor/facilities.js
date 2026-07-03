@@ -21,8 +21,10 @@ export async function onRequestGet({ request, env }) {
     return json({ facilities: results });
   } catch (e) {
     if (e instanceof Response) return e;
-    console.error("facilities error", e);
-    return err("Server error", 500);
+    console.error("facilities error:", e.message, "\n", e.stack);
+    // TEMPORARY: exposing message/stack to diagnose a production-only 500.
+    // Remove debug_message/debug_stack once the cause is confirmed.
+    return json({ error: "Server error", debug_message: e.message, debug_stack: e.stack }, 500);
   }
 }
 
@@ -43,7 +45,7 @@ export async function onRequestPost({ request, env }) {
     return json({ ok: true, id }, 201);
   } catch (e) {
     if (e instanceof Response) return e;
-    console.error("facilities create error", e);
+    console.error("facilities create error:", e.message, "\n", e.stack);
     return err("Server error", 500);
   }
 }
