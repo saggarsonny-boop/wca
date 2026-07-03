@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Billing & Payments — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+    <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">📊 Dashboard</a>
+      <a href="/organiser/case-file.html">📋 Case File</a>
+      <a href="/organiser/dates.html">📅 Dates</a>
+      <a href="/organiser/checklists.html">✅ Checklists</a>
+      <a href="/organiser/documents.html">📄 Documents</a>
+      <a href="/organiser/ai.html">🤖 Ask a question</a>
+      <a href="/organiser/support-circle.html">💬 Support Circle Chat</a>
+      <a href="/organiser/peer-support.html">👥 Peer Support</a>
+      <a href="/organiser/family.html">🏠 Family Dashboard</a>
+      <a href="/organiser/lawyer.html">⚖️ Lawyer Dashboard</a>
+      <a href="/organiser/case-workspace.html">📂 Shared Workspace</a>
+      <a href="/organiser/attorney.html">⚖️ Attorney Portal</a>
+      <a href="/organiser/calculator.html">🧮 Calculator</a>
+      <a href="/organiser/mitigation.html">📝 Mitigation Workbook</a>
+      <a href="/organiser/allocution.html">🎤 Allocution Prep</a>
+      <a href="/organiser/sentencing-prep.html">⚖️ Sentencing Prep</a>
+      <a href="/organiser/billing.html" class="active">💳 Billing & Payments</a>
+      <a href="/organiser/reminders.html">🔔 Reminders & Alerts</a>
+      <a href="/organiser/resources.html">📚 Resource Library</a>
+    </nav>
+  </aside>
+
+  <main id="main-content" class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Billing & Payments</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Track legal fees, commissary, and restitution balances.</p>
+
+    <!-- BILLING FORM -->
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+      <h2>Log Expense / Payment</h2>
+      <form id="ledger-form" style="margin-top:1rem;">
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Category</label>
+          <select id="ledg-cat" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+            <option>Legal Fees</option>
+            <option>Commissary Deposit</option>
+            <option>Restitution Payment</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Amount ($)</label>
+          <input type="number" id="ledg-amt" placeholder="e.g. 500" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Description</label>
+          <input type="text" id="ledg-desc" placeholder="e.g. Attorney deposit" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <button type="submit" class="btn">Log Balance Action</button>
+      </form>
+    </section>
+
+    <!-- LEDGER LIST -->
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2>Financial Ledger</h2>
+        <button id="export-csv-btn" class="btn btn--outline" style="font-size:0.8rem; padding:4px 8px;">Export CSV</button>
+      </div>
+      <table style="width:100%; border-collapse:collapse; margin-top:1rem; font-size:0.9rem;">
+        <thead>
+          <tr style="background:var(--bg-alt); border-bottom:1px solid var(--border);">
+            <th style="padding:10px; text-align:left;">Category</th>
+            <th style="padding:10px; text-align:left;">Description</th>
+            <th style="padding:10px; text-align:right;">Amount</th>
+          </tr>
+        </thead>
+        <tbody id="ledger-list">
+          <tr>
+            <td colspan="3" style="text-align:center; padding:15px; color:var(--text-soft);">No transactions logged yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<script src="/js/nav-toggle.js"></script>
+<script>
+  const ledgForm = document.getElementById('ledger-form');
+  const ledgList = document.getElementById('ledger-list');
+  let transactions = JSON.parse(localStorage.getItem('wca_ledger_tx') || '[]');
+
+  function renderLedger() {
+    if (transactions.length === 0) {
+      ledgList.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:15px; color:var(--text-soft);">No transactions logged yet.</td></tr>';
+      return;
+    }
+    ledgList.innerHTML = transactions.map(t => `
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px;"><strong>` + t.cat + `</strong></td>
+        <td style="padding:10px;">` + t.desc + `</td>
+        <td style="padding:10px; text-align:right; font-weight:600;">$` + t.amt + `</td>
+      </tr>
+    `).join('');
+  }
+
+  ledgForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const cat = document.getElementById('ledg-cat').value;
+    const amt = document.getElementById('ledg-amt').value;
+    const desc = document.getElementById('ledg-desc').value;
+    transactions.push({ cat, amt, desc });
+    localStorage.setItem('wca_ledger_tx', JSON.stringify(transactions));
+    renderLedger();
+    ledgForm.reset();
+  });
+
+  document.getElementById('export-csv-btn').addEventListener('click', () => {
+    if (transactions.length === 0) return alert("No transaction items to export.");
+    let csv = "Category,Description,Amount\n";
+    transactions.forEach(t => {
+      csv += '"' + t.cat + '","' + t.desc + '",' + t.amt + '\n';
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'WCA_Financial_Ledger.csv';
+    a.click();
+  });
+
+  renderLedger();
+</script>
+</body>
+</html>
