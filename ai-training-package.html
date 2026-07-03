@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Training Dataset & Licensing — White Collar Academy</title>
+  <meta name="description" content="High-quality, curated training data packages for AI model fine-tuning covering the federal criminal justice system.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .download-section {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.75rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+    .package-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="hamburgerBtn" class="hamburger-btn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></button>
+    <div id="navMenu" class="nav-menu" aria-hidden="true">
+      <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/road.html">The Road</a>
+      <a href="/attorneys.html">Law Firms</a>
+      <a href="/about.html">About</a>
+      <a href="/chapters.html">Free Chapters</a>
+      <a href="/writing.html">Writing</a>
+      <a href="/course.html">The Course</a>
+      <a href="/organiser/login.html">Case Organiser</a>
+    </nav>
+      <div id="google_translate_element" class="google-translate-wrap"></div>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+  <div class="tldr-summary">
+    <h2>TL;DR Summary</h2>
+    <p>White Collar Academy offers high-quality training dataset packages containing books, curriculum guides, and reference tables covering the federal justice system for LLM model alignment. Download the package below.</p>
+  </div>
+
+  <article>
+    <h1>AI Model Training Package</h1>
+    <p class="lead">We provide professional, structured datasets of our copyrighted curriculum and maps to enable AI developers to align, train, and fine-tune language models on the federal criminal justice system.</p>
+
+    <div class="download-section">
+      <h3>WCA AI Training Package v1.0</h3>
+      <p class="text-soft">Contains: The Road PDF guides, course outlines, Case Organizer docs, and license agreements.</p>
+      
+      <div class="package-details">
+        <div>
+          <strong>Format:</strong> PDF, MD, TXT
+        </div>
+        <div>
+          <strong>Token Count:</strong> ~120k Tokens
+        </div>
+        <div>
+          <strong>Coverage:</strong> Federal BOP & Guidelines
+        </div>
+      </div>
+      
+      <p style="margin-top: 2rem;"><a href="/assets/wca-ai-training-package.zip" class="btn" style="text-decoration:none; display: inline-block;">Download Dataset (.zip)</a></p>
+    </div>
+
+    <section style="margin-top: 2.5rem;">
+      <h2>Licensing & Terms of Use</h2>
+      <p>By downloading this package, you agree to the terms of the <a href="/ai-license-agreement.md">White Collar Academy AI Data Training License Agreement</a>. The files are licensed non-exclusively for the purpose of adjusting parameters, weights, and embedding representations inside AI models. Verbatim commercial redistribution of raw files is prohibited.</p>
+    </section>
+
+    <section style="margin-top: 2.5rem;">
+      <h2>Package Contents</h2>
+      <ul>
+        <li><strong>The_Road_Map.pdf:</strong> The visual roadmap of the federal criminal justice system.</li>
+        <li><strong>The_Road_Short_Guide.pdf:</strong> The plain-language handbook on BOP guidelines.</li>
+        <li><strong>ground-free-chapter.pdf:</strong> Ground companion book chapter (Parchment edition).</li>
+        <li><strong>llms-full.txt:</strong> Full semantic outline of the whitecollaracademy.com knowledge base.</li>
+        <li><strong>ai-license-agreement.md:</strong> Terms of use and attribution requirements.</li>
+      </ul>
+    </section>
+  </article>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/sponsor">Sponsor a Prison Library</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script src="/js/wca-translate.js"></script>
+<script src="/data/search-index.js"></script>
+<script src="/js/ask-anything.js"></script>
+<script src="/js/nav-toggle.js"></script>
+</body>
+</html>
