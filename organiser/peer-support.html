@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peer Support Directory — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">📊 Dashboard</a>
+      <a href="/organiser/case-file.html">📋 Case File</a>
+      <a href="/organiser/dates.html">📅 Dates</a>
+      <a href="/organiser/checklists.html">✅ Checklists</a>
+      <a href="/organiser/documents.html">📄 Documents</a>
+      <a href="/organiser/ai.html">🤖 Ask a question</a>
+      <a href="/organiser/support-circle.html">💬 Support Circle Chat</a>
+      <a href="/organiser/attorney.html">⚖️ Attorney Portal</a>
+      <a href="/organiser/calculator.html">🧮 Calculator</a>
+      <a href="/organiser/mitigation.html">📝 Mitigation Workbook</a>
+      <a href="/organiser/allocution.html">🎤 Allocution Prep</a>
+      <a href="/organiser/sentencing-prep.html">⚖️ Sentencing Prep</a>
+    </nav>
+  </aside>
+
+  <main id="main-content" class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Peer Support Registry</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Connect safely and legally with peers</p>
+
+    <!-- LEGAL COMPLIANCE DISCLAIMER -->
+    <div style="background:#fffbeb; border:1px solid #f59e0b; padding:1.25rem; border-radius:8px; margin-bottom:2rem; color:#b45309; font-size:0.95rem; line-height:1.5;">
+      ⚖️ <strong>CRITICAL LEGAL COMPLIANCE NOTICE:</strong><br>
+      Defendants, inmates, or supervisees must <strong>NOT</strong> communicate with other defendants, inmates, or supervisees under any circumstances unless they have first obtained prior written approval from their pretrial services officer, probation officer, or prison case manager. Unauthorized communication may constitute a violation of supervised release, bond, or prison regulations and can lead to immediate revocation of release.
+    </div>
+
+    <!-- PRE-REGISTRATION VERIFICATION -->
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px;">
+      <h2>Request Officer Authorization Approval</h2>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1.25rem;">Please upload written verification from your Pretrial/Probation Officer to activate Peer Support group visibility.</p>
+      <form id="officer-auth-form">
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Officer Name</label>
+          <input type="text" placeholder="e.g. Officer John Doe" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Upload Written Consent Document (PDF / Image)</label>
+          <input type="file" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <button type="submit" class="btn">Submit for Legal Compliance Verification</button>
+      </form>
+    </section>
+  </main>
+</div>
+
+<script src="/js/nav-toggle.js"></script>
+<a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
+</body>
+</html>

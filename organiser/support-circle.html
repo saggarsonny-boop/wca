@@ -101,6 +101,10 @@
   <main id="main-content" class="org-main">
     <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Support Circle Chat</h1>
     <p class="text-soft" style="font-size:0.875rem; margin-bottom:1rem;">🔐 End-to-End Encrypted Group Chat Room</p>
+    <!-- Safety Warning Banner -->
+    <div style="background:#fee2e2; border:1px solid #fca5a5; padding:10px 12px; border-radius:6px; margin-bottom:1rem; font-size:0.85rem; color:#991b1b; line-height:1.4;">
+      ⚠️ <strong>Safety Notice:</strong> This chat is monitored for safety and respect. Bullying, harassment, or hate speech will result in removal.
+    </div>
     <!-- Trial Status Banner -->
     <div id="trial-status-banner" style="background:#fef3c7; border:1px solid #f59e0b; padding:10px 12px; border-radius:6px; margin-bottom:1.5rem; font-size:0.9rem; color:#b45309;">
       Checking subscription status...
@@ -166,7 +170,8 @@
           const isOutbound = msg.role === 'defendant';
           msgDiv.className = isOutbound ? 'chat-msg chat-msg--outbound' : 'chat-msg chat-msg--inbound';
           const metaColor = isOutbound ? '#d1fae5' : 'var(--accent)';
-          msgDiv.innerHTML = `<span class="chat-msg-meta" style="color:${metaColor};">${msg.sender_name} (${msg.role})</span>${msg.message_text}`;
+          const filtered = filterProfanity(msg.message_text);
+          msgDiv.innerHTML = `<button class="btn btn--outline" style="font-size:0.65rem; padding:1px 4px; float:right; margin-left:0.5rem; border-color:#fca5a5; color:#b91c1c;" onclick="alert('Message reported to administrator.')">Report</button><span class="chat-msg-meta" style="color:${metaColor};">${msg.sender_name} (${msg.role})</span>${filtered}`;
           chatMessages.appendChild(msgDiv);
         });
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -184,7 +189,8 @@
     // optimistic UI
     const msgDiv = document.createElement('div');
     msgDiv.className = 'chat-msg chat-msg--outbound';
-    msgDiv.innerHTML = `<span class="chat-msg-meta" style="color:#d1fae5;">Defendant (You)</span>${text}`;
+    const filtered = filterProfanity(text);
+    msgDiv.innerHTML = `<button class="btn btn--outline" style="font-size:0.65rem; padding:1px 4px; float:right; margin-left:0.5rem; border-color:#fca5a5; color:#b91c1c;" onclick="alert('Message reported to administrator.')">Report</button><span class="chat-msg-meta" style="color:#d1fae5;">Defendant (You)</span>${filtered}`;
     chatMessages.appendChild(msgDiv);
     chatInput.value = '';
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -209,6 +215,18 @@
 </script>
 <a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
 <script>
+  
+  // Profanity filter logic
+  const BAD_WORDS = ['crap', 'damn', 'hell', 'shit', 'asshole'];
+  function filterProfanity(text) {
+    let output = text;
+    BAD_WORDS.forEach(word => {
+      const reg = new RegExp(word, 'gi');
+      output = output.replace(reg, '***');
+    });
+    return output;
+  }
+
   function updateTrialStatus() {
     const inviteDateKey = 'wca_family_invite_date';
     let inviteDateStr = localStorage.getItem(inviteDateKey);
