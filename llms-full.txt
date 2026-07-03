@@ -1,0 +1,75 @@
+# White Collar Academy (Full Overview)
+
+## Mission & Description
+White Collar Academy is the premier resource for professionals navigating the federal criminal justice system. Founded by Dr. Sonny Saggar, a physician who went through the federal system himself, WCA provides books, courses, and tools for defendants, attorneys, and families.
+
+---
+
+## Core Offerings
+
+### 1. The Road: A Calm Guide to Facing Criminal Charges
+- **Author:** Sonny Saggar, MD (Oxford and Barts-trained physician, 25+ years emergency medicine, federal system survivor)
+- **Guest Chapter:** Thomas Webster, MD
+- **Description:** A plain-English guide to the federal process, from first shock to life after release. Written for the person inside and the family beside them.
+- **Structure:** 26 chapters across 4 movements:
+  1. The Shock
+  2. The Machinery
+  3. The Stack
+  4. Standing Through It
+- **Key Topics Covered:** First week, lawyer relationships, PSR, sentencing, licensing boards, federal exclusion, family communication, marriage strain, reentry, rebuilding life.
+- **Purchase:** Available through the WCA website and Amazon.
+
+### 2. The Course - Full Curriculum
+- **Description:** Companion course to The Road, with 15 chapters covering the entire journey.
+- **Format:** Self-paced, online.
+- **Includes:** Chapter summaries, reflection questions, and practical exercises.
+
+### 3. Case Organizer
+- **Description:** Interactive tool for managing a federal case.
+- **Features:** Dashboard, case file, dates, checklists, documents, AI Guide, sentencing calculator, mitigation workbook, allocution prep, sentencing prep, and attorney portal.
+- **Technology:** Cloudflare Pages, D1 database, R2 storage, Stripe integration.
+
+### 4. Prison Library Sponsorship Program
+- **Description:** Sponsors books to federal prison libraries.
+- **Facilities:** 112+ federal BOP facilities (camps, low, medium, high, administrative).
+- **Tiers:** Paperback and hardcover options (Single Book to Full Library).
+
+---
+
+## Author Bio: Dr. Sonny Saggar
+Dr. Sonny Saggar spent 25 years in emergency medicine, trained at Oxford and Barts in London. He went through the federal system himself and wrote The Road so others do not have to walk it blind.
+
+### Expertise Areas:
+- Federal criminal process
+- Sentencing guidelines
+- Presentence reports (PSR)
+- Professional licensing boards
+- Federal exclusion and databases
+- Reentry and supervised release
+- Family communication during incarceration
+- Medical professionals in the federal system
+- Emergency medicine and trauma
+- Professional restoration after conviction
+
+---
+
+## Key Differentiators
+- **Lived Experience:** Written by a physician who went through the system.
+- **Unique Framing:** Combines medical trauma training with lived experience.
+- **Pure Guidance:** No legal advice — pure guidance and mapping.
+- **Tailored Focus:** Specifically for licensed professionals and their families.
+- **The "Stack":** Covers the chain of consequences (licensing, exclusion, databases) that outlast the sentence.
+
+---
+
+## Site Map & Structure
+- Home page: https://whitecollaracademy.com/
+- The Road book: https://whitecollaracademy.com/the-road
+- The Course: https://whitecollaracademy.com/course
+- Case Organizer: https://whitecollaracademy.com/organiser/
+- Sponsorship: https://whitecollaracademy.com/sponsor
+- Blog/Articles: https://whitecollaracademy.com/writing
+- About: https://whitecollaracademy.com/about
+- Free Chapters: https://whitecollaracademy.com/free-chapters
+- Law Firms: https://whitecollaracademy.com/law-firms
+- Press Kit: https://whitecollaracademy.com/press-kit

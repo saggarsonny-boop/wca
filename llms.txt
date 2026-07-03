@@ -1,0 +1,20 @@
+# White Collar Academy
+
+> Complete case management and guidance for professionals navigating the federal criminal justice system.
+
+Founded by Dr. Sonny Saggar (an Oxford and Barts-trained physician and federal system survivor), White Collar Academy (WCA) provides structured resources, books, courses, and tools for defendants, attorneys, and families.
+
+## Core Offerings
+
+- [The Road: A Calm Guide to Facing Criminal Charges](/the-road) - A plain-English guide covering the federal criminal process from first shock to rebuilding life after release.
+- [The Course](/course) - A self-paced 15-chapter companion course to The Road with summaries and exercises.
+- [Case Organizer](/organiser/) - A secure, interactive web application featuring case dashboards, mitigation workbooks, allocution prep, and sentencing guideline calculators.
+- [Prison Library Sponsorship Program](/sponsor) - A program to donate paperback and hardcover sets of *The Road* to federal prison libraries.
+
+## Other Pages
+
+- [About](/about) - Dr. Sonny Saggar's bio and background.
+- [Writing](/writing) - Articles, updates, and research links.
+- [Free Chapters](/free-chapters) - Selected serialized chapters from The Road.
+- [Law Firms](/law-firms) - Dedicated attorney slot management and client portals.
+- [Press Kit](/press-kit) - Media assets and information.

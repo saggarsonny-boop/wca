@@ -1,6 +1,38 @@
 User-agent: *
+Allow: /$
+Allow: /the-road$
+Allow: /course$
+Allow: /about$
+Allow: /writing$
+Allow: /free-chapters$
+Allow: /law-firms$
+Allow: /sponsor$
+Allow: /press-kit$
 Disallow: /organiser/
-Disallow: /_draft/
+Disallow: /sponsor-admin/
 Disallow: /api/
+
+# AI Search Bots (Allow for GEO)
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# AI Training Bots (Disallow if you don't want training data used)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
 
 Sitemap: https://whitecollaracademy.com/sitemap.xml
