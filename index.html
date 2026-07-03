@@ -25,40 +25,134 @@
 
   <!-- JSON-LD Structured Data Schema -->
   <script type="application/ld+json">
-  [
+{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "White Collar Academy",
-      "url": "https://whitecollaracademy.com/",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://whitecollaracademy.com/organiser/login.html?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    },
-    {
-      "@context": "https://schema.org",
       "@type": "Organization",
+      "@id": "https://whitecollaracademy.com/#organization",
       "name": "White Collar Academy",
-      "url": "https://whitecollaracademy.com/",
-      "logo": "https://whitecollaracademy.com/assets/favicon.svg",
-      "founder": {
-        "@type": "Person",
-        "name": "Sonny Saggar MD"
-      }
+      "url": "https://whitecollaracademy.com",
+      "logo": "https://whitecollaracademy.com/assets/logo.png",
+      "description": "Complete case management and guidance for professionals navigating the federal criminal justice system.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "US"
+      },
+      "sameAs": [
+        "https://twitter.com/whitecollaracad",
+        "https://linkedin.com/company/white-collar-academy",
+        "https://youtube.com/@whitecollaracademy"
+      ]
     },
     {
-      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": "https://whitecollaracademy.com/#sonny-saggar",
+      "name": "Sonny Saggar",
+      "honorificSuffix": "MD",
+      "jobTitle": "Physician, Author, Founder",
+      "description": "Oxford and Barts-trained physician, 25+ years emergency medicine, federal system survivor, author of The Road.",
+      "alumniOf": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "University of Oxford"
+        },
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "Barts and The London School of Medicine and Dentistry"
+        }
+      ],
+      "hasCredential": {
+        "@type": "EducationalOccupationalCredential",
+        "name": "Medical Doctor",
+        "description": "Emergency Medicine"
+      },
+      "worksFor": {
+        "@type": "Organization",
+        "name": "White Collar Academy"
+      },
+      "url": "https://whitecollaracademy.com/about"
+    },
+    {
       "@type": "Book",
-      "name": "The Road: a calm guide to the federal process",
+      "@id": "https://whitecollaracademy.com/the-road/#book",
+      "name": "The Road: A Calm Guide to Facing Criminal Charges",
       "author": {
         "@type": "Person",
-        "name": "Sonny Saggar MD"
+        "name": "Sonny Saggar"
       },
-      "description": "A book walking the federal criminal process from the first shock to the life that comes after, one step at a time."
+      "about": "Federal criminal process, sentencing, professional licensing, reentry",
+      "description": "A plain-English guide to the federal process, written by a physician who went through it. For the person inside and the family beside them.",
+      "audience": {
+        "@type": "Audience",
+        "name": "Professionals facing federal charges and their families"
+      },
+      "contributor": {
+        "@type": "Person",
+        "name": "Thomas Webster",
+        "honorificSuffix": "MD"
+      }
+    },
+    {
+      "@type": "Course",
+      "@id": "https://whitecollaracademy.com/course/#course",
+      "name": "The Road Course",
+      "description": "A 15-chapter course companion to The Road, covering the entire federal process.",
+      "provider": {
+        "@type": "Organization",
+        "name": "White Collar Academy"
+      },
+      "audience": {
+        "@type": "Audience",
+        "name": "Professionals facing federal charges and their families"
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://whitecollaracademy.com/organiser/#case-organizer",
+      "name": "Case Organizer",
+      "applicationCategory": "Legal",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript",
+      "description": "Interactive case management tool for federal criminal defense.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://whitecollaracademy.com/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the federal sentencing process?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The federal sentencing process begins with the presentence report (PSR), followed by the sentencing hearing where the judge determines the sentence based on guidelines and individual factors."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens to a professional license after a federal conviction?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Licensing boards often act independently of the court. They may suspend or revoke a license based on the conviction, separate from any court-imposed sentence."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the 'stack' in the federal process?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The 'stack' refers to the chain of consequences that come after the court: licensing boards, federal exclusion, national databases, and other collateral consequences that outlast the sentence."
+          }
+        }
+      ]
     }
   ]
+}
   </script>
 
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
