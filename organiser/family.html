@@ -48,7 +48,11 @@
 </header>
 
 <div class="org-layout">
-    <aside class="org-sidebar">
+      <aside class="org-sidebar">
+    <!-- Sidebar toggle button - always visible -->
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar" style="width:100%; border:none; background:var(--bg-alt); padding:10px; cursor:pointer; color:var(--text); z-index:10; font-size:16px;">
+      <span class="toggle-icon">◀</span>
+    </button>
     <nav aria-label="Organiser navigation">
       <span class="sidebar-label">Your case</span>
       <a href="/organiser/">📊 Dashboard</a>
@@ -70,6 +74,8 @@
       <a href="/organiser/billing.html">💳 Billing & Payments</a>
       <a href="/organiser/reminders.html">🔔 Reminders & Alerts</a>
       <a href="/organiser/resources.html">📚 Resource Library</a>
+      <!-- Admin cog - visible only to admins -->
+      <a href="/organiser/admin.html" id="admin-cog-link" style="display: none;">⚙️ Admin</a>
     </nav>
   </aside>
 

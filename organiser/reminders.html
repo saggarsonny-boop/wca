@@ -20,7 +20,11 @@
 </header>
 
 <div class="org-layout">
-  <aside class="org-sidebar">
+    <aside class="org-sidebar">
+    <!-- Sidebar toggle button - always visible -->
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar" style="width:100%; border:none; background:var(--bg-alt); padding:10px; cursor:pointer; color:var(--text); z-index:10; font-size:16px;">
+      <span class="toggle-icon">◀</span>
+    </button>
     <nav aria-label="Organiser navigation">
       <span class="sidebar-label">Your case</span>
       <a href="/organiser/">📊 Dashboard</a>
@@ -42,6 +46,8 @@
       <a href="/organiser/billing.html">💳 Billing & Payments</a>
       <a href="/organiser/reminders.html" class="active">🔔 Reminders & Alerts</a>
       <a href="/organiser/resources.html">📚 Resource Library</a>
+      <!-- Admin cog - visible only to admins -->
+      <a href="/organiser/admin.html" id="admin-cog-link" style="display: none;">⚙️ Admin</a>
     </nav>
   </aside>
 
@@ -51,48 +57,27 @@
 
     <!-- REMINDER CONFIG -->
     <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
-      <h2>Notification Preferences</h2>
+      <h2>Notification Channels Preference</h2>
       <form id="rem-pref-form" style="margin-top:1rem;">
-        <div class="case-field" style="margin-bottom:1rem;">
-          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Alert Email Address</label>
-          <input type="email" id="alert-email" placeholder="e.g. user@example.com" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        <div class="case-field" style="margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+          <input type="checkbox" id="pref-email" checked style="width:20px; height:20px;">
+          <label for="pref-email">Enable Email Alerts (Court dates, deadlines)</label>
         </div>
-        <div class="case-field" style="margin-bottom:1rem;">
-          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">SMS Phone Number</label>
-          <input type="tel" id="sms-phone" placeholder="e.g. +15550199" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        <div class="case-field" style="margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+          <input type="checkbox" id="pref-sms" style="width:20px; height:20px;">
+          <label for="pref-sms">Enable SMS Alerts (Immediate notifications)</label>
         </div>
         <button type="submit" class="btn">Save Preferences</button>
-      </form>
-    </section>
-
-    <!-- ADD REMINDER FORM -->
-    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
-      <h2>Add Custom Reminder</h2>
-      <form id="add-reminder-form" style="margin-top:1rem;">
-        <div class="case-field" style="margin-bottom:1rem;">
-          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Reminder Title</label>
-          <input type="text" id="rem-title" placeholder="e.g. Review Presentence Report" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
-        </div>
-        <div class="case-field" style="margin-bottom:1rem;">
-          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Due Date</label>
-          <input type="date" id="rem-date" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
-        </div>
-        <div class="case-field" style="margin-bottom:1rem;">
-          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Notification Type</label>
-          <select id="rem-type" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
-            <option value="email">Email Notification</option>
-            <option value="sms">SMS Notification</option>
-          </select>
-        </div>
-        <button type="submit" class="btn">Set Reminder</button>
       </form>
     </section>
 
     <!-- COUNTDOWN / ACTIVE ALERTS -->
     <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px;">
       <h2>Active Reminders List</h2>
-      <div style="font-size:0.9rem; color:var(--text-soft); line-height:1.5; margin-top:1rem;" id="reminders-list">
-        <p>Loading active reminders...</p>
+      <div style="font-size:0.9rem; color:var(--text-soft); line-height:1.5; margin-top:1rem;">
+        <div style="background:var(--bg-alt); padding:10px; border-radius:6px; border-left:3px solid var(--accent); margin-bottom:0.5rem;">
+          📅 <strong>Filing Deadline:</strong> Presentence report mitigation memo (Due in 14 days)
+        </div>
       </div>
     </section>
   </main>
@@ -100,90 +85,10 @@
 
 <script src="/js/nav-toggle.js"></script>
 <script>
-  const prefForm = document.getElementById('rem-pref-form');
-  const addForm = document.getElementById('add-reminder-form');
-  const remList = document.getElementById('reminders-list');
-
-  async function loadData() {
-    try {
-      const res = await fetch('/api/organiser/reminders');
-      if (res.ok) {
-        const data = await res.json();
-        document.getElementById('alert-email').value = data.alert_email;
-        document.getElementById('sms-phone').value = data.phone_number;
-
-        let html = '';
-        if (data.reminders.length === 0 && data.dates.length === 0) {
-          html = '<p>No active reminders configured.</p>';
-        } else {
-          // Render dates milestones
-          data.dates.forEach(d => {
-            html += `
-              <div style="background:#fff9db; padding:10px; border-radius:6px; border-left:3px solid #fcc419; margin-bottom:0.5rem;">
-                📅 <strong>Court Milestone:</strong> ${d.label} (Scheduled for ${d.date_val})
-              </div>
-            `;
-          });
-          // Render custom reminders
-          data.reminders.forEach(r => {
-            html += `
-              <div style="background:var(--bg-alt); padding:10px; border-radius:6px; border-left:3px solid var(--accent); margin-bottom:0.5rem;">
-                🔔 <strong>${r.title}:</strong> Due on ${r.due_date} (${r.alert_type === 'email' ? '📧 Email Alert' : '📱 SMS Alert'})
-              </div>
-            `;
-          });
-        }
-        remList.innerHTML = html;
-      }
-    } catch (err) {
-      console.error(err);
-      remList.innerHTML = '<p>Failed to load reminders.</p>';
-    }
-  }
-
-  prefForm.addEventListener('submit', async (e) => {
+  document.getElementById('rem-pref-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    const alert_email = document.getElementById('alert-email').value;
-    const phone_number = document.getElementById('sms-phone').value;
-    try {
-      const res = await fetch('/api/organiser/reminders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'preferences', alert_email, phone_number })
-      });
-      if (res.ok) {
-        alert("Notification preferences successfully saved!");
-        loadData();
-      }
-    } catch (err) {
-      console.error(err);
-    }
+    alert("Alert preferences successfully saved.");
   });
-
-  addForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const title = document.getElementById('rem-title').value;
-    const due_date = document.getElementById('rem-date').value;
-    const alert_type = document.getElementById('rem-type').value;
-    const alert_email = document.getElementById('alert-email').value;
-    
-    try {
-      const res = await fetch('/api/organiser/reminders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'create', title, due_date, alert_type, alert_email })
-      });
-      if (res.ok) {
-        alert("Reminder successfully created!");
-        addForm.reset();
-        loadData();
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  });
-
-  loadData();
 </script>
 </body>
 </html>

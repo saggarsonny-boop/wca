@@ -101,88 +101,46 @@
       });
     }
 
-    // Admin check to inject cog link
-    async function injectAdminCog() {
+    // Sidebar toggle toggleSidebar function
+    window.toggleSidebar = function() {
+      const sidebar = document.querySelector('.org-sidebar');
+      if (sidebar) {
+        sidebar.classList.toggle('collapsed');
+        const icon = document.querySelector('#sidebarToggle .toggle-icon');
+        if (icon) {
+          icon.textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
+        }
+        localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed') ? 'true' : 'false');
+      }
+    };
+
+    // Load initial sidebar collapsed state
+    const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+    const sidebar = document.querySelector('.org-sidebar');
+    if (sidebar && isCollapsed) {
+      sidebar.classList.add('collapsed');
+      const icon = document.querySelector('#sidebarToggle .toggle-icon');
+      if (icon) icon.textContent = '▶';
+    }
+
+    // Admin check to show admin-cog-link
+    async function checkAdminStatus() {
       try {
         const res = await fetch("/api/auth/me");
         if (res.ok) {
           const user = await res.json();
           if (user.role === "admin") {
-            const nav = document.querySelector("nav[aria-label='Organiser navigation']");
-            if (nav && !document.getElementById("admin-cog-link")) {
-              const cog = document.createElement("a");
-              cog.id = "admin-cog-link";
-              cog.href = "/organiser/admin.html";
-              cog.textContent = "⚙️ Admin";
-              nav.appendChild(cog);
+            const cog = document.getElementById("admin-cog-link");
+            if (cog) {
+              cog.style.display = "block";
             }
           }
         }
       } catch (err) {
-        console.warn("Failed admin cog injection check:", err);
+        console.warn("Failed admin cog visibility check:", err);
       }
     }
-    // Robust sidebar injection check with polling
-    let sidebarAttempts = 0;
-    const sidebarInterval = setInterval(() => {
-      sidebarAttempts++;
-      const sidebar = document.querySelector(".org-sidebar");
-      const nav = document.querySelector("nav[aria-label='Organiser navigation']");
-      
-      if (sidebar && nav) {
-        clearInterval(sidebarInterval);
-        console.log("Sidebar found on attempt:", sidebarAttempts);
-        
-        // 1. Inject Floating Toggle Button outside sidebar
-        if (!document.getElementById("sidebar-toggle")) {
-          const toggleBtn = document.createElement("button");
-          toggleBtn.id = "sidebar-toggle";
-          toggleBtn.className = "sidebar-toggle-btn no-print";
-          toggleBtn.style.position = "fixed";
-          toggleBtn.style.top = "12px";
-          toggleBtn.style.left = "12px";
-          toggleBtn.style.zIndex = "9999";
-          toggleBtn.style.background = "var(--accent)";
-          toggleBtn.style.color = "#fff";
-          toggleBtn.style.border = "none";
-          toggleBtn.style.borderRadius = "4px";
-          toggleBtn.style.padding = "4px 8px";
-          toggleBtn.style.cursor = "pointer";
-          toggleBtn.textContent = "◀";
-          document.body.appendChild(toggleBtn);
-          
-          const layout = document.querySelector(".org-layout");
-          
-          function updateToggleIcon() {
-            if (layout) {
-              const isCollapsed = layout.classList.contains("sidebar-collapsed");
-              toggleBtn.textContent = isCollapsed ? "▶" : "◀";
-            }
-          }
-
-          if (layout) {
-            toggleBtn.addEventListener("click", () => {
-              layout.classList.toggle("sidebar-collapsed");
-              const collapsed = layout.classList.contains("sidebar-collapsed");
-              localStorage.setItem("wca_sidebar_collapsed", collapsed ? "true" : "false");
-              updateToggleIcon();
-            });
-            if (localStorage.getItem("wca_sidebar_collapsed") === "true") {
-              layout.classList.add("sidebar-collapsed");
-            }
-            updateToggleIcon();
-          }
-        }
-        
-        // 2. Inject Admin Cog
-        injectAdminCog();
-      }
-      
-      if (sidebarAttempts >= 30) {
-        clearInterval(sidebarInterval);
-        console.warn("Sidebar elements not found after 3 seconds.");
-      }
-    }, 100);
+    checkAdminStatus();
 
     // PWA Install Prompt Listener
     let deferredPrompt;

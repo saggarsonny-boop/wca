@@ -21,6 +21,10 @@
 
 <div class="org-layout">
     <aside class="org-sidebar">
+    <!-- Sidebar toggle button - always visible -->
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar" style="width:100%; border:none; background:var(--bg-alt); padding:10px; cursor:pointer; color:var(--text); z-index:10; font-size:16px;">
+      <span class="toggle-icon">◀</span>
+    </button>
     <nav aria-label="Organiser navigation">
       <span class="sidebar-label">Your case</span>
       <a href="/organiser/">📊 Dashboard</a>
@@ -42,6 +46,8 @@
       <a href="/organiser/billing.html">💳 Billing & Payments</a>
       <a href="/organiser/reminders.html">🔔 Reminders & Alerts</a>
       <a href="/organiser/resources.html" class="active">📚 Resource Library</a>
+      <!-- Admin cog - visible only to admins -->
+      <a href="/organiser/admin.html" id="admin-cog-link" style="display: none;">⚙️ Admin</a>
     </nav>
   </aside>
 
@@ -53,8 +59,8 @@
     <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
       <h2>Mitigation Guides by Dr. Saggar</h2>
       <ul style="padding-left:1.25rem; font-size:0.95rem; line-height:1.6; margin-top:1rem;">
-        <li><a href="resources/character-reference-guide.html" style="color:var(--accent); font-weight:600;">Structuring the Character Reference Letter Portfolio</a></li>
-        <li><a href="resources/psr-interview-guide.html" style="color:var(--accent); font-weight:600;">Preparing for the Presentence Interview: A Step-by-Step Walkthrough</a></li>
+        <li><a href="#" style="color:var(--accent); font-weight:600;">Structuring the Character Reference Letter Portfolio</a></li>
+        <li><a href="#" style="color:var(--accent); font-weight:600;">Preparing for the Presentence Interview: A Step-by-Step Walkthrough</a></li>
       </ul>
     </section>
 
@@ -62,8 +68,8 @@
     <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px;">
       <h2>Support Groups & Mental Health Resources</h2>
       <ul style="padding-left:1.25rem; font-size:0.95rem; line-height:1.6; margin-top:1rem;">
-        <li><a href="resources/support-group-directory.html" style="color:var(--accent); font-weight:600;">Support Group Directory for White Collar Offenders</a></li>
-        <li><a href="resources/reentry-checklist.html" style="color:var(--accent); font-weight:600;">Reentry Checklist: Rebuilding Credit and Restoring Licensing Credentials</a></li>
+        <li>Support Group Directory for White Collar Offenders</li>
+        <li>Reentry Checklist: Rebuilding Credit and Restoring Licensing Credentials</li>
       </ul>
     </section>
   </main>
