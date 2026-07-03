@@ -145,18 +145,58 @@
   const chatInput = document.getElementById('chat-input');
   const chatMessages = document.getElementById('chat-messages');
 
-  chatForm.addEventListener('submit', (e) => {
+  // Load existing messages
+  async function loadMessages() {
+    try {
+      const res = await fetch('/api/organiser/support-circle');
+      if (res.ok) {
+        const data = await res.json();
+        chatMessages.innerHTML = ''; // Clear mock messages
+        data.messages.forEach(msg => {
+          const msgDiv = document.createElement('div');
+          const isOutbound = msg.role === 'defendant';
+          msgDiv.className = isOutbound ? 'chat-msg chat-msg--outbound' : 'chat-msg chat-msg--inbound';
+          const metaColor = isOutbound ? '#d1fae5' : 'var(--accent)';
+          msgDiv.innerHTML = `<span class="chat-msg-meta" style="color:${metaColor};">${msg.sender_name} (${msg.role})</span>${msg.message_text}`;
+          chatMessages.appendChild(msgDiv);
+        });
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    } catch (err) {
+      console.error('Failed to load messages:', err);
+    }
+  }
+
+  chatForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const text = chatInput.value.trim();
     if (!text) return;
 
+    // optimistic UI
     const msgDiv = document.createElement('div');
     msgDiv.className = 'chat-msg chat-msg--outbound';
     msgDiv.innerHTML = `<span class="chat-msg-meta" style="color:#d1fae5;">Defendant (You)</span>${text}`;
     chatMessages.appendChild(msgDiv);
     chatInput.value = '';
     chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    try {
+      await fetch('/api/organiser/support-circle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sender_name: 'Defendant',
+          message_text: text,
+          role: 'defendant'
+        })
+      });
+    } catch (err) {
+      console.error('Failed to send message:', err);
+    }
   });
+
+  loadMessages();
+  setInterval(loadMessages, 5000); // Polling every 5 seconds for real-time simulation
 </script>
 <a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
 </body>
