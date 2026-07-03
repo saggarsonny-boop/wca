@@ -1,0 +1,17 @@
+{
+  "name": "White Collar Academy",
+  "short_name": "WCA",
+  "description": "Educational platform and Case Organizer for the justice system",
+  "start_url": "/organiser/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2c4a7c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}
