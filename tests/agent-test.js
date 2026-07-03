@@ -161,5 +161,16 @@ console.log("===================================================================
 if (failed > 0) {
   process.exit(1);
 } else {
+  // Automated test database cleanup
+  try {
+    const { execSync } = require('child_process');
+    console.log("Cleaning up database test telemetry data...");
+    execSync('cmd /c npx wrangler d1 execute wca-subscribers --local --command="DELETE FROM organiser_support_circle_messages WHERE user_id IN (SELECT id FROM organiser_users WHERE email LIKE \'test%\');"');
+    execSync('cmd /c npx wrangler d1 execute wca-subscribers --local --command="DELETE FROM organiser_analytics WHERE user_agent LIKE \'%agent-test%\' OR user_agent = \'\';"');
+    execSync('cmd /c npx wrangler d1 execute wca-subscribers --local --command="DELETE FROM organiser_users WHERE email LIKE \'test%\';"');
+    console.log("Database cleanup finished successfully.");
+  } catch (cleanErr) {
+    console.warn("Failed to clean test telemetry data:", cleanErr.message);
+  }
   process.exit(0);
 }
