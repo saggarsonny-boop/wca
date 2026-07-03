@@ -563,7 +563,9 @@
 
 /* ── Mobile tap-target sizing ── */
 @media (max-width: 640px) {
-  .btn {
+  .btn,
+  button,
+  [role="button"] {
     min-height: 44px;
     display: inline-flex;
     align-items: center;
@@ -574,10 +576,16 @@
     min-height: 44px;
   }
 
-  .case-field input,
-  .case-field textarea,
-  .case-field select {
+  input,
+  select,
+  textarea {
     font-size: 16px; /* prevents iOS auto-zoom on focus */
     min-height: 44px;
   }
+}
+
+/* ── Visible keyboard focus (no effect on mouse users, desktop unaffected) ── */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
