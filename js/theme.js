@@ -122,35 +122,52 @@
         console.warn("Failed admin cog injection check:", err);
       }
     }
-    injectAdminCog();
+    // Robust sidebar injection check with polling
+    let sidebarAttempts = 0;
+    const sidebarInterval = setInterval(() => {
+      sidebarAttempts++;
+      const sidebar = document.querySelector(".org-sidebar");
+      const nav = document.querySelector("nav[aria-label='Organiser navigation']");
+      
+      if (sidebar && nav) {
+        clearInterval(sidebarInterval);
+        console.log("Sidebar found on attempt:", sidebarAttempts);
+        
+        // 1. Inject Toggle Button
+        if (!document.getElementById("sidebar-toggle")) {
+          const toggleContainer = document.createElement("div");
+          toggleContainer.style.padding = "0.5rem 0.75rem";
+          toggleContainer.style.borderBottom = "1px solid var(--border)";
+          toggleContainer.innerHTML = `<button id="sidebar-toggle" class="sidebar-toggle-btn" style="width:100%;">📂 Toggle Sidebar</button>`;
+          sidebar.insertBefore(toggleContainer, sidebar.firstChild);
+          
+          // Bind toggle handler
+          const toggleBtn = document.getElementById("sidebar-toggle");
+          const layout = document.querySelector(".org-layout");
+          if (toggleBtn && layout) {
+            toggleBtn.addEventListener("click", () => {
+              layout.classList.toggle("sidebar-collapsed");
+              const collapsed = layout.classList.contains("sidebar-collapsed");
+              localStorage.setItem("wca_sidebar_collapsed", collapsed ? "true" : "false");
+            });
+            if (localStorage.getItem("wca_sidebar_collapsed") === "true") {
+              layout.classList.add("sidebar-collapsed");
+            }
+          }
+        }
+        
+        // 2. Inject Admin Cog
+        injectAdminCog();
+      }
+      
+      if (sidebarAttempts >= 30) {
+        clearInterval(sidebarInterval);
+        console.warn("Sidebar elements not found after 3 seconds.");
+      }
+    }, 100);
 
     // PWA Install Prompt Listener
     let deferredPrompt;
-    
-    // Sidebar toggle initialization & dynamic injection
-    const sidebar = document.querySelector(".org-sidebar");
-    if (sidebar && !document.getElementById("sidebar-toggle")) {
-      const toggleContainer = document.createElement("div");
-      toggleContainer.style.padding = "0.5rem 0.75rem";
-      toggleContainer.style.borderBottom = "1px solid var(--border)";
-      toggleContainer.innerHTML = `<button id="sidebar-toggle" class="sidebar-toggle-btn" style="width:100%;">📂 Toggle Sidebar</button>`;
-      sidebar.insertBefore(toggleContainer, sidebar.firstChild);
-    }
-
-    const toggleBtn = document.getElementById("sidebar-toggle");
-    const layout = document.querySelector(".org-layout");
-    if (toggleBtn && layout) {
-      toggleBtn.addEventListener("click", () => {
-        layout.classList.toggle("sidebar-collapsed");
-        const collapsed = layout.classList.contains("sidebar-collapsed");
-        localStorage.setItem("wca_sidebar_collapsed", collapsed ? "true" : "false");
-      });
-      // Load saved state
-      if (localStorage.getItem("wca_sidebar_collapsed") === "true") {
-        layout.classList.add("sidebar-collapsed");
-      }
-    }
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
