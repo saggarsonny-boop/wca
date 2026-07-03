@@ -158,10 +158,14 @@ CREATE TABLE IF NOT EXISTS sponsorship_tiers (
 
 INSERT OR IGNORE INTO sponsorship_tiers (id, name, description, amount_cents, book_count, features)
 VALUES
-  (1, 'Single Book', 'Sponsor one book for a prison library', 1500, 1, '{"receipt":true}'),
-  (2, 'Small Set', 'Sponsor 5 books for a prison library', 7500, 5, '{"receipt":true,"thank_you_letter":true}'),
-  (3, 'Library Set', 'Sponsor 10 books for a prison library', 15000, 10, '{"receipt":true,"thank_you_letter":true,"recognition":true}'),
-  (4, 'Full Library', 'Sponsor 25 books for a prison library', 37500, 25, '{"receipt":true,"thank_you_letter":true,"recognition":true,"plaque":true}');
+  (1, 'Single Book', 'Sponsor one paperback book for a prison library', 1500, 1, '{"receipt":true}'),
+  (2, 'Small Set', 'Sponsor 5 paperback books for a prison library', 7500, 5, '{"receipt":true,"thank_you_letter":true}'),
+  (3, 'Library Set', 'Sponsor 10 paperback books for a prison library', 15000, 10, '{"receipt":true,"thank_you_letter":true,"recognition":true}'),
+  (4, 'Full Library', 'Sponsor 25 paperback books for a prison library', 37500, 25, '{"receipt":true,"thank_you_letter":true,"recognition":true,"plaque":true}'),
+  (5, 'Single Book (Hardcover)', 'Sponsor one hardcover book for a prison library', 2500, 1, '{"receipt":true}'),
+  (6, 'Small Set (Hardcover)', 'Sponsor 5 hardcover books for a prison library', 12500, 5, '{"receipt":true,"thank_you_letter":true}'),
+  (7, 'Library Set (Hardcover)', 'Sponsor 10 hardcover books for a prison library', 25000, 10, '{"receipt":true,"thank_you_letter":true,"recognition":true}'),
+  (8, 'Full Library (Hardcover)', 'Sponsor 25 hardcover books for a prison library', 62500, 25, '{"receipt":true,"thank_you_letter":true,"recognition":true,"plaque":true}');
 
 CREATE TABLE IF NOT EXISTS sponsorships (
   id                       TEXT PRIMARY KEY,

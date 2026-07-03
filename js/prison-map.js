@@ -41,12 +41,23 @@
     return { x, y };
   }
 
-  function hashOffset(id, spread) {
-    let h = 0;
-    for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
-    const angle = (h % 360) * (Math.PI / 180);
-    const dist = spread * (0.3 + ((h >> 8) % 100) / 140);
-    return { dx: Math.cos(angle) * dist, dy: Math.sin(angle) * dist };
+  // Lays facilities out in a small grid centered on the state, spaced far
+  // enough apart that pins don't overlap even when a state has a dozen-plus
+  // facilities (e.g. TX). List order is stable (already sorted by the API),
+  // so this is deterministic, not random.
+  function gridPositions(count, spacing) {
+    const cols = Math.ceil(Math.sqrt(count));
+    const rows = Math.ceil(count / cols);
+    const positions = [];
+    for (let i = 0; i < count; i++) {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      positions.push({
+        dx: (col - (cols - 1) / 2) * spacing,
+        dy: (row - (rows - 1) / 2) * spacing
+      });
+    }
+    return positions;
   }
 
   function svgEl(tag, attrs) {
@@ -89,6 +100,10 @@
       statesLayer.innerHTML = "";
       const allAbbrs = new Set([...Object.keys(STATE_CENTROIDS), ...Object.keys(INSET_POSITIONS)]);
       allAbbrs.forEach((abbr) => {
+        // While zoomed into a state, its facilities are shown as individual
+        // pins instead - skip drawing the summary circle so it doesn't sit
+        // underneath (and visually clump with) the pins.
+        if (zoomedState === abbr) return;
         const pos = stateCenter(abbr);
         if (!pos) return;
         const count = (byState[abbr] || []).length;
@@ -119,8 +134,9 @@
       const list = byState[abbr] || [];
       const center = stateCenter(abbr);
       if (!center) return;
-      list.forEach((f) => {
-        const off = hashOffset(f.id, 26);
+      const positions = gridPositions(list.length, 22);
+      list.forEach((f, i) => {
+        const off = positions[i];
         const x = center.x + off.dx;
         const y = center.y + off.dy;
         const g = svgEl("g", {
