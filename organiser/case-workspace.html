@@ -34,7 +34,7 @@
 </header>
 
 <div class="org-layout">
-      <aside class="org-sidebar">
+  <aside class="org-sidebar">
     <nav aria-label="Organiser navigation">
       <span class="sidebar-label">Your case</span>
       <a href="/organiser/">📊 Dashboard</a>
@@ -64,20 +64,19 @@
       <!-- CALENDAR / TIMELINE -->
       <div class="workspace-card">
         <h3>Shared Milestones</h3>
-        <ul style="padding-left:1.25rem; font-size:0.9rem; margin-top:0.5rem;">
-          <li style="margin-bottom:0.5rem;"><strong>July 15:</strong> Attorney draft review memo deadline.</li>
-          <li style="margin-bottom:0.5rem;"><strong>August 01:</strong> Presentence report interview.</li>
+        <ul id="milestone-list" style="padding-left:1.25rem; font-size:0.9rem; margin-top:0.5rem;">
+          <li style="color:var(--text-soft); list-style:none; margin-left:-1.25rem;">No milestones added yet.</li>
         </ul>
       </div>
 
       <!-- MESSAGES / DISCUSSIONS -->
       <div class="workspace-card">
         <h3>Secure Workspace Messaging</h3>
-        <div style="background:var(--bg-alt); padding:0.75rem; border-radius:6px; font-size:0.85rem; margin-bottom:0.5rem;">
-          <strong>Lawyer:</strong> "Please review the sentencing guidelines Zone C variance options."
+        <div id="workspace-msg-feed" style="max-height: 200px; overflow-y: auto; margin-bottom: 0.5rem; background: var(--bg-alt); padding: 8px; border-radius: 6px; font-size: 0.85rem;">
+          <div style="color:var(--text-soft); text-align:center; padding:10px;">No messages yet.</div>
         </div>
-        <form id="msg-form">
-          <input type="text" placeholder="Type a secure message..." required style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; margin-bottom:0.5rem;">
+        <form id="workspace-msg-form">
+          <input type="text" id="workspace-msg-input" placeholder="Type a secure message..." required style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; margin-bottom:0.5rem;">
           <button type="submit" class="btn btn--outline" style="width:100%; font-size:0.8rem;">Send</button>
         </form>
       </div>
@@ -86,7 +85,52 @@
 </div>
 
 <script src="/js/nav-toggle.js"></script>
-<a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
+<script>
+  // Load real workspace messages from session / localStorage
+  const msgForm = document.getElementById('workspace-msg-form');
+  const msgFeed = document.getElementById('workspace-msg-feed');
+  const msgInput = document.getElementById('workspace-msg-input');
+  let workspaceMsgs = JSON.parse(localStorage.getItem('wca_workspace_msgs') || '[]');
+
+  function renderMessages() {
+    if (workspaceMsgs.length === 0) {
+      msgFeed.innerHTML = '<div style="color:var(--text-soft); text-align:center; padding:10px;">No messages yet.</div>';
+      return;
+    }
+    msgFeed.innerHTML = workspaceMsgs.map(m => `
+      <div style="background:#fff; border:1px solid var(--border); padding:6px; border-radius:4px; margin-bottom:0.4rem; font-size:0.8rem;">
+        <strong>User:</strong> ${m.text}
+      </div>
+    `).join('');
+    msgFeed.scrollTop = msgFeed.scrollHeight;
+  }
+
+  msgForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = msgInput.value.trim();
+    if (!text) return;
+    workspaceMsgs.push({ text });
+    localStorage.setItem('wca_workspace_msgs', JSON.stringify(workspaceMsgs));
+    renderMessages();
+    msgInput.value = '';
+  });
+
+  renderMessages();
+
+  // Load real milestones from dates module
+  function loadMilestones() {
+    const dates = JSON.parse(localStorage.getItem('wca_case_dates') || '[]');
+    const milestoneList = document.getElementById('milestone-list');
+    if (dates.length === 0) {
+      milestoneList.innerHTML = '<li style="color:var(--text-soft); list-style:none; margin-left:-1.25rem;">No milestones added yet.</li>';
+      return;
+    }
+    milestoneList.innerHTML = dates.map(d => `
+      <li style="margin-bottom:0.5rem;"><strong>${d.date_val}:</strong> ${d.label}</li>
+    `).join('');
+  }
+  loadMilestones();
+</script>
   <!-- Mobile Bottom Navigation -->
   <div class="mobile-bottom-nav">
     <a href="/organiser/"><span>📊</span>Dashboard</a>

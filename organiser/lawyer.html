@@ -20,7 +20,7 @@
 </header>
 
 <div class="org-layout">
-      <aside class="org-sidebar">
+  <aside class="org-sidebar">
     <nav aria-label="Organiser navigation">
       <span class="sidebar-label">Your case</span>
       <a href="/organiser/">📊 Dashboard</a>
@@ -47,57 +47,89 @@
     <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Secure Client Oversight & Task Coordination</p>
 
     <!-- CLIENT LIST -->
-    <section>
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
       <h2>Active Client Directory</h2>
-      <table style="width:100%; border-collapse:collapse; margin-top:1rem; font-size:0.9rem; background:#fff; border:1px solid var(--border);">
+      <table style="width:100%; border-collapse:collapse; margin-top:1rem; font-size:0.9rem;">
         <thead>
           <tr style="background:var(--bg-alt); border-bottom:1px solid var(--border);">
             <th style="padding:10px; text-align:left;">Client Name</th>
-            <th style="padding:10px; text-align:left;">Case Status</th>
-            <th style="padding:10px; text-align:center;">Readiness</th>
+            <th style="padding:10px; text-align:left;">Case Number</th>
+            <th style="padding:10px; text-align:left;">Status</th>
             <th style="padding:10px; text-align:right;">Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px;"><strong>Client #9482</strong></td>
-            <td style="padding:10px;">Pre-Sentencing (PSR Interview set)</td>
-            <td style="padding:10px; text-align:center;"><strong style="color:var(--accent)">75%</strong></td>
-            <td style="padding:10px; text-align:right;"><a href="/organiser/case-workspace.html" class="btn btn--outline" style="font-size:0.75rem; padding:4px 8px; text-decoration:none;">Open Workspace</a></td>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);">
-            <td style="padding:10px;"><strong>Client #2241</strong></td>
-            <td style="padding:10px;">Plea Evaluation Phase</td>
-            <td style="padding:10px; text-align:center;"><strong style="color:var(--accent)">40%</strong></td>
-            <td style="padding:10px; text-align:right;"><a href="/organiser/case-workspace.html" class="btn btn--outline" style="font-size:0.75rem; padding:4px 8px; text-decoration:none;">Open Workspace</a></td>
+        <tbody id="client-list">
+          <tr>
+            <td colspan="4" style="text-align:center; padding:15px; color:var(--text-soft);">No clients added yet.</td>
           </tr>
         </tbody>
       </table>
     </section>
 
-    <!-- TASK ASSIGNMENT -->
-    <section style="margin-top:2.5rem; background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px;">
-      <h2>Dispatch Task to Client</h2>
-      <form id="assign-task-form" style="margin-top:1rem;">
+    <!-- ADD CLIENT -->
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+      <h2>Add Real Client</h2>
+      <form id="add-client-form" style="margin-top:1rem;">
         <div class="case-field" style="margin-bottom:1rem;">
-          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Select Client</label>
-          <select style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
-            <option>Client #9482</option>
-            <option>Client #2241</option>
-          </select>
+          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Client Name</label>
+          <input type="text" id="client-name" placeholder="e.g. John Doe" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
         </div>
         <div class="case-field" style="margin-bottom:1rem;">
-          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Task Instruction</label>
-          <input type="text" placeholder="e.g. Request character references from employer" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Case Number</label>
+          <input type="text" id="client-case-num" placeholder="e.g. 1:24-cr-00123" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
         </div>
-        <button type="submit" class="btn">Assign Task</button>
+        <div class="case-field" style="margin-bottom:1rem;">
+          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Status</label>
+          <input type="text" id="client-status" placeholder="e.g. Pre-Sentencing" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <button type="submit" class="btn">Add Client</button>
       </form>
     </section>
   </main>
 </div>
 
 <script src="/js/nav-toggle.js"></script>
-<a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
+<script>
+  const clientForm = document.getElementById('add-client-form');
+  const clientList = document.getElementById('client-list');
+  let clients = JSON.parse(localStorage.getItem('wca_lawyer_clients') || '[]');
+
+  function renderClients() {
+    if (clients.length === 0) {
+      clientList.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:15px; color:var(--text-soft);">No clients added yet.</td></tr>';
+      return;
+    }
+    clientList.innerHTML = clients.map((c, idx) => `
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:10px;"><strong>${c.name}</strong></td>
+        <td style="padding:10px;">${c.case_num}</td>
+        <td style="padding:10px;">${c.status}</td>
+        <td style="padding:10px; text-align:right;">
+          <button onclick="removeClient(${idx})" class="btn btn--outline" style="font-size:0.75rem; padding:4px 8px; border-color:#fca5a5; color:#b91c1c;">Remove</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  clientForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('client-name').value;
+    const case_num = document.getElementById('client-case-num').value;
+    const status = document.getElementById('client-status').value;
+    clients.push({ name, case_num, status });
+    localStorage.setItem('wca_lawyer_clients', JSON.stringify(clients));
+    renderClients();
+    clientForm.reset();
+  });
+
+  window.removeClient = function(idx) {
+    clients.splice(idx, 1);
+    localStorage.setItem('wca_lawyer_clients', JSON.stringify(clients));
+    renderClients();
+  };
+
+  renderClients();
+</script>
   <!-- Mobile Bottom Navigation -->
   <div class="mobile-bottom-nav">
     <a href="/organiser/"><span>📊</span>Dashboard</a>

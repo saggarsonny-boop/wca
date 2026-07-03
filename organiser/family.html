@@ -35,7 +35,7 @@
 </header>
 
 <div class="org-layout">
-      <aside class="org-sidebar">
+  <aside class="org-sidebar">
     <nav aria-label="Organiser navigation">
       <span class="sidebar-label">Your case</span>
       <a href="/organiser/">📊 Dashboard</a>
@@ -59,7 +59,8 @@
 
   <main id="main-content" class="org-main">
     <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Family Support Panel</h1>
-    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Access-level: Limited View</p>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Access-level: Family Access</p>
+
     <!-- Trial Status Banner -->
     <div id="trial-status-banner" style="background:#fef3c7; border:1px solid #f59e0b; padding:10px 12px; border-radius:6px; margin-bottom:1.5rem; font-size:0.9rem; color:#b45309;">
       Checking subscription status...
@@ -69,57 +70,68 @@
     <div style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
       <h2 style="font-size: 1.1rem; margin: 0; font-family: var(--font-serif); font-weight: 600;">Shared Case Progress</h2>
       <div style="width: 100%; height: 10px; background: var(--bg-alt); border-radius: 5px; overflow: hidden; margin-top:0.75rem;">
-        <div style="width: 45%; height: 100%; background: var(--accent); border-radius: 5px;"></div>
+        <div id="readiness-bar" style="width: 0%; height: 100%; background: var(--accent); border-radius: 5px; transition: width 0.5s;"></div>
       </div>
-      <p style="font-size:0.8rem; color:var(--text-soft); margin-top:0.5rem; margin-bottom:0;">Case readiness score estimated at 45%.</p>
+      <p id="readiness-text" style="font-size:0.8rem; color:var(--text-soft); margin-top:0.5rem; margin-bottom:0;">Case readiness: Not yet calculated.</p>
     </div>
 
     <div class="family-grid">
       <!-- VISIT PLANNER -->
       <div class="family-card">
         <h3>BOP Visit Planner</h3>
-        <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Plan security visits, look up dress codes, and calendar check-ins.</p>
+        <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Schedule visits and automatically log them in the Dates case tracker.</p>
         <form id="visit-form">
-          <input type="date" required style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; margin-bottom:0.5rem;">
+          <div class="case-field" style="margin-bottom:0.5rem;">
+            <label style="font-size:0.8rem; font-weight:600; display:block;">Facility Name</label>
+            <input type="text" id="facility-name" placeholder="e.g. FCI Otisville" required style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; font-size:0.85rem;">
+          </div>
+          <div class="case-field" style="margin-bottom:0.5rem;">
+            <label style="font-size:0.8rem; font-weight:600; display:block;">Visit Date</label>
+            <input type="date" id="visit-date" required style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; font-size:0.85rem;">
+          </div>
           <button type="submit" class="btn btn--outline" style="font-size:0.8rem; width:100%;">Schedule Visit</button>
         </form>
       </div>
 
-      <!-- COMMISSARY TRACKER -->
+      <!-- FINANCIAL TRACKER -->
       <div class="family-card">
-        <h3> commissary & Legal Expense Tracker</h3>
-        <table style="width:100%; font-size:0.85rem; border-collapse:collapse; margin-top:0.5rem;">
-          <thead>
-            <tr style="border-bottom:1px solid var(--border);">
-              <th style="padding:4px 0; text-align:left;">Item</th>
-              <th style="padding:4px 0; text-align:right;">Amt</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="padding:4px 0;">Attorney Deposit</td>
-              <td style="padding:4px 0; text-align:right;">$2,500</td>
-            </tr>
-            <tr style="border-bottom:1px solid var(--border);">
-              <td style="padding:4px 0;">Commissary Fund</td>
-              <td style="padding:4px 0; text-align:right;">$150</td>
-            </tr>
-          </tbody>
-        </table>
+        <h3>Expense Logger</h3>
+        <form id="expense-form" style="margin-bottom:1rem;">
+          <input type="date" id="exp-date" required style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; margin-bottom:0.4rem;">
+          <input type="text" id="exp-desc" placeholder="Legal/Commissary description" required style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; margin-bottom:0.4rem;">
+          <input type="number" id="exp-amt" placeholder="Amount ($)" required style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; font-size:0.8rem; margin-bottom:0.4rem;">
+          <button type="submit" class="btn btn--outline" style="font-size:0.8rem; width:100%;">Add Expense</button>
+        </form>
+        <div style="max-height: 150px; overflow-y: auto;">
+          <table style="width:100%; font-size:0.85rem; border-collapse:collapse;" id="expense-table">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border);">
+                <th style="padding:4px 0; text-align:left;">Item</th>
+                <th style="padding:4px 0; text-align:right;">Amt</th>
+              </tr>
+            </thead>
+            <tbody id="expense-list">
+              <tr>
+                <td colspan="2" style="text-align:center; padding:10px; color:var(--text-soft);">No data yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- KIDS GUIDE -->
       <div class="family-card">
-        <h3>Children's Explanation Guide</h3>
-        <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Find age-appropriate explanations and storybooks mapping structural separation to children.</p>
-        <a href="#" class="btn btn--outline" style="font-size:0.8rem; text-decoration:none; display:block; text-align:center;">Read Guide</a>
+        <h3>Children's Guidance Resources</h3>
+        <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Age-appropriate guidelines to help children understand the separation process.</p>
+        <div style="background:var(--bg-alt); padding:8px; border-radius:6px; font-size:0.8rem; line-height:1.4;">
+          <strong>Recommendation:</strong> Use simple, reassuring phrasing. Reassure them that they are loved, that the separation is temporary, and that they did nothing wrong.
+        </div>
       </div>
     </div>
   </main>
 </div>
 
 <script src="/js/nav-toggle.js"></script>
-<a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
 <script>
   function updateTrialStatus() {
     const inviteDateKey = 'wca_family_invite_date';
@@ -166,6 +178,52 @@
     }
   }
   updateTrialStatus();
+
+  // Expense tracker
+  const expForm = document.getElementById('expense-form');
+  const expList = document.getElementById('expense-list');
+  let expenses = JSON.parse(localStorage.getItem('wca_family_expenses') || '[]');
+
+  function renderExpenses() {
+    if (expenses.length === 0) {
+      expList.innerHTML = '<tr><td colspan="2" style="text-align:center; padding:10px; color:var(--text-soft);">No data yet.</td></tr>';
+      return;
+    }
+    expList.innerHTML = expenses.map(e => `
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:4px 0;">${e.desc} <span style="font-size:0.75rem; color:var(--text-soft);">(${e.date})</span></td>
+        <td style="padding:4px 0; text-align:right;">$${e.amt}</td>
+      </tr>
+    `).join('');
+  }
+
+  expForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const date = document.getElementById('exp-date').value;
+    const desc = document.getElementById('exp-desc').value;
+    const amt = document.getElementById('exp-amt').value;
+    expenses.push({ date, desc, amt });
+    localStorage.setItem('wca_family_expenses', JSON.stringify(expenses));
+    renderExpenses();
+    expForm.reset();
+  });
+  renderExpenses();
+
+  // BOP Visit Planner
+  const visitForm = document.getElementById('visit-form');
+  visitForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fac = document.getElementById('facility-name').value;
+    const date = document.getElementById('visit-date').value;
+    
+    // Add to dates checklist in localstorage/mock
+    let dates = JSON.parse(localStorage.getItem('wca_case_dates') || '[]');
+    dates.push({ label: `Visit to ${fac}`, date_val: date, note: "Scheduled via BOP Visit Planner" });
+    localStorage.setItem('wca_case_dates', JSON.stringify(dates));
+    
+    alert(`Success: Scheduled visit to ${fac} on ${date}. This has been logged to your case Dates.`);
+    visitForm.reset();
+  });
 </script>
   <!-- Mobile Bottom Navigation -->
   <div class="mobile-bottom-nav">

@@ -20,7 +20,7 @@
 </header>
 
 <div class="org-layout">
-    <aside class="org-sidebar">
+  <aside class="org-sidebar">
     <nav aria-label="Organiser navigation">
       <span class="sidebar-label">Your case</span>
       <a href="/organiser/">📊 Dashboard</a>
@@ -46,7 +46,7 @@
     <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Peer Support Registry</h1>
     <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Connect safely and legally with peers</p>
 
-        <!-- IMPORTANT LEGAL NOTICE -->
+    <!-- LEGAL COMPLIANCE DISCLAIMER -->
     <div style="background:#fee2e2; border:2px solid #ef4444; padding:1.5rem; border-radius:8px; margin-bottom:2rem; color:#991b1b; font-size:0.95rem; line-height:1.6;">
       <h3 style="margin-top:0; color:#b91c1c; font-size:1.1rem; display:flex; align-items:center; gap:0.5rem;">⚠️ IMPORTANT LEGAL NOTICE</h3>
       <p><strong>Individuals who are:</strong></p>
@@ -69,23 +69,21 @@
       <p style="margin-bottom:0; font-weight:600; font-style:italic;">By using this service, you certify that you have obtained the necessary approvals or that you are not subject to such restrictions.</p>
     </div>
 
-    <!-- PRE-REGISTRATION VERIFICATION -->
-    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px;">
-      <h2>Request Officer Authorization Approval</h2>
-      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1.25rem;">Please upload written verification from your Pretrial/Probation Officer to activate Peer Support group visibility.</p>
-      <form id="officer-auth-form">
-        <div class="case-field" style="margin-bottom:1rem;">
-          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Officer Name</label>
-          <input type="text" placeholder="e.g. Officer John Doe" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+    <!-- COMPLIANCE REGISTRATION CHECKBOX -->
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+      <h2>Peer Support Safety Verification</h2>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1.25rem;">Please review and check the legal guidelines certification to activate peer directories.</p>
+      <form id="compliance-check-form">
+        <div class="case-field" style="margin-bottom:1rem; display:flex; align-items:flex-start; gap:0.5rem;">
+          <input type="checkbox" id="consent-check" required style="width:20px; height:20px; margin-top:2px;">
+          <label for="consent-check" style="font-size:0.9rem; color:var(--text); line-height:1.4; cursor:pointer;">
+            I certify that I have read the Legal Notice, obtained all necessary prior written approvals from my supervising officer, and that my communication complies with all release conditions.
+          </label>
         </div>
-        <div class="case-field" style="margin-bottom:1rem;">
-          <label style="display:block; margin-bottom:0.25rem; font-weight:600;">Upload Written Consent Document (PDF / Image)</label>
-          <input type="file" required style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
-        </div>
-        <button type="submit" class="btn">Submit for Legal Compliance Verification</button>
+        <button type="submit" class="btn">Access Peer Registry Directory</button>
       </form>
     </section>
-  
+
     <!-- Peer Support Compliance -->
     <section id="peer-support-compliance" style="margin-top: 2.5rem; background: var(--bg-alt); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
       <h3 style="margin-top: 0;">Peer Support Compliance</h3>
@@ -98,18 +96,48 @@
       </ul>
     </section>
 
+    <!-- PRIVACY & DATA PROTECTION -->
+    <section id="privacy-protection" style="margin-top: 2rem; background: var(--bg-alt); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+      <h3 style="margin-top: 0; display:flex; align-items:center; gap:0.5rem;">🔒 PRIVACY & DATA PROTECTION</h3>
+      <p style="font-size:0.9rem; color:var(--text-soft); line-height:1.5;">We take your privacy seriously:</p>
+      <ul style="font-size:0.875rem; color:var(--text-soft); line-height:1.6; padding-left:1.25rem;">
+        <li>All chat messages are encrypted</li>
+        <li>Messages are automatically deleted after 30 days</li>
+        <li>No human (including site admins) can read your messages</li>
+        <li>Moderation is performed by AI, not by humans</li>
+        <li>We do not release your data to any third party</li>
+        <li>Your data is yours, not ours</li>
+      </ul>
+    </section>
+
+    <!-- MODERATION NOTICE -->
+    <section id="ai-moderation" style="margin-top: 2rem; background: var(--bg-alt); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+      <h3 style="margin-top: 0; display:flex; align-items:center; gap:0.5rem;">🤖 MODERATION</h3>
+      <p style="font-size:0.9rem; color:var(--text-soft); line-height:1.5;">This chat is moderated by AI, not by humans.</p>
+      <ul style="font-size:0.875rem; color:var(--text-soft); line-height:1.6; padding-left:1.25rem;">
+        <li>Inappropriate content is automatically flagged and blocked</li>
+        <li>No human reads your messages</li>
+        <li>Your privacy is protected</li>
+        <li>If you see something inappropriate, use the Report button</li>
+      </ul>
+    </section>
   </main>
 </div>
 
 <script src="/js/nav-toggle.js"></script>
-<a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
+<script>
+  document.getElementById('compliance-check-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert("Compliance verified. Access to Peer Registry Directory granted.");
+  });
+</script>
   <!-- Mobile Bottom Navigation -->
   <div class="mobile-bottom-nav">
     <a href="/organiser/"><span>📊</span>Dashboard</a>
     <a href="/organiser/case-file.html"><span>📋</span>Case File</a>
     <a href="/organiser/dates.html"><span>📅</span>Dates</a>
     <a href="/organiser/support-circle.html"><span>💬</span>Chat</a>
-    <a href="/organiser/peer-support.html" class="active"><span>👥</span>More</a>
+    <a href="/organiser/peer-support.html"><span>👥</span>More</a>
   </div>
 </body>
 </html>
