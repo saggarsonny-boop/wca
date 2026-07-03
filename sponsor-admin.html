@@ -112,6 +112,7 @@
       background: #fff;
       color: #1a1a2e;
       transition: border-color 0.2s;
+      box-sizing: border-box;
     }
 
     .search-box:focus {
@@ -279,58 +280,57 @@
 </head>
 <body>
 
-<div id="app"></div>
+<div id="app">
+  <!-- Rendered by JavaScript -->
+</div>
 
 <script>
+function escHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
 let currentTab = 'sponsorships';
 let allSponsorships = [];
 let allRequests = [];
+let cachedStats = {};
 
-function renderLogin(errorMsg) {
-  document.getElementById('app').innerHTML = `
-    <div class="login-container">
-      <h1>🔐 Admin Login</h1>
-      <p>Enter the admin password to continue</p>
-      <input type="password" id="admin-password" placeholder="Enter password"
-             onkeydown="if(event.key==='Enter') login()">
-      <button class="btn" onclick="login()">Login</button>
-      <div class="error">${errorMsg || ''}</div>
-    </div>
-  `;
-}
-
-async function login() {
-  const password = document.getElementById('admin-password').value;
-  try {
-    const res = await fetch('/api/sponsor/admin-login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password })
-    });
-    if (res.ok) {
-      loadDashboard();
-    } else {
-      const data = await res.json().catch(() => ({}));
-      renderLogin(data.error || 'Invalid password');
-    }
-  } catch (e) {
-    renderLogin('Login failed. Please try again.');
-  }
-}
-
-async function loadDashboard() {
+async function checkAuthAndLoad() {
   try {
     const res = await fetch('/api/sponsor/admin');
-    if (res.status === 401) { renderLogin(); return; }
-    if (!res.ok) throw new Error('Failed to load');
+
+    if (res.status === 401) {
+      renderLogin();
+      return;
+    }
+
     const data = await res.json();
+
+    if (data.error === 'Unauthorized' || data.error === 'No session') {
+      renderLogin();
+      return;
+    }
+
     allSponsorships = data.sponsorships || [];
+    cachedStats = data.stats || {};
 
-    const reqRes = await fetch('/api/sponsor/admin-requests');
-    allRequests = reqRes.ok ? (await reqRes.json()).requests || [] : [];
+    try {
+      const reqRes = await fetch('/api/sponsor/admin-requests');
+      if (reqRes.ok) {
+        const reqData = await reqRes.json();
+        allRequests = reqData.requests || [];
+      } else {
+        allRequests = [];
+      }
+    } catch(e) {
+      allRequests = [];
+    }
 
-    renderDashboard(data.stats || {});
-  } catch (e) {
+    renderDashboard();
+
+  } catch(e) {
     document.getElementById('app').innerHTML = `
       <div class="admin-container">
         <p style="color:#991b1b;">Failed to load dashboard. Please refresh.</p>
@@ -339,11 +339,53 @@ async function loadDashboard() {
   }
 }
 
-function escHtml(s) {
-  return (s || '').toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function renderLogin() {
+  document.getElementById('app').innerHTML = `
+    <div class="login-container">
+      <h1>🔐 Admin Login</h1>
+      <p>Enter the admin password to continue</p>
+      <input type="password" id="admin-password" placeholder="Enter password"
+             onkeydown="if(event.key==='Enter') login()">
+      <button class="btn" onclick="login()">Login</button>
+      <div id="login-error" class="error"></div>
+    </div>
+  `;
 }
 
-function renderDashboard(stats) {
+async function login() {
+  const password = document.getElementById('admin-password').value;
+  const errorEl = document.getElementById('login-error');
+
+  try {
+    const res = await fetch('/api/sponsor/admin-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+
+    if (res.ok) {
+      checkAuthAndLoad();
+    } else {
+      const data = await res.json();
+      errorEl.textContent = data.error || 'Invalid password';
+    }
+  } catch(e) {
+    errorEl.textContent = 'Login failed. Please try again.';
+  }
+}
+
+async function logout() {
+  if (!confirm('Log out?')) return;
+  try {
+    await fetch('/api/sponsor/admin-logout', { method: 'POST' });
+  } catch(e) {
+    // Ignore errors - just render login anyway
+  }
+  renderLogin();
+}
+
+function renderDashboard() {
+  const stats = cachedStats;
   const total = stats.total || 0;
   const pending = stats.pending || 0;
   const paid = stats.paid || 0;
@@ -385,6 +427,7 @@ function filterSponsorships(list) {
   if (!searchEl) return list;
   const query = searchEl.value.toLowerCase().trim();
   if (!query) return list;
+
   return list.filter(s => {
     const name = (s.sponsor_name || '').toLowerCase();
     const email = (s.sponsor_email || '').toLowerCase();
@@ -398,6 +441,7 @@ function filterRequests(list) {
   if (!searchEl) return list;
   const query = searchEl.value.toLowerCase().trim();
   if (!query) return list;
+
   return list.filter(r => {
     const name = (r.facility_name || '').toLowerCase();
     const email = (r.requestor_email || '').toLowerCase();
@@ -406,135 +450,188 @@ function filterRequests(list) {
 }
 
 function renderSponsorshipsList(list) {
-  const search = `<input class="search-box" id="search-box" placeholder="Search by name, email, or facility..." oninput="refreshCurrentTab()">`;
-  if (!list.length) return search + `<div class="empty-state">No sponsorships yet</div>`;
+  if (!list.length) {
+    return `
+      <input class="search-box" id="search-box" placeholder="Search by name, email, or facility..." oninput="refreshCurrentTab()">
+      <div class="empty-state">No sponsorships yet</div>
+    `;
+  }
 
-  let html = search;
+  let html = `
+    <input class="search-box" id="search-box" placeholder="Search by name, email, or facility..." oninput="refreshCurrentTab()">
+  `;
+
   for (const s of list) {
     const amount = s.amount_cents ? (s.amount_cents / 100).toFixed(2) : '0.00';
     const status = s.status || 'pending';
+    const name = escHtml(s.sponsor_name) || 'Anonymous';
+    const email = escHtml(s.sponsor_email);
+    const facility = escHtml(s.facility_name) || 'Unknown facility';
+    const message = escHtml(s.message);
+    const date = s.created_at ? new Date(s.created_at).toLocaleDateString() : '';
+
     html += `
       <div class="sponsorship-card">
         <div class="card-row">
           <div>
-            <span class="card-name">${escHtml(s.sponsor_name) || 'Anonymous'}</span>
-            <span class="card-email">${escHtml(s.sponsor_email)}</span>
+            <span class="card-name">${name}</span>
+            <span class="card-email">${email}</span>
             ${s.is_anonymous ? ' 🔒' : ''}
           </div>
           <span class="status-badge ${status}">${status}</span>
         </div>
         <div class="card-details">
-          <span>${escHtml(s.facility_name) || 'Unknown facility'}</span>
+          <span>${facility}</span>
           <span>$${amount}</span>
           <span>${s.book_count || 0} books</span>
-          <span>${new Date(s.created_at).toLocaleDateString()}</span>
+          <span>${date}</span>
         </div>
-        ${s.message ? `<div class="card-message">"${escHtml(s.message)}"</div>` : ''}
+        ${message ? `<div class="card-message">"${message}"</div>` : ''}
         <div class="card-actions">
-          ${status === 'paid' ? `<button class="action-btn fulfill" onclick="markFulfilled('${s.id}')">Mark Fulfilled</button>` : ''}
+          ${status === 'paid' ? `<button class="action-btn fulfill" onclick="markFulfilled('${escHtml(s.id)}')">Mark Fulfilled</button>` : ''}
         </div>
       </div>
     `;
   }
+
   return html;
 }
 
 function renderRequestsList(list) {
-  const search = `<input class="search-box" id="search-requests" placeholder="Search by facility or email..." oninput="refreshCurrentTab()">`;
-  if (!list.length) return search + `<div class="empty-state">No facility requests</div>`;
+  const pendingRequests = list.filter(r => r.status === 'pending');
 
-  let html = search;
-  for (const r of list) {
+  if (!pendingRequests.length) {
+    return `
+      <input class="search-box" id="search-requests" placeholder="Search by facility or email..." oninput="refreshCurrentTab()">
+      <div class="empty-state">No pending facility requests</div>
+    `;
+  }
+
+  let html = `
+    <input class="search-box" id="search-requests" placeholder="Search by facility or email..." oninput="refreshCurrentTab()">
+  `;
+
+  for (const r of pendingRequests) {
+    const facility = escHtml(r.facility_name);
+    const city = escHtml(r.city);
+    const state = escHtml(r.state);
+    const address = escHtml(r.address);
+    const requestorName = escHtml(r.requestor_name);
+    const requestorEmail = escHtml(r.requestor_email);
+    const notes = escHtml(r.notes);
+    const date = r.created_at ? new Date(r.created_at).toLocaleDateString() : '';
     const status = r.status || 'pending';
+
     html += `
       <div class="sponsorship-card">
         <div class="card-row">
           <div>
-            <span class="card-name">${escHtml(r.facility_name)}</span>
-            ${r.city ? `, ${escHtml(r.city)}` : ''} ${escHtml(r.state)}
+            <span class="card-name">${facility}</span>
+            ${city ? `, ${city}` : ''} ${state || ''}
           </div>
           <span class="status-badge ${status}">${status}</span>
         </div>
-        ${r.address ? `<div class="card-details">${escHtml(r.address)}</div>` : ''}
+        ${address ? `<div class="card-details">${address}</div>` : ''}
         <div class="card-details">
-          ${r.requestor_name ? `Requested by: ${escHtml(r.requestor_name)}` : ''}
-          ${r.requestor_email ? `(${escHtml(r.requestor_email)})` : ''}
-          <span>${new Date(r.created_at).toLocaleDateString()}</span>
+          ${requestorName ? `Requested by: ${requestorName}` : ''}
+          ${requestorEmail ? `(${requestorEmail})` : ''}
+          <span>${date}</span>
         </div>
-        ${r.notes ? `<div class="card-message">"${escHtml(r.notes)}"</div>` : ''}
+        ${notes ? `<div class="card-message">"${notes}"</div>` : ''}
         <div class="card-actions">
-          ${status === 'pending' ? `
-            <button class="action-btn approve" onclick="approveRequest('${r.id}')">✅ Approve</button>
-            <button class="action-btn deny" onclick="denyRequest('${r.id}')">❌ Deny</button>
-            <button class="action-btn duplicate" onclick="markDuplicate('${r.id}')">📋 Duplicate</button>
-          ` : ''}
+          <button class="action-btn approve" onclick="approveRequest('${escHtml(r.id)}')">✅ Approve</button>
+          <button class="action-btn deny" onclick="denyRequest('${escHtml(r.id)}')">❌ Deny</button>
+          <button class="action-btn duplicate" onclick="markDuplicate('${escHtml(r.id)}')">📋 Duplicate</button>
         </div>
       </div>
     `;
   }
+
   return html;
 }
 
 async function markFulfilled(id) {
   if (!confirm('Mark this sponsorship as fulfilled?')) return;
-  const res = await fetch('/api/sponsor/admin', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id, action: 'fulfill' })
-  });
-  if (res.ok) loadDashboard(); else alert('Failed to update');
+  try {
+    const res = await fetch('/api/sponsor/admin', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, action: 'fulfill' })
+    });
+    if (res.ok) {
+      checkAuthAndLoad();
+    } else {
+      alert('Failed to update');
+    }
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
 }
 
 async function approveRequest(id) {
   if (!confirm('Approve this facility and add it to the database?')) return;
-  const res = await fetch('/api/sponsor/admin-requests', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ request_id: id, action: 'approve' })
-  });
-  if (res.ok) loadDashboard(); else alert('Failed to approve');
+  try {
+    const res = await fetch('/api/sponsor/admin-requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ request_id: id, action: 'approve' })
+    });
+    if (res.ok) {
+      checkAuthAndLoad();
+    } else {
+      alert('Failed to approve');
+    }
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
 }
 
 async function denyRequest(id) {
   if (!confirm('Deny this facility request?')) return;
-  const res = await fetch('/api/sponsor/admin-requests', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ request_id: id, action: 'deny' })
-  });
-  if (res.ok) loadDashboard(); else alert('Failed to deny');
+  try {
+    const res = await fetch('/api/sponsor/admin-requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ request_id: id, action: 'deny' })
+    });
+    if (res.ok) {
+      checkAuthAndLoad();
+    } else {
+      alert('Failed to deny');
+    }
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
 }
 
 async function markDuplicate(id) {
   if (!confirm('Mark this as a duplicate request?')) return;
-  const res = await fetch('/api/sponsor/admin-requests', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ request_id: id, action: 'duplicate' })
-  });
-  if (res.ok) loadDashboard(); else alert('Failed to mark duplicate');
+  try {
+    const res = await fetch('/api/sponsor/admin-requests', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ request_id: id, action: 'duplicate' })
+    });
+    if (res.ok) {
+      checkAuthAndLoad();
+    } else {
+      alert('Failed to mark duplicate');
+    }
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
 }
 
 function switchTab(tab) {
   currentTab = tab;
-  loadDashboard();
+  renderDashboard();
 }
 
 function refreshCurrentTab() {
-  const total = allSponsorships.length;
-  const pending = allSponsorships.filter(s => s.status === 'pending').length;
-  const paid = allSponsorships.filter(s => s.status === 'paid').length;
-  const fulfilled = allSponsorships.filter(s => s.status === 'fulfilled').length;
-  renderDashboard({ total, pending, paid, fulfilled });
+  renderDashboard();
 }
 
-async function logout() {
-  if (!confirm('Log out?')) return;
-  await fetch('/api/sponsor/admin-logout', { method: 'POST' });
-  renderLogin();
-}
-
-loadDashboard();
+checkAuthAndLoad();
 </script>
 
 </body>
