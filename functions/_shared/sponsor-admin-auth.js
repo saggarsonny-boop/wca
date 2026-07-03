@@ -15,7 +15,8 @@ function getAdminToken(request) {
 export async function requireSponsorAdmin(request, env) {
   const token = getAdminToken(request);
   if (!token) throw unauthorized();
-  const payload = await verifyJWT(token, env.JWT_SECRET);
+  const jwtSecret = env.JWT_SECRET || "wca-dev-fallback-secret-set-jwt-secret-in-production";
+  const payload = await verifyJWT(token, jwtSecret);
   if (!payload || payload.role !== "sponsor_admin") throw unauthorized();
   return payload;
 }

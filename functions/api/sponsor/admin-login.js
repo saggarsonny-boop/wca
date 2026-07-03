@@ -14,9 +14,14 @@ export async function onRequestPost({ request, env }) {
       return err("Incorrect password.", 401);
     }
 
-    const token = await signJWT({ role: "sponsor_admin" }, env.JWT_SECRET, 60 * 60 * 8); // 8 hour session
+    const jwtSecret = env.JWT_SECRET || "wca-dev-fallback-secret-set-jwt-secret-in-production";
+    const token = await signJWT({ role: "sponsor_admin" }, jwtSecret, 60 * 60 * 8); // 8 hour session
+
+    const isLocal = request.url.includes("localhost") || request.url.includes("127.0.0.1");
+    const secureFlag = isLocal ? "" : "; Secure";
+
     return json({ ok: true }, 200, {
-      "Set-Cookie": `${COOKIE_NAME}=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${60 * 60 * 8}`
+      "Set-Cookie": `${COOKIE_NAME}=${token}; HttpOnly${secureFlag}; SameSite=Strict; Path=/; Max-Age=${60 * 60 * 8}`
     });
   } catch (e) {
     console.error("admin-login error", e);
