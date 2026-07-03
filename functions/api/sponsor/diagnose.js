@@ -1,41 +1,62 @@
-// TEMPORARY diagnostic endpoint for the sponsor feature's D1 wiring.
-// Does not touch facilities.js or tiers.js. Delete this file once the
-// production issue is confirmed and resolved.
+// TEMPORARY DIAGNOSTIC ENDPOINT - DELETE AFTER DEBUGGING
+// DO NOT SHIP THIS TO PRODUCTION PERMANENTLY
+// URL: /api/sponsor/diagnose
+
 export async function onRequestGet({ env }) {
-  const out = {
+  // Collect diagnostic information
+  const diagnosis = {
     timestamp: new Date().toISOString(),
-    binding_available: !!env.DB
+    binding_available: !!env.DB,
+    binding_type: env.DB ? typeof env.DB : "undefined",
+    query_attempted: false,
+    query_success: false,
+    error: null,
+    table_check: null,
+    row_count: null
   };
 
-  if (!out.binding_available) {
-    out.table_check = "unknown";
-    out.error = "env.DB is undefined - the D1 binding named 'DB' is not attached to this Pages deployment/environment.";
-    return new Response(JSON.stringify(out, null, 2), {
+  // Step 1: Check if the DB binding exists
+  if (!env.DB) {
+    diagnosis.error = "DB binding is undefined - check Pages bindings";
+    return new Response(JSON.stringify(diagnosis, null, 2), {
       status: 500,
       headers: { "Content-Type": "application/json" }
     });
   }
 
+  // Step 2: Try a simple query to check if the table exists
   try {
-    const countRow = await env.DB.prepare("SELECT COUNT(*) as n FROM facilities").first();
-    out.table_check = "exists";
-    out.row_count = countRow.n;
+    diagnosis.query_attempted = true;
 
-    const { results } = await env.DB.prepare(
-      "SELECT id, name, state FROM facilities ORDER BY state, name LIMIT 5"
-    ).all();
-    out.sample = results;
+    // Try to get the table info
+    const tableCheck = await env.DB.prepare(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name='facilities'"
+    ).first();
 
-    return new Response(JSON.stringify(out, null, 2), {
-      headers: { "Content-Type": "application/json" }
-    });
+    diagnosis.table_check = tableCheck ? "exists" : "missing";
+
+    // If table exists, count the rows
+    if (tableCheck) {
+      const countResult = await env.DB.prepare(
+        "SELECT COUNT(*) as count FROM facilities"
+      ).first();
+      diagnosis.row_count = countResult ? countResult.count : 0;
+
+      // Try to get the first few facilities
+      const sample = await env.DB.prepare(
+        "SELECT id, name, state FROM facilities LIMIT 5"
+      ).all();
+      diagnosis.sample = sample.results || [];
+      diagnosis.query_success = true;
+    }
   } catch (error) {
-    out.table_check = "missing_or_error";
-    out.error = error.message;
-    out.stack = error.stack;
-    return new Response(JSON.stringify(out, null, 2), {
-      status: 500,
-      headers: { "Content-Type": "application/json" }
-    });
+    diagnosis.error = error.message;
+    diagnosis.stack = error.stack;
+    diagnosis.query_success = false;
   }
+
+  return new Response(JSON.stringify(diagnosis, null, 2), {
+    status: diagnosis.query_success ? 200 : 500,
+    headers: { "Content-Type": "application/json" }
+  });
 }
