@@ -23,6 +23,19 @@
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.01);
     }
+    .guide-cohort {
+      background: var(--bg-alt);
+      padding: 10px 12px;
+      border-radius: 6px;
+      border-left: 3px solid var(--accent);
+      margin-bottom: 0.75rem;
+      font-size: 0.85rem;
+    }
+    .guide-cohort strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
   </style>
 </head>
 <body>
@@ -70,9 +83,9 @@
     <div style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
       <h2 style="font-size: 1.1rem; margin: 0; font-family: var(--font-serif); font-weight: 600;">Shared Case Progress</h2>
       <div style="width: 100%; height: 10px; background: var(--bg-alt); border-radius: 5px; overflow: hidden; margin-top:0.75rem;">
-        <div id="readiness-bar" style="width: 0%; height: 100%; background: var(--accent); border-radius: 5px; transition: width 0.5s;"></div>
+        <div id="readiness-bar" style="width: 10%; height: 100%; background: var(--accent); border-radius: 5px; transition: width 0.8s;"></div>
       </div>
-      <p id="readiness-text" style="font-size:0.8rem; color:var(--text-soft); margin-top:0.5rem; margin-bottom:0;">Case readiness: Not yet calculated.</p>
+      <p id="readiness-text" style="font-size:0.8rem; color:var(--text-soft); margin-top:0.5rem; margin-bottom:0;">Case readiness score: calculating...</p>
     </div>
 
     <div class="family-grid">
@@ -119,12 +132,34 @@
         </div>
       </div>
 
-      <!-- KIDS GUIDE -->
-      <div class="family-card">
+      <!-- KIDS GUIDE (EXPANDED) -->
+      <div class="family-card" style="grid-column: span 1;">
         <h3>Children's Guidance Resources</h3>
         <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Age-appropriate guidelines to help children understand the separation process.</p>
-        <div style="background:var(--bg-alt); padding:8px; border-radius:6px; font-size:0.8rem; line-height:1.4;">
-          <strong>Recommendation:</strong> Use simple, reassuring phrasing. Reassure them that they are loved, that the separation is temporary, and that they did nothing wrong.
+        
+        <div class="guide-cohort">
+          <strong>Ages 3-5: "Mommy/Daddy is away helping people"</strong>
+          Use simple terms. Avoid complex judicial concepts. Reassure them that they are safe, loved, and that the parent will return.
+        </div>
+
+        <div class="guide-cohort">
+          <strong>Ages 6-9: "Why is Daddy/Mommy away?"</strong>
+          Explain that rules exist for everyone, and sometimes grown-ups have to take a time-out to resolve rule issues. Emphasize it is not their fault.
+        </div>
+
+        <div class="guide-cohort">
+          <strong>Ages 10-12: "The justice system and what it means"</strong>
+          Introduce basic legal rules. Discuss how courts decide terms, and answer their direct questions honestly without burdening them with worry.
+        </div>
+
+        <div class="guide-cohort">
+          <strong>Ages 13-15: "Understanding the legal process"</strong>
+          Engage in more mature discussions about rehabilitation, compliance, and guidelines. Keep lines of communication open.
+        </div>
+
+        <div class="guide-cohort">
+          <strong>Ages 16-18: "Preparing for reentry"</strong>
+          Discuss reentry preparation, support mechanisms, and how the family unit will collaborate to build a stable transition pathway.
         </div>
       </div>
     </div>
@@ -179,6 +214,22 @@
   }
   updateTrialStatus();
 
+  // Load readiness dynamically
+  async function loadReadiness() {
+    try {
+      const res = await fetch('/api/organiser/readiness');
+      if (res.ok) {
+        const data = await res.json();
+        const score = data.readiness_score;
+        document.getElementById('readiness-bar').style.width = score + '%';
+        document.getElementById('readiness-text').textContent = `Case readiness score calculated at ${score}%.`;
+      }
+    } catch (err) {
+      console.error('Failed to load readiness:', err);
+    }
+  }
+  loadReadiness();
+
   // Expense tracker
   const expForm = document.getElementById('expense-form');
   const expList = document.getElementById('expense-list');
@@ -209,20 +260,33 @@
   });
   renderExpenses();
 
-  // BOP Visit Planner
+  // BOP Visit Planner POST request to dates endpoint
   const visitForm = document.getElementById('visit-form');
   visitForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const fac = document.getElementById('facility-name').value;
     const date = document.getElementById('visit-date').value;
     
-    // Add to dates checklist in localstorage/mock
-    let dates = JSON.parse(localStorage.getItem('wca_case_dates') || '[]');
-    dates.push({ label: `Visit to ${fac}`, date_val: date, note: "Scheduled via BOP Visit Planner" });
-    localStorage.setItem('wca_case_dates', JSON.stringify(dates));
-    
-    alert(`Success: Scheduled visit to ${fac} on ${date}. This has been logged to your case Dates.`);
-    visitForm.reset();
+    try {
+      const res = await fetch('/api/organiser/dates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          label: `Visit to ${fac}`,
+          date_val: date,
+          note: `Visit scheduled to ${fac}`
+        })
+      });
+      if (res.ok) {
+        alert("Visit successfully scheduled and logged to Dates timeline!");
+        window.location.href = "/organiser/dates.html";
+      } else {
+        alert("Failed to schedule visit via API.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error contacting Dates API.");
+    }
   });
 </script>
   <!-- Mobile Bottom Navigation -->
