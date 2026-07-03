@@ -204,8 +204,35 @@
         facilitySelect.innerHTML = '<option value="">No facilities available yet</option>';
         return;
       }
-      facilitySelect.innerHTML = '<option value="">Select a facility</option>' +
-        data.facilities.map(f => `<option value="${f.id}">${f.name} (${f.state})</option>`).join("");
+      // Sort facilities by state, then city, then name
+      const sorted = [...data.facilities].sort((a, b) => {
+        if (a.state !== b.state) return a.state.localeCompare(b.state);
+        if (a.city !== b.city) return a.city.localeCompare(b.city);
+        return a.name.localeCompare(b.name);
+      });
+
+      // Group by location
+      const groups = {};
+      sorted.forEach(f => {
+        const key = `${f.city}, ${f.state}`;
+        (groups[key] = groups[key] || []).push(f);
+      });
+
+      let html = '<option value="">Select a facility</option>';
+      Object.keys(groups).sort().forEach(loc => {
+        const list = groups[loc];
+        if (list.length > 1) {
+          html += `<optgroup label="${loc} (${list.length} units)">`;
+          list.forEach(f => {
+            html += `<option value="${f.id}">${f.name} (${f.security_level || f.type})</option>`;
+          });
+          html += `</optgroup>`;
+        } else {
+          const f = list[0];
+          html += `<option value="${f.id}">${f.name} (${f.city}, ${f.state})</option>`;
+        }
+      });
+      facilitySelect.innerHTML = html;
 
       if (window.WCA_initPrisonMap) {
         window.WCA_initPrisonMap("prison-map", data.facilities, function (facilityId) {
