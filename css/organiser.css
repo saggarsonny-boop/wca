@@ -560,3 +560,24 @@
   left: 0;
   color: var(--accent);
 }
+
+/* ── Mobile tap-target sizing ── */
+@media (max-width: 640px) {
+  .btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .org-sidebar nav a {
+    min-height: 44px;
+  }
+
+  .case-field input,
+  .case-field textarea,
+  .case-field select {
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+    min-height: 44px;
+  }
+}
