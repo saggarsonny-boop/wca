@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sponsor a Prison Library — White Collar Academy</title>
+  <meta name="description" content="Sponsor copies of The Road for a federal prison library. Give the gift of a map to someone who needs one.">
+  <!-- NOT YET LIVE: facilities table is empty, no verified BOP facility data has been added.
+       Do not link this page from nav or footer until _schema_sponsor.sql has real facility rows.
+       See _schema_sponsor.sql header comment. -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/road.html">The Road</a>
+      <a href="/about.html">About</a>
+      <a href="/course.html">The Course</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" style="padding-bottom:2rem;">
+    <div class="container">
+      <h1>Sponsor a Prison Library</h1>
+      <p class="lead" style="margin-top:0.75rem;">
+        Give the gift of reading to someone inside. Every book is a map.
+      </p>
+      <p class="text-soft" style="font-size:0.9rem;">The Road — a calm guide to facing criminal charges</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width:640px;">
+      <h2>How it works</h2>
+      <ol class="curriculum">
+        <li>Choose a federal facility from the list</li>
+        <li>Select a sponsorship tier</li>
+        <li>Complete payment — we handle the rest</li>
+        <li>Copies are sent to that facility's library</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="max-width:640px;">
+      <h2>Sponsor a facility</h2>
+
+      <form id="sponsor-form" novalidate>
+        <div class="case-field">
+          <label for="facility">Facility</label>
+          <select id="facility" name="facility_id" required>
+            <option value="">Loading facilities…</option>
+          </select>
+        </div>
+
+        <div class="case-field">
+          <label for="tier">Sponsorship tier</label>
+          <select id="tier" name="tier_id" required>
+            <option value="">Loading tiers…</option>
+          </select>
+        </div>
+
+        <div class="case-field">
+          <label for="sponsor_name">Your name</label>
+          <input type="text" id="sponsor_name" name="sponsor_name" required>
+        </div>
+
+        <div class="case-field">
+          <label for="sponsor_email">Your email</label>
+          <input type="email" id="sponsor_email" name="sponsor_email" required autocomplete="email">
+        </div>
+
+        <div class="case-field">
+          <label for="sponsor_phone">Phone (optional)</label>
+          <input type="text" id="sponsor_phone" name="sponsor_phone">
+        </div>
+
+        <div class="case-field">
+          <label for="message">A note to include (optional)</label>
+          <textarea id="message" name="message" rows="3"></textarea>
+        </div>
+
+        <div class="case-field" style="display:flex; align-items:center; gap:0.5rem;">
+          <input type="checkbox" id="is_anonymous" name="is_anonymous" style="width:auto;">
+          <label for="is_anonymous" style="margin:0;">Sponsor anonymously</label>
+        </div>
+
+        <button type="submit" class="btn" id="sponsor-submit">Continue to payment</button>
+        <div id="sponsor-status" class="form-status" role="alert" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <span>© <span id="yr"></span> White Collar Academy. General information only. Not legal advice.</span>
+    <span><a href="/about.html">About</a> · <a href="/writing.html">Writing</a> · <a href="/privacy.html">Privacy</a></span>
+  </div>
+</footer>
+
+<script>document.getElementById("yr").textContent = new Date().getFullYear();</script>
+<script>
+(async function () {
+  const facilitySelect = document.getElementById("facility");
+  const tierSelect = document.getElementById("tier");
+  const status = document.getElementById("sponsor-status");
+  const form = document.getElementById("sponsor-form");
+
+  async function loadFacilities() {
+    try {
+      const r = await fetch("/api/sponsor/facilities");
+      const data = await r.json();
+      facilitySelect.innerHTML = "";
+      if (!data.facilities || !data.facilities.length) {
+        facilitySelect.innerHTML = '<option value="">No facilities available yet</option>';
+        return;
+      }
+      facilitySelect.innerHTML = '<option value="">Select a facility</option>' +
+        data.facilities.map(f => `<option value="${f.id}">${f.name} (${f.state})</option>`).join("");
+    } catch {
+      facilitySelect.innerHTML = '<option value="">Could not load facilities</option>';
+    }
+  }
+
+  async function loadTiers() {
+    try {
+      const r = await fetch("/api/sponsor/tiers");
+      const data = await r.json();
+      tierSelect.innerHTML = '<option value="">Select a tier</option>' +
+        data.tiers.map(t => `<option value="${t.id}">${t.name} — $${(t.amount_cents / 100).toFixed(0)} (${t.book_count} book${t.book_count > 1 ? "s" : ""})</option>`).join("");
+    } catch {
+      tierSelect.innerHTML = '<option value="">Could not load tiers</option>';
+    }
+  }
+
+  loadFacilities();
+  loadTiers();
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    status.textContent = "";
+    status.className = "form-status";
+    const btn = document.getElementById("sponsor-submit");
+    btn.disabled = true;
+    btn.textContent = "Redirecting to payment...";
+
+    try {
+      const resp = await fetch("/api/sponsor/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          facility_id: form.facility_id.value,
+          tier_id: form.tier_id.value,
+          sponsor_name: form.sponsor_name.value.trim(),
+          sponsor_email: form.sponsor_email.value.trim(),
+          sponsor_phone: form.sponsor_phone.value.trim(),
+          message: form.message.value.trim(),
+          is_anonymous: form.is_anonymous.checked
+        })
+      });
+      const data = await resp.json();
+      if (resp.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        status.textContent = data.error || "Could not start checkout. Please try again.";
+        status.className = "form-status form-status--err";
+        btn.disabled = false;
+        btn.textContent = "Continue to payment";
+      }
+    } catch {
+      status.textContent = "Network error. Please try again.";
+      status.className = "form-status form-status--err";
+      btn.disabled = false;
+      btn.textContent = "Continue to payment";
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

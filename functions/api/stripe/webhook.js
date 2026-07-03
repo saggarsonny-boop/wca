@@ -30,6 +30,17 @@ export async function onRequestPost({ request, env }) {
 
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
+
+      if (session.metadata?.type === "sponsorship") {
+        const sponsorshipId = session.metadata.sponsorship_id;
+        if (sponsorshipId) {
+          await env.DB.prepare(
+            "UPDATE sponsorships SET status = 'paid', stripe_payment_intent_id = ?, stripe_customer_id = ?, updated_at = datetime('now') WHERE id = ?"
+          ).bind(session.payment_intent || "", session.customer || "", sponsorshipId).run();
+        }
+        return json({ received: true });
+      }
+
       const userId = session.metadata?.user_id;
       const customerId = session.customer;
       const mode = session.mode;

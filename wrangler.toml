@@ -6,9 +6,12 @@
 # 2. Authenticate:     npx wrangler login
 # 3. D1 database already created: wca-subscribers (f9e924d6-3547-4ba4-ac8d-005e95d36628)
 # 4. Run organiser schema: npx wrangler d1 execute wca-subscribers --file=_schema_organiser.sql
-# 5. Create R2 bucket: npx wrangler r2 bucket create wca-documents
-# 6. Set secrets in Cloudflare Pages dashboard (see below)
-# 7. Deploy via Cloudflare Pages dashboard (GitHub repo: saggarsonny-boop/wca)
+# 5. Run sponsor schema:   npx wrangler d1 execute wca-subscribers --file=_schema_sponsor.sql
+#    Then seed real facility rows before enabling /sponsor.html publicly —
+#    see the header comment in _schema_sponsor.sql.
+# 6. Create R2 bucket: npx wrangler r2 bucket create wca-documents
+# 7. Set secrets in Cloudflare Pages dashboard (see below)
+# 8. Deploy via Cloudflare Pages dashboard (GitHub repo: saggarsonny-boop/wca)
 
 name = "whitecollaracademy"
 pages_build_output_dir = "."
