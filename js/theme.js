@@ -127,7 +127,16 @@
     // PWA Install Prompt Listener
     let deferredPrompt;
     
-    // Sidebar toggle initialization
+    // Sidebar toggle initialization & dynamic injection
+    const sidebar = document.querySelector(".org-sidebar");
+    if (sidebar && !document.getElementById("sidebar-toggle")) {
+      const toggleContainer = document.createElement("div");
+      toggleContainer.style.padding = "0.5rem 0.75rem";
+      toggleContainer.style.borderBottom = "1px solid var(--border)";
+      toggleContainer.innerHTML = `<button id="sidebar-toggle" class="sidebar-toggle-btn" style="width:100%;">📂 Toggle Sidebar</button>`;
+      sidebar.insertBefore(toggleContainer, sidebar.firstChild);
+    }
+
     const toggleBtn = document.getElementById("sidebar-toggle");
     const layout = document.querySelector(".org-layout");
     if (toggleBtn && layout) {
