@@ -1,0 +1,36 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "WCA AI-Native Query Feed API",
+    "description": "Structured AI query feed matching Case Organizer profiles and telemetry logs.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/ai/query": {
+      "post": {
+        "summary": "AI Model Query Feed",
+        "description": "Query Case Organizer metrics using JSON filters and score thresholds.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "keywords": { "type": "string" },
+                  "filters": { "type": "object" },
+                  "score_threshold": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JSON summaries of Case Organizer records"
+          }
+        }
+      }
+    }
+  }
+}
