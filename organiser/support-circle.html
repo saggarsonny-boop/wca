@@ -142,27 +142,31 @@
   <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
     <span class="toggle-icon">☰</span>
   </button>
+    <!-- Sidebar toggle button - always visible -->
+  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+    <span class="toggle-icon">☰</span>
+  </button>
   <aside class="org-sidebar">
     <nav aria-label="Organiser navigation">
       <span class="sidebar-label">Your case</span>
       <a href="/organiser/">📊 Dashboard</a>
-      <a href="/organiser/case-file.html">📋 Case File</a>
-      <a href="/organiser/dates.html">📅 Dates</a>
-      <a href="/organiser/checklists.html">✅ Checklists</a>
-      <a href="/organiser/documents.html">📄 Documents</a>
-      <a href="/organiser/ai.html">🤖 Ask a question</a>
-      <a href="/organiser/support-circle.html" class="active">💬 Support Circle Chat</a>
-      <a href="/organiser/peer-support.html">👥 Peer Support</a>
-      <a href="/organiser/family.html">🏠 Family Dashboard</a>
-      <a href="/organiser/lawyer.html">⚖️ Lawyer Dashboard</a>
-      <a href="/organiser/case-workspace.html">📂 Shared Workspace</a>
-      <a href="/organiser/attorney.html">⚖️ Attorney Portal</a>
-      <a href="/organiser/calculator.html">🧮 Calculator</a>
-      <a href="/organiser/mitigation.html">📝 Mitigation Workbook</a>
-      <a href="/organiser/allocution.html">🎤 Allocution Prep</a>
-      <a href="/organiser/sentencing-prep.html">⚖️ Sentencing Prep</a>
-      <a href="/organiser/billing.html">💳 Billing & Payments</a>
-      <a href="/organiser/reminders.html">🔔 Reminders & Alerts</a>
+      <a href="/organiser/case-file.html" class="role-link role-defendant role-attorney">📋 Case File</a>
+      <a href="/organiser/dates.html" class="role-link role-defendant role-family">📅 Dates</a>
+      <a href="/organiser/checklists.html" class="role-link role-defendant">✅ Checklists</a>
+      <a href="/organiser/documents.html" class="role-link role-defendant role-attorney">📄 Documents</a>
+      <a href="/organiser/ai.html" class="role-link role-defendant">🤖 Ask a question</a>
+      <a href="/organiser/support-circle.html" class="role-link role-defendant role-family" class="active">💬 Support Circle Chat</a>
+      <a href="/organiser/peer-support.html" class="role-link role-defendant role-family">👥 Peer Support</a>
+      <a href="/organiser/family.html" class="role-link role-family">🏠 Family Dashboard</a>
+      <a href="/organiser/lawyer.html" class="role-link role-attorney">⚖️ Lawyer Dashboard</a>
+      <a href="/organiser/case-workspace.html" class="role-link role-attorney">📂 Shared Workspace</a>
+      <a href="/organiser/attorney.html" class="role-link role-attorney">⚖️ Attorney Portal</a>
+      <a href="/organiser/calculator.html" class="role-link role-defendant">🧮 Calculator</a>
+      <a href="/organiser/mitigation.html" class="role-link role-defendant">📝 Mitigation Workbook</a>
+      <a href="/organiser/allocution.html" class="role-link role-defendant">🎤 Allocution Prep</a>
+      <a href="/organiser/sentencing-prep.html" class="role-link role-defendant">⚖️ Sentencing Prep</a>
+      <a href="/organiser/billing.html" class="role-link role-defendant">💳 Billing & Payments</a>
+      <a href="/organiser/reminders.html" class="role-link role-defendant">🔔 Reminders & Alerts</a>
       <a href="/organiser/resources.html">📚 Resource Library</a>
       <!-- Admin cog - visible only to admins -->
       <a href="/organiser/admin.html" id="admin-cog-link" style="display: none;">⚙️ Admin</a>

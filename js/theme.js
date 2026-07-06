@@ -121,6 +121,15 @@
           const res = await fetch("/api/auth/me");
           if (res.ok) {
             const user = await res.json();
+            
+            // Filter sidebar links based on user role
+            const userRole = user.role || "defendant";
+            document.querySelectorAll(".org-sidebar nav a.role-link").forEach(link => {
+              if (!link.classList.contains(`role-${userRole}`)) {
+                link.style.display = "none";
+              }
+            });
+
             if (user.role === "admin") {
               const cog = document.getElementById("admin-cog-link");
               if (cog) {
