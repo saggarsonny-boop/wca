@@ -21,33 +21,75 @@
 <div class="org-layout">
   <main id="main-content" class="org-main" style="max-width:800px; margin:0 auto; padding:2rem 1rem;">
     <h1>Case Study Vault</h1>
-    <p class="text-soft">Vetted, anonymized case studies demonstrating clinical mitigation outcomes and sentencing guideline adjustments.</p>
+    <p class="text-soft" style="margin-bottom:2rem;">Vetted, anonymized case studies demonstrating clinical mitigation outcomes and sentencing guideline adjustments.</p>
 
-    <!-- CASE STUDY 1 -->
-    <article style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-top:2rem;">
-      <h2>Case Study #108: Medical Professional Licensure Restoration</h2>
-      <p style="margin-top:0.5rem; font-size:0.95rem; line-height:1.6;">
-        <strong>Charge:</strong> Healthcare Fraud (18 U.S.C. § 1347)<br>
-        <strong>Mitigation Strategy:</strong> Clinical mitigation logs demonstrating complete restitution steps and voluntary recovery program enrollment prior to indictment.<br>
-        <strong>Outcome:</strong> Sentence variance of 18 months below guidelines range. Licensing board reinstatement approved with monitoring conditions.
-      </p>
-    </article>
-
-    <!-- CASE STUDY 2 -->
-    <article style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-top:1.5rem;">
-      <h2>Case Study #224: Non-Violent First-Time Offender RDAP Placement</h2>
-      <p style="margin-top:0.5rem; font-size:0.95rem; line-height:1.6;">
-        <strong>Charge:</strong> Wire Fraud (18 U.S.C. § 1343)<br>
-        <strong>Mitigation Strategy:</strong> Accurate mapping of substance abuse history inside the draft Presentence Report (PSR).<br>
-        <strong>Outcome:</strong> Verified RDAP eligibility resulting in 12 months sentence reduction and early release to halfway house.
-      </p>
-    </article>
+    <!-- CONTAINER FOR DYNAMIC CASE STUDIES -->
+    <div id="cases-container">Loading case studies...</div>
 
     <div style="margin-top:2rem;">
       <a href="/organiser/resources.html" class="btn">Back to Resources</a>
     </div>
   </main>
 </div>
+
+<script>
+  async function loadCaseStudies() {
+    try {
+      const res = await fetch("/data/case_studies.json");
+      if (!res.ok) throw new Error("Failed to load case studies");
+      const cases = await res.json();
+      
+      const container = document.getElementById("cases-container");
+      container.innerHTML = "";
+      
+      const schemas = [];
+
+      cases.forEach(c => {
+        // Render card
+        const card = document.createElement("article");
+        card.style.cssText = "background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:1.5rem;";
+        card.innerHTML = `
+          <h2 style="font-size:1.2rem; color:var(--accent);">${c.title}</h2>
+          <p style="margin-top:0.5rem; font-size:0.95rem; line-height:1.6;">
+            <strong>Charge:</strong> ${c.charge}<br>
+            <strong>Problem:</strong> ${c.problem}<br>
+            <strong>Mitigation Strategy:</strong> ${c.solution}<br>
+            <strong>Outcome:</strong> ${c.outcome}<br>
+            <span style="font-size:0.8rem; background:var(--bg-alt); padding:2px 6px; border-radius:4px; margin-top:8px; display:inline-block;">🏷️ ${c.jurisdiction} | ${c.offense_type}</span>
+          </p>
+        `;
+        container.appendChild(card);
+
+        // Build CaseStudy Schema
+        schemas.push({
+          "@context": "https://schema.org",
+          "@type": "CaseStudy",
+          "name": c.title,
+          "description": c.problem,
+          "about": {
+            "@type": "AdministrativeArea",
+            "name": c.jurisdiction
+          }
+        });
+      });
+
+      // Inject JSON-LD
+      const script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.text = JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": schemas
+      });
+      document.head.appendChild(script);
+
+    } catch (err) {
+      console.error(err);
+      document.getElementById("cases-container").innerText = "Failed to load case studies.";
+    }
+  }
+  
+  loadCaseStudies();
+</script>
 
 </body>
 </html>
