@@ -4,18 +4,23 @@ export async function onRequestPost({ request, env }) {
   try {
     const { keywords, filters, score_threshold } = await request.json();
     
-    // Query Case Organizer D1 data filtered/aggregated for AI summarization
-    const { results: users } = await env.DB.prepare(
-      "SELECT id, email, subscription_status, created_at FROM organiser_users LIMIT 50"
-    ).all();
+    let query = "SELECT id, question_text, ai_answer, created_at FROM organiser_public_questions";
+    let params = [];
+    if (keywords) {
+      query += " WHERE question_text LIKE ? OR ai_answer LIKE ?";
+      params.push(`%${keywords}%`, `%${keywords}%`);
+    }
+    query += " ORDER BY id DESC LIMIT 50";
 
-    const summaries = users.map(u => ({
-      entity_id: u.id,
-      classification: "Defendant User Profile",
-      status: u.subscription_status,
-      confidence_score: 0.95,
+    const { results } = await env.DB.prepare(query).bind(...params).all();
+
+    const records = results.map(r => ({
+      entity_id: r.id,
+      classification: "Public AI Inquiry",
+      text: r.question_text,
+      response: r.ai_answer,
       meta: {
-        created: u.created_at
+        created_at: r.created_at
       }
     }));
 
@@ -23,9 +28,10 @@ export async function onRequestPost({ request, env }) {
       query_meta: {
         timestamp: new Date().toISOString(),
         filters_applied: filters || {},
-        threshold: score_threshold || 0.5
+        threshold: score_threshold || 0.5,
+        count: records.length
       },
-      records: summaries
+      records
     });
   } catch (e) {
     console.error("ai query error", e);
