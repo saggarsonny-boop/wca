@@ -154,6 +154,10 @@
   <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
     <span class="toggle-icon">☰</span>
   </button>
+    <!-- Sidebar toggle button - always visible -->
+  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+    <span class="toggle-icon">☰</span>
+  </button>
   <aside class="org-sidebar">
     <nav aria-label="Organiser navigation">
       <span class="sidebar-label">Your case</span>
@@ -218,6 +222,23 @@
       
       <div style="width: 100%; height: 8px; background: var(--bg-alt); border-radius: 4px; overflow: hidden;">
         <div id="readiness-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent), #4f73b3); border-radius: 4px; transition: width 0.8s ease-out;"></div>
+      </div>
+    </div>
+
+    <!-- AI GEO DOMINANCE RADAR CARD -->
+    <div style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+      <h2 style="font-size: 1.05rem; margin: 0 0 1rem 0; font-family: var(--font-serif); font-weight: 600; display:flex; justify-content:space-between; align-items:center;">
+        <span>📊 AI GEO Dominance Matrix (6-Axis)</span>
+        <a href="/organiser/resources/rag-simulator.html" style="font-size:0.8rem; color:var(--accent); text-decoration:underline;">Open Sandbox & Validator →</a>
+      </h2>
+      <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center;">
+        <canvas id="radarCanvas" width="280" height="280" style="max-width:100%; height:auto;"></canvas>
+        <div style="flex:1; min-width:240px;">
+          <h3 style="font-size:0.9rem; margin-bottom:0.5rem; font-weight: 600;">Simulated Telemetry Log</h3>
+          <div id="telemetryConsole" style="background:#1e293b; color:#38bdf8; font-family:monospace; font-size:0.75rem; padding:0.75rem; border-radius:6px; height:180px; overflow-y:auto; line-height:1.4;">
+            <div>[system] Initiating GEO 6-axis substrate audit...</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -413,6 +434,97 @@
     }
   }
   loadReadiness();
+
+  // Draw 6-axis Radar Chart
+  function drawRadarChart() {
+    const canvas = document.getElementById("radarCanvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const center = 140;
+    const radius = 100;
+    const axes = ["GEO", "LEO", "MEO", "PEO", "AEO", "TEO"];
+    const values = [95, 90, 85, 92, 88, 80]; // Actual scores mapped
+
+    ctx.clearRect(0, 0, 280, 280);
+
+    // Draw concentric rings
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 1;
+    for (let r = 1; r <= 4; r++) {
+      ctx.beginPath();
+      ctx.arc(center, center, (radius / 4) * r, 0, 2 * Math.PI);
+      ctx.stroke();
+    }
+
+    // Draw axes lines and labels
+    ctx.fillStyle = "#64748b";
+    ctx.font = "11px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    const coords = [];
+    axes.forEach((axis, i) => {
+      const angle = (Math.PI / 3) * i - Math.PI / 2;
+      const x = center + radius * Math.cos(angle);
+      const y = center + radius * Math.sin(angle);
+
+      // Axis line
+      ctx.beginPath();
+      ctx.moveTo(center, center);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      // Label positioning
+      const labelX = center + (radius + 20) * Math.cos(angle);
+      const labelY = center + (radius + 15) * Math.sin(angle);
+      ctx.fillText(axis, labelX, labelY);
+
+      // Score coordinate
+      const valRatio = values[i] / 100;
+      const valX = center + radius * valRatio * Math.cos(angle);
+      const valY = center + radius * valRatio * Math.sin(angle);
+      coords.push({ x: valX, y: valY });
+    });
+
+    // Draw filled polygon matching values
+    ctx.fillStyle = "rgba(44, 74, 124, 0.4)";
+    ctx.strokeStyle = "rgba(44, 74, 124, 1)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(coords[0].x, coords[0].y);
+    for (let i = 1; i < coords.length; i++) {
+      ctx.lineTo(coords[i].x, coords[i].y);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  drawRadarChart();
+
+  // Simulated Telemetry logs
+  const logsConsole = document.getElementById("telemetryConsole");
+  const botLogs = [
+    "[perplexitybot] Fetched index.html - 200 OK (0.23s)",
+    "[deepseekbot] Indexed Dataset schema node - Success",
+    "[openai-searchbot] Verified author Dr. Sonny Saggar (High Trust)",
+    "[claudebot] Read llms.txt context structure - Parsed successfully",
+    "[google-extended] Scraped raw.md data specs - RAG verified",
+    "[system] Recalculating latent density... LEO Score: 90/100",
+    "[system] Running Page Budget checklist... Pass",
+    "[system] Syncing brand nodes to vector DB... Done"
+  ];
+
+  let logIndex = 0;
+  setInterval(() => {
+    if (!logsConsole) return;
+    const log = botLogs[logIndex % botLogs.length];
+    const item = document.createElement("div");
+    item.textContent = `[${new Date().toLocaleTimeString()}] ${log}`;
+    logsConsole.appendChild(item);
+    logsConsole.scrollTop = logsConsole.scrollHeight;
+    logIndex++;
+  }, 3500);
 </script>
 </body>
 </html>

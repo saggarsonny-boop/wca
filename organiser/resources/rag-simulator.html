@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG Simulator & GEO Sandbox — WCA</title>
+  <meta name="description" content="Simulate search engine RAG bot context retrieval and analyze brand authority.">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <a href="/organiser/" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Back to Dashboard</a>
+  </div>
+</header>
+
+<div class="org-layout">
+  <main id="main-content" class="org-main" style="max-width:900px; margin:0 auto; padding:2rem 1rem;">
+    <h1>RAG Simulator & GEO Diagnostic Sandbox</h1>
+    <p class="text-soft" style="margin-bottom:2rem;">Simulate how search engine crawlers (ChatGPT Search, Perplexity, DeepSeek) fetch, index, and query your entity metadata.</p>
+
+    <!-- SIMULATOR CONTROL CARD -->
+    <div style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:10px; margin-bottom:2rem; box-shadow:0 4px 15px rgba(0,0,0,0.02);">
+      <h2>Interactive Schema Validator</h2>
+      <p class="text-soft" style="font-size:0.9rem; margin-bottom:1rem;">Paste your webpage JSON-LD graph or raw copy text to analyze its indexability rating.</p>
+      
+      <textarea id="schema-input" placeholder='Paste JSON-LD or raw copy here... e.g. {"@type": "Dataset", "name": "White Collar Academy"}' style="width:100%; height:180px; padding:0.75rem; border:1px solid var(--border); border-radius:6px; font-family:monospace; font-size:0.875rem; margin-bottom:1rem; resize:vertical;"></textarea>
+      
+      <button onclick="analyzeSchema()" class="btn">Analyze Substrate RAG Compatibility</button>
+    </div>
+
+    <!-- REPORT CARD -->
+    <div id="results-card" style="display:none; background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.02);">
+      <h2 style="color:var(--accent); margin-bottom:1rem;">Diagnostic Scorecard</h2>
+      
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:1.5rem; margin-bottom:2rem;">
+        <div>
+          <h3>GEO Score (Stability)</h3>
+          <p id="geo-score" style="font-size:1.8rem; font-weight:700; color:var(--accent); margin:0.25rem 0;">0/100</p>
+          <p id="geo-desc" class="text-soft" style="font-size:0.85rem;"></p>
+        </div>
+        <div>
+          <h3>LEO Score (Latent Density)</h3>
+          <p id="leo-score" style="font-size:1.8rem; font-weight:700; color:var(--accent); margin:0.25rem 0;">0/100</p>
+          <p id="leo-desc" class="text-soft" style="font-size:0.85rem;"></p>
+        </div>
+        <div>
+          <h3>AEO Score (Agentic Cleanliness)</h3>
+          <p id="aeo-score" style="font-size:1.8rem; font-weight:700; color:var(--accent); margin:0.25rem 0;">0/100</p>
+          <p id="aeo-desc" class="text-soft" style="font-size:0.85rem;"></p>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--border); padding-top:1.5rem;">
+        <h3>Crawler Recommendation Engine</h3>
+        <ul id="recommendation-list" style="padding-left:1.25rem; font-size:0.9rem; line-height:1.6; margin-top:0.75rem;">
+          <!-- Loaded dynamically -->
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+function analyzeSchema() {
+  const input = document.getElementById("schema-input").value.trim();
+  const resultsCard = document.getElementById("results-card");
+  
+  if (!input) {
+    alert("Please enter some text or JSON-LD to analyze.");
+    return;
+  }
+
+  resultsCard.style.display = "block";
+  
+  let geo = 10;
+  let leo = 15;
+  let aeo = 20;
+  const recommendations = [];
+
+  // 1. Check for JSON-LD structures
+  if (input.includes("@context") && input.includes("https://schema.org")) {
+    geo += 65;
+    if (input.includes("Dataset")) {
+      geo += 15;
+      recommendations.push("✅ Valid Dataset entity detected. Models can safely index this as structured database tables.");
+    } else {
+      recommendations.push("⚠️ JSON-LD is valid but missing explicit Dataset mappings.");
+    }
+  } else {
+    recommendations.push("❌ No structured JSON-LD @context found. AI engines will struggle to isolate key brand nodes.");
+  }
+
+  // 2. Check for LEO density (authoritative terms)
+  const keyTerms = ["mitigation", "sentencing", "federal", "court", "reentry", "bop", "prison", "rehabilitation"];
+  let matchedTerms = 0;
+  keyTerms.forEach(t => {
+    if (input.toLowerCase().includes(t)) matchedTerms++;
+  });
+  
+  leo += Math.min(matchedTerms * 10, 80);
+  if (matchedTerms >= 4) {
+    recommendations.push("✅ Autoritative vocabulary matches LLM latent space concepts. High latent density (LEO).");
+  } else {
+    recommendations.push("⚠️ Low copy density. LLMs may fail to categorize this page correctly.");
+  }
+
+  // 3. Check for AEO compliance (form element indicators)
+  if (input.includes("<button") || input.includes("<form") || input.includes("onclick") || input.includes("data-")) {
+    aeo += 70;
+    recommendations.push("✅ Standard HTML tags used. Autonomous browser agents can easily locate target actions.");
+  } else {
+    recommendations.push("⚠️ No interactive web buttons or elements detected. Sandbox AEO defaults to base reference profile.");
+  }
+
+  // Update DOM values
+  document.getElementById("geo-score").innerText = `${geo}/100`;
+  document.getElementById("geo-desc").innerText = geo > 70 ? "Excellent. Entity mappings are clear." : "Critical. Structure lacks semantic markup.";
+  
+  document.getElementById("leo-score").innerText = `${leo}/100`;
+  document.getElementById("leo-desc").innerText = leo > 60 ? "Dense vocabulary matching category terms." : "Weak vector alignment. Add key terminology.";
+  
+  document.getElementById("aeo-score").innerText = `${aeo}/100`;
+  document.getElementById("aeo-desc").innerText = aeo > 70 ? "Ready for AI browser agents." : "Form attributes lack target actions.";
+
+  const recList = document.getElementById("recommendation-list");
+  recList.innerHTML = recommendations.map(r => `<li style="margin-bottom:8px;">${r}</li>`).join("");
+}
+</script>
+
+</body>
+</html>
