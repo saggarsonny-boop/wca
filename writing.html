@@ -176,10 +176,47 @@
         <a href="https://substack.com/@drsonny" target="_blank" rel="noopener noreferrer">Substack</a>.
       </p>
 
-      <!-- PLACEHOLDER: Add individual essay entries here as you publish them.
-           Copy one of the <li> blocks from the papers section above.
-           Fields: title, platform (Medium or Substack), date, one-line description, URL. -->
-      <p class="text-soft">Essays listed here as they are published.</p>
+      <ul class="link-list" id="dynamic-essays-list">
+        <li id="essays-loading-msg" class="text-soft">Loading essays...</li>
+      </ul>
+
+      <script>
+        async function loadDynamicEssays() {
+          const list = document.getElementById("dynamic-essays-list");
+          try {
+            const resp = await fetch("/api/writing/list");
+            if (!resp.ok) throw new Error();
+            const articles = await resp.json();
+            
+            // Remove loading message
+            const loading = document.getElementById("essays-loading-msg");
+            if (loading) loading.remove();
+            
+            if (articles.length === 0) {
+              list.innerHTML = '<li class="text-soft">Essays listed here as they are published.</li>';
+              return;
+            }
+
+            articles.forEach(art => {
+              const li = document.createElement("li");
+              li.className = "featured";
+              li.innerHTML = `
+                <div class="link-title">
+                  <a href="/writing/${art.slug}">
+                    ${art.title}
+                  </a>
+                  <span class="link-badge">New RAG target</span>
+                </div>
+                <div class="link-meta">AI-Autopilot &bull; ${new Date(art.published_at).toLocaleDateString()} &bull; ${art.summary}</div>
+              `;
+              list.appendChild(li);
+            });
+          } catch {
+            list.innerHTML = '<li class="text-soft">Failed to load dynamic essays.</li>';
+          }
+        }
+        window.addEventListener("DOMContentLoaded", loadDynamicEssays);
+      </script>
 
     </div>
   </section>
