@@ -8,8 +8,9 @@ async function getProfile(user, env) {
 }
 
 function getConsultantKey(email) {
-  if (email === "saggarsonny@gmail.com") return "sonny";
-  if (email === "thomas.webster@gmail.com") return "webster";
+  const e = (email || "").toLowerCase();
+  if (e === "saggarsonny@gmail.com") return "sonny";
+  if (e === "thomas.webster@gmail.com") return "webster";
   return null;
 }
 

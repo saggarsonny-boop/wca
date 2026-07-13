@@ -105,7 +105,7 @@ export async function onRequestPost({ request, env }) {
           },
           body: JSON.stringify({
             from: "support@whitecollaracademy.com",
-            to: "saggarsonny@gmail.com",
+            to: "saggarsonny@gmail.com, thomas.webster@gmail.com",
             subject: `New Case Organizer Ticket: ${subject}`,
             html: `<p>Client <strong>${user.email}</strong> submitted a new support ticket:</p><blockquote>${message}</blockquote>`
           })

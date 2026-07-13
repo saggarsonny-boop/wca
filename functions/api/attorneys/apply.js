@@ -80,7 +80,7 @@ export async function onRequestPost({ request, env }) {
       },
       body: JSON.stringify({
         from: `${shortName} Directory <${senderEmail}>`,
-        to: "saggarsonny@gmail.com",
+        to: "saggarsonny@gmail.com, thomas.webster@gmail.com",
         reply_to: contact_email,
         subject: `${shortName} Firm Application: ${firm_name}`,
         html: emailHtml
