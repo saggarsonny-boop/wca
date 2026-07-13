@@ -236,10 +236,10 @@ export async function onRequestPost({ request, env }) {
           return err("Consultant, Date, Time, and Phone are required", 400);
         }
 
-        if (profile.subscription_status !== "consulting") {
+        if (profile.subscription_status !== "consulting" && profile.role !== "admin") {
           return err("Consulting plan required.", 403);
         }
-        if (profile.consulting_sessions_remaining <= 0) {
+        if (profile.consulting_sessions_remaining <= 0 && profile.role !== "admin") {
           return err("No prepaid sessions remaining.", 400);
         }
 

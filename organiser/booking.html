@@ -153,11 +153,11 @@
           phoneInput.value = profile.phone;
         }
 
-        // Show/hide based on subscription status
-        if (profile.subscription_status === 'consulting') {
+        // Show/hide based on subscription status or admin role
+        if (profile.subscription_status === 'consulting' || profile.role === 'admin') {
           document.getElementById('consulting-scheduler-card').style.display = 'block';
           document.getElementById('consulting-lock-card').style.display = 'none';
-          document.getElementById('remaining-sessions-count').textContent = profile.consulting_sessions_remaining;
+          document.getElementById('remaining-sessions-count').textContent = profile.consulting_sessions_remaining || 8;
           loadClientBookings();
         } else {
           document.getElementById('consulting-scheduler-card').style.display = 'none';
