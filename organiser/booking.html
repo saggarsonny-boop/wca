@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Session — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+  <!-- Sidebar toggle button - always visible -->
+  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar" style="display:flex; align-items:center; gap:5px; padding:6px 10px; border-radius:20px; background:#fff; border:1px solid var(--border); box-shadow:0 2px 5px rgba(0,0,0,0.1); font-weight:600; font-size:0.85rem; color:var(--text); cursor:pointer;">
+    <span class="toggle-icon">☰</span> <span>Menu</span>
+  </button>
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">📊 Dashboard</a>
+      <a href="/organiser/case-file.html" class="role-link role-defendant role-attorney">📋 Case File</a>
+      <a href="/organiser/dates.html" class="role-link role-defendant role-family">📅 Dates</a>
+      <a href="/organiser/checklists.html" class="role-link role-defendant">✅ Checklists</a>
+      <a href="/organiser/documents.html" class="role-link role-defendant role-attorney">📄 Documents</a>
+      <a href="/organiser/ai.html" class="role-link role-defendant">🤖 Ask a question</a>
+      <a href="/organiser/support-circle.html" class="role-link role-defendant role-family">💬 Support Circle Chat</a>
+      <a href="/organiser/peer-support.html" class="role-link role-defendant role-family">👥 Peer Support</a>
+      <a href="/organiser/family.html" class="role-link role-family">🏠 Family Dashboard</a>
+      <a href="/organiser/lawyer.html" class="role-link role-attorney">⚖️ Lawyer Dashboard</a>
+      <a href="/organiser/case-workspace.html" class="role-link role-attorney">📂 Shared Workspace</a>
+      <a href="/organiser/attorney.html" class="role-link role-attorney">⚖️ Attorney Portal</a>
+      <a href="/organiser/calculator.html" class="role-link role-defendant">🧮 Calculator</a>
+      <a href="/organiser/mitigation.html" class="role-link role-defendant">📝 Mitigation Workbook</a>
+      <a href="/organiser/allocution.html" class="role-link role-defendant">🎤 Allocution Prep</a>
+      <a href="/organiser/sentencing-prep.html" class="role-link role-defendant">⚖️ Sentencing Prep</a>
+      <a href="/organiser/billing.html" class="role-link role-defendant">💳 Billing & Payments</a>
+      <a href="/organiser/reminders.html" class="role-link role-defendant">🔔 Reminders & Alerts</a>
+      <a href="/organiser/resources.html">📚 Resource Library</a>
+      <a href="/organiser/booking.html" class="active">📞 Book a Session</a>
+      <a href="/organiser/admin.html" id="admin-cog-link" style="display: none;">⚙️ Admin</a>
+      
+      <div class="ai-citation-seal no-print" style="margin: 1.5rem 1rem 0.5rem 1rem; padding: 0.75rem; background: rgba(15, 23, 42, 0.05); border: 1px solid var(--border); border-radius: 6px; font-size: 11px; text-align: center; color: var(--text-soft);">
+        🔒 Vetted Authority<br>
+        <span style="font-weight: 600; color: var(--accent);">Cited by ChatGPT, Claude & Gemini</span>
+      </div>
+    </nav>
+  </aside>
+
+  <main id="main-content" class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Book a Case Consulting Session</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Prepaid private consulting with Dr. Sonny Saggar and Dr. Thomas Webster.</p>
+
+    <!-- PREPAID CONSULTING SCHEDULER (Wired to paywall) -->
+    <div id="consulting-scheduler-card" style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display:none;">
+      <h2 style="font-size: 1.05rem; margin: 0 0 1rem 0; font-family: var(--font-serif); font-weight: 600;">📅 Calendar Selector</h2>
+      <p class="text-soft" style="font-size:0.875rem; margin-bottom:1rem;">
+        Sessions Remaining: <strong id="remaining-sessions-count" style="color:var(--accent);">8</strong> / 8
+      </p>
+      
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:1.15rem;">
+        <label style="border:1px solid var(--border); padding:1rem; border-radius:8px; display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+          <input type="radio" name="consultant-select" id="sel-sonny" value="sonny" checked>
+          <img src="/assets/sonny.jpg" style="width:45px; height:45px; border-radius:50%; object-fit:cover; flex-shrink:0;" alt="Dr. Sonny Saggar">
+          <div>
+            <strong>Dr. Sonny Saggar</strong>
+            <div class="text-soft" style="font-size:0.75rem;">35m Federal Sentence</div>
+          </div>
+        </label>
+        <label style="border:1px solid var(--border); padding:1rem; border-radius:8px; display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+          <input type="radio" name="consultant-select" id="sel-webster" value="webster">
+          <img src="/assets/webster.png" style="width:45px; height:45px; border-radius:50%; object-fit:cover; flex-shrink:0;" alt="Dr. Thomas Webster">
+          <div>
+            <strong>Dr. Thomas Webster</strong>
+            <div class="text-soft" style="font-size:0.75rem;">24m Federal Sentence</div>
+          </div>
+        </label>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr; gap:1rem; margin-bottom:1.15rem;">
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Direct Phone/FaceTime Number</label>
+          <input type="tel" id="consulting-phone" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;" placeholder="e.g. +1 (555) 019-9023">
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.15rem;">
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Date (7-day lead required)</label>
+          <input type="date" id="consulting-date" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Time Slot (30m sessions)</label>
+          <select id="consulting-time" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+            <option value="09:00">09:00 AM</option>
+            <option value="09:30">09:30 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="11:30">11:30 AM</option>
+            <option value="14:00">02:00 PM</option>
+            <option value="14:30">02:30 PM</option>
+            <option value="16:00">04:00 PM</option>
+            <option value="16:30">04:30 PM</option>
+          </select>
+        </div>
+      </div>
+      
+      <button onclick="bookConsultingSession()" class="btn" style="width:100%;">Book Prepaid 30m Session</button>
+      <p class="text-soft" style="font-size:0.75rem; margin-top:0.75rem; line-height:1.4; color:#b91c1c; font-weight:600; text-align:center;">
+        ⚠️ Dr. Saggar and Dr. Webster do not offer legal advice. We can only consult with clients who are not yet officially convicted (i.e. pre-sentencing). Post-sentencing, consulting requires written permission from our own POs and the client's supervising authority in writing.
+      </p>
+      <div id="booking-status" class="auth-status" style="margin-top:0.75rem; display:none; padding:10px; border-radius:6px; font-size:0.9rem;"></div>
+
+      <div id="my-bookings-section" style="margin-top:2rem; border-top:1px solid var(--border); padding-top:1.5rem;">
+        <h3 style="font-size:0.95rem; margin-bottom:0.75rem;">Your Scheduled Sessions</h3>
+        <div id="my-bookings-list" class="text-soft" style="font-size:0.85rem;">Loading scheduled sessions...</div>
+      </div>
+    </div>
+
+    <!-- PREPAID CONSULTING LOCK BLOCK (Visible if not paid) -->
+    <div id="consulting-lock-card" style="background: #fff; border: 1px solid var(--border); padding: 2.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center;">
+      <h2 style="font-size: 1.25rem; margin: 0 0 0.75rem 0; font-family: var(--font-serif); font-weight: 600;">📅 Case Consulting Calendars</h2>
+      <p class="text-soft" style="font-size:0.9rem; margin-bottom:1.5rem; line-height:1.6; max-width:600px; margin-left:auto; margin-right:auto;">
+        Unlock direct 30-minute prepaid consulting sessions with Dr. Sonny Saggar or Dr. Thomas Webster.<br>
+        <span style="font-weight:600; color:var(--accent); font-size:0.95rem;">WCA Member Discount: $900/month for 8 sessions (down from $1,000/mo public rate).</span><br>
+        <span style="font-size:0.8rem; color:#b91c1c; font-weight:600; display:block; margin-top:0.5rem;">⚠️ Note: We only consult pre-sentencing. Post-sentencing requires prior written probation officer clearances.</span>
+      </p>
+      <a href="/organiser/subscribe.html" class="btn" style="display:inline-block; font-size:0.9rem; padding:0.6rem 2rem;">Unlock Consulting & Calendars ($900/mo)</a>
+    </div>
+  </main>
+</div>
+
+<script src="/js/nav-toggle.js"></script>
+<script>
+  async function loadProfileAndLockState() {
+    try {
+      const res = await fetch('/api/organiser/profile');
+      if (res.ok) {
+        const profile = await res.json();
+        
+        // Populate default phone if exists
+        const phoneInput = document.getElementById("consulting-phone");
+        if (phoneInput && profile.phone) {
+          phoneInput.value = profile.phone;
+        }
+
+        // Show/hide based on subscription status
+        if (profile.subscription_status === 'consulting') {
+          document.getElementById('consulting-scheduler-card').style.display = 'block';
+          document.getElementById('consulting-lock-card').style.display = 'none';
+          document.getElementById('remaining-sessions-count').textContent = profile.consulting_sessions_remaining;
+          loadClientBookings();
+        } else {
+          document.getElementById('consulting-scheduler-card').style.display = 'none';
+          document.getElementById('consulting-lock-card').style.display = 'block';
+        }
+
+        if (profile.role === "admin") {
+          const cog = document.getElementById("admin-cog-link");
+          if (cog) cog.style.display = "block";
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load profile state:', err);
+    }
+  }
+  loadProfileAndLockState();
+
+  // Load user's booked sessions
+  async function loadClientBookings() {
+    const container = document.getElementById("my-bookings-list");
+    if (!container) return;
+    try {
+      const res = await fetch("/api/organiser/booking");
+      if (res.ok) {
+        const data = await res.json();
+        const bookingsList = data.bookings || [];
+        if (bookingsList.length === 0) {
+          container.innerHTML = '<div style="color:var(--text-soft); font-style:italic;">No sessions booked yet.</div>';
+          return;
+        }
+
+        container.innerHTML = bookingsList.map(b => {
+          const isCancelled = b.status === "cancelled";
+          const statusBadge = isCancelled 
+            ? '<span style="color:#b91c1c; font-weight:600; font-size:0.75rem; background:#fee2e2; padding:2px 6px; border-radius:4px;">Cancelled</span>' 
+            : b.status === "requested"
+              ? '<span style="color:#b58900; font-weight:600; font-size:0.75rem; background:#fef3c7; padding:2px 6px; border-radius:4px;">Requested (Pending)</span>'
+              : '<span style="color:#15803d; font-weight:600; font-size:0.75rem; background:#dcfce7; padding:2px 6px; border-radius:4px;">Confirmed</span>';
+          
+          const cancelBtn = isCancelled 
+            ? "" 
+            : `<button onclick="cancelBooking(${b.id}, '${b.booking_date}T${b.booking_time}:00')" class="btn btn--outline" style="font-size:0.7rem; padding:2px 6px; border-color:#fca5a5; color:#b91c1c; margin-left:1rem;">Cancel / Postpone</button>`;
+
+          return `
+            <div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <strong>${b.consultant === "sonny" ? "Dr. Sonny Saggar" : "Dr. Thomas Webster"}</strong>
+                <div style="font-size:0.75rem; color:var(--text-soft); margin-top:2px;">${b.booking_date} at ${b.booking_time} (30m) &bull; ${statusBadge}</div>
+              </div>
+              <div>${cancelBtn}</div>
+            </div>
+          `;
+        }).join("");
+      }
+    } catch {
+      container.innerHTML = '<div>Error loading bookings.</div>';
+    }
+  }
+
+  // Cancel / Postpone Booking
+  async function cancelBooking(bookingId, dateTimeStr) {
+    const bookingDateTime = new Date(dateTimeStr);
+    const now = new Date();
+    const diffHours = (bookingDateTime - now) / (1000 * 60 * 60);
+
+    let confirmMsg = "Are you sure you want to cancel this consulting session?";
+    if (diffHours < 24) {
+      confirmMsg = "⚠️ WARNING: You are cancelling with less than 24 hours notice. The prepaid session balance token will be forfeited. Proceed?";
+    }
+
+    if (!confirm(confirmMsg)) return;
+
+    try {
+      const res = await fetch("/api/organiser/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "cancel", booking_id: bookingId })
+      });
+      if (res.ok) {
+        alert("Booking cancelled successfully.");
+        loadProfileAndLockState();
+      }
+    } catch {
+      alert("Network error.");
+    }
+  }
+  window.cancelBooking = cancelBooking;
+
+  // Book Consulting Session
+  async function bookConsultingSession() {
+    const status = document.getElementById("booking-status");
+    status.style.display = "none";
+
+    const consultant = document.querySelector('input[name="consultant-select"]:checked').value;
+    const phone = document.getElementById("consulting-phone").value.trim();
+    const date = document.getElementById("consulting-date").value;
+    const time = document.getElementById("consulting-time").value;
+
+    if (!phone || !date || !time) {
+      status.textContent = "Please fill in all booking fields.";
+      status.className = "auth-status auth-status--err";
+      status.style.display = "block";
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/organiser/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ consultant, phone, date, time })
+      });
+
+      if (res.ok) {
+        status.textContent = "Consulting session requested successfully! A confirmation email will be sent upon approval.";
+        status.className = "auth-status auth-status--success";
+        status.style.display = "block";
+        loadProfileAndLockState();
+      } else {
+        const d = await res.json();
+        status.textContent = d.error || "Booking failed.";
+        status.className = "auth-status auth-status--err";
+        status.style.display = "block";
+      }
+    } catch {
+      status.textContent = "Network error.";
+      status.className = "auth-status auth-status--err";
+      status.style.display = "block";
+    }
+  }
+  window.bookConsultingSession = bookConsultingSession;
+
+  // Setup lead time min attribute
+  function setupBookingDateLimit() {
+    const input = document.getElementById("consulting-date");
+    if (!input) return;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const minDate = new Date(today);
+    minDate.setDate(today.getDate() + 7);
+    const yyyy = minDate.getFullYear();
+    const mm = String(minDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(minDate.getDate()).padStart(2, '0');
+    input.min = `${yyyy}-${mm}-${dd}`;
+  }
+  setupBookingDateLimit();
+</script>
+</body>
+</html>
