@@ -34,6 +34,10 @@
           <label for="password">Password <span style="font-weight:normal;font-size:0.8em;">(at least 8 characters)</span></label>
           <input type="password" id="password" name="password" autocomplete="new-password" required minlength="8">
         </div>
+        <div class="field">
+          <label for="phone">Phone <span style="font-weight:normal;font-size:0.8em;color:var(--text-soft);">(Optional — if you ever plan to communicate by phone)</span></label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel">
+        </div>
         <div style="display:none !important;" aria-hidden="true">
           <input type="text" name="phone_confirm" tabindex="-1" autocomplete="off">
         </div>
@@ -118,6 +122,7 @@
         body: JSON.stringify({
           email: form.email.value.trim(),
           password: form.password.value,
+          phone: form.phone.value.trim(),
           phone_confirm: form.phone_confirm.value
         })
       });

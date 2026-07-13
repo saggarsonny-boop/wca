@@ -62,35 +62,7 @@
 </header>
 
 <div class="org-layout">
-          <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
+  <!-- Sidebar toggle button - always visible -->
   <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
     <span class="toggle-icon">☰</span>
   </button>
@@ -226,15 +198,84 @@
           <tr style="background:var(--bg-alt); border-bottom:1px solid var(--border); font-weight:600;">
             <th style="padding:8px; text-align:left;">Client</th>
             <th style="padding:8px; text-align:left;">Phone</th>
-            <th style="padding:8px; text-align:left;">Consultant</th>
             <th style="padding:8px; text-align:left;">Date</th>
             <th style="padding:8px; text-align:left;">Time Slot</th>
+            <th style="padding:8px; text-align:center;">Status</th>
+            <th style="padding:8px; text-align:right;">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="5" style="text-align:center; padding:15px; color:var(--text-soft);">Loading scheduled bookings...</td></tr>
+          <tr><td colspan="6" style="text-align:center; padding:15px; color:var(--text-soft);">Loading scheduled bookings...</td></tr>
         </tbody>
       </table>
+    </section>
+
+    <!-- MANAGE CALENDAR AVAILABILITY (BLOCKED SLOTS) -->
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+      <h2>Manage Calendar Availability</h2>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1.05rem;">Block specific dates and times on your calendar to prevent client bookings.</p>
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr 120px; gap:1rem; margin-bottom:1.5rem; align-items:flex-end;">
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Date to Block</label>
+          <input type="date" id="block-date" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Time Slot to Block</label>
+          <select id="block-time" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+            <option value="09:00">09:00 AM</option>
+            <option value="09:30">09:30 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="11:30">11:30 AM</option>
+            <option value="14:00">02:00 PM</option>
+            <option value="14:30">02:30 PM</option>
+            <option value="16:00">04:00 PM</option>
+            <option value="16:30">04:30 PM</option>
+          </select>
+        </div>
+        <div>
+          <button onclick="blockAdminSlot()" class="btn" style="width:100%; padding:9px;">Block Slot</button>
+        </div>
+      </div>
+
+      <h3>Your Blocked Slots</h3>
+      <div id="blocked-slots-list" class="text-soft" style="font-size:0.85rem; margin-top:0.75rem;">Loading blocked slots...</div>
+    </section>
+
+    <!-- ADMIN DIRECT BOOKING PLACEMENT (OVERRIDE ADD) -->
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+      <h2>Direct Booking Placement</h2>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1.05rem;">Bypass plan token checks to add a free session directly to a client's calendar.</p>
+      
+      <div style="display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:1rem; margin-bottom:1rem; align-items:flex-end;">
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Client Email</label>
+          <input type="email" id="override-email" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;" placeholder="client@example.com">
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Client Phone</label>
+          <input type="tel" id="override-phone" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;" placeholder="Contact phone">
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Date</label>
+          <input type="date" id="override-date" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Time Slot</label>
+          <select id="override-time" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+            <option value="09:00">09:00 AM</option>
+            <option value="09:30">09:30 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="11:30">11:30 AM</option>
+            <option value="14:00">02:00 PM</option>
+            <option value="14:30">02:30 PM</option>
+            <option value="16:00">04:00 PM</option>
+            <option value="16:30">04:30 PM</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="submitDirectPlacement()" class="btn" style="width:100%;">Add Direct Booking</button>
+      <div id="override-status" class="auth-status" style="margin-top:0.75rem; display:none; padding:8px; border-radius:4px;"></div>
     </section>
 
     <!-- AI GEO DOMINANCE RADAR CARD -->
@@ -371,32 +412,196 @@
   }
   window.submitAdminReply = submitAdminReply;
 
-  // Load Consulting Bookings
+  // Load Consulting Bookings & Blocked Slots
   async function loadBookings() {
     const tableBody = document.querySelector("#admin-bookings-table tbody");
+    const blockedList = document.getElementById("blocked-slots-list");
     try {
       const res = await fetch("/api/organiser/booking");
       if (res.ok) {
-        const bookings = await res.json();
+        const data = await res.json();
+        const bookings = data.bookings || [];
+        const blocked = data.blocked || [];
+
+        // 1. Render bookings table
         if (bookings.length === 0) {
-          tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:15px; color:var(--text-soft);">No bookings scheduled.</td></tr>';
-          return;
+          tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px; color:var(--text-soft);">No bookings found for your calendar.</td></tr>';
+        } else {
+          tableBody.innerHTML = bookings.map(b => {
+            const isCancelled = b.status === "cancelled";
+            const isConfirmed = b.status === "confirmed";
+            
+            const badge = isCancelled 
+              ? '<span style="color:#b91c1c; font-weight:600; font-size:0.75rem; background:#fee2e2; padding:2px 6px; border-radius:4px;">Cancelled</span>' 
+              : b.status === 'requested'
+                ? '<span style="color:#b58900; font-weight:600; font-size:0.75rem; background:#fef3c7; padding:2px 6px; border-radius:4px;">Requested</span>'
+                : '<span style="color:#15803d; font-weight:600; font-size:0.75rem; background:#dcfce7; padding:2px 6px; border-radius:4px;">Confirmed</span>';
+
+            const approveBtn = b.status === 'requested' 
+              ? `<button onclick="approveBooking(${b.id})" class="btn" style="font-size:0.75rem; padding:3px 6px;">Approve</button>` 
+              : "";
+
+            const moveBtn = isCancelled 
+              ? "" 
+              : `<button onclick="moveBooking(${b.id}, '${b.booking_date}')" class="btn btn--outline" style="font-size:0.75rem; padding:3px 6px; margin-left:0.25rem;">Move</button>`;
+
+            return `
+              <tr style="border-bottom:1px solid var(--border); ${isCancelled ? 'text-decoration: line-through; opacity:0.6;' : ''}">
+                <td style="padding:10px;">${b.client_email}</td>
+                <td style="padding:10px;">${b.phone || '-'}</td>
+                <td style="padding:10px;">${b.booking_date}</td>
+                <td style="padding:10px;">${b.booking_time}</td>
+                <td style="padding:10px; text-align:center;">${badge}</td>
+                <td style="padding:10px; text-align:right;">${approveBtn}${moveBtn}</td>
+              </tr>
+            `;
+          }).join("");
         }
 
-        tableBody.innerHTML = bookings.map(b => `
-          <tr style="border-bottom:1px solid var(--border); ${b.status === 'cancelled' ? 'text-decoration: line-through; opacity:0.6;' : ''}">
-            <td style="padding:10px;">${b.client_email}</td>
-            <td style="padding:10px;">${b.phone || '-'}</td>
-            <td style="padding:10px; font-weight:600;">${b.consultant === 'sonny' ? 'Sonny Saggar' : 'Thomas Webster'}</td>
-            <td style="padding:10px;">${b.booking_date}</td>
-            <td style="padding:10px;">${b.booking_time}</td>
-          </tr>
-        `).join("");
+        // 2. Render blocked slots
+        if (blocked.length === 0) {
+          blockedList.innerHTML = '<div style="color:var(--text-soft); font-style:italic;">No blocked slots configured.</div>';
+        } else {
+          blockedList.innerHTML = blocked.map(bl => `
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding:6px 0;">
+              <span><strong>${bl.blocked_date}</strong> at ${bl.blocked_time}</span>
+              <button onclick="unblockSlot(${bl.id})" style="background:none; border:none; color:#b91c1c; font-size:1.15rem; cursor:pointer;">&times;</button>
+            </div>
+          `).join("");
+        }
       }
     } catch {
-      tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:15px; color:var(--text-soft);">Error loading bookings.</td></tr>';
+      tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px; color:var(--text-soft);">Error loading bookings.</td></tr>';
     }
   }
+
+  async function approveBooking(bookingId) {
+    if (!confirm("Approve this consulting session request and notify the client?")) return;
+    try {
+      const res = await fetch("/api/organiser/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "approve", booking_id: bookingId })
+      });
+      if (res.ok) {
+        alert("Booking confirmed and client notified.");
+        loadBookings();
+      } else {
+        alert("Action failed.");
+      }
+    } catch {
+      alert("Network error.");
+    }
+  }
+  window.approveBooking = approveBooking;
+
+  async function blockAdminSlot() {
+    const date = document.getElementById("block-date").value;
+    const time = document.getElementById("block-time").value;
+
+    if (!date || !time) {
+      alert("Please select date and time.");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/organiser/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "block", date, time })
+      });
+      if (res.ok) {
+        alert("Slot blocked successfully.");
+        loadBookings();
+      }
+    } catch {
+      alert("Network error.");
+    }
+  }
+  window.blockAdminSlot = blockAdminSlot;
+
+  async function unblockSlot(blockId) {
+    if (!confirm("Unblock this slot?")) return;
+    try {
+      const res = await fetch("/api/organiser/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "unblock", block_id: blockId })
+      });
+      if (res.ok) {
+        loadBookings();
+      }
+    } catch {
+      alert("Network error.");
+    }
+  }
+  window.unblockSlot = unblockSlot;
+
+  async function submitDirectPlacement() {
+    const status = document.getElementById("override-status");
+    status.style.display = "none";
+
+    const client_email = document.getElementById("override-email").value.trim();
+    const phone = document.getElementById("override-phone").value.trim();
+    const date = document.getElementById("override-date").value;
+    const time = document.getElementById("override-time").value;
+
+    if (!client_email || !phone || !date || !time) {
+      status.textContent = "All fields are required.";
+      status.className = "auth-status auth-status--err";
+      status.style.display = "block";
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/organiser/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "override_add", client_email, phone, date, time })
+      });
+
+      if (res.ok) {
+        status.textContent = "Direct booking added and client notified.";
+        status.className = "auth-status auth-status--success";
+        status.style.display = "block";
+        loadBookings();
+      } else {
+        const d = await res.json();
+        status.textContent = d.error || "Placement failed.";
+        status.className = "auth-status auth-status--err";
+        status.style.display = "block";
+      }
+    } catch {
+      status.textContent = "Network error.";
+      status.className = "auth-status auth-status--err";
+      status.style.display = "block";
+    }
+  }
+  window.submitDirectPlacement = submitDirectPlacement;
+
+  async function moveBooking(bookingId, currentDate) {
+    const new_date = prompt("Enter new Date (YYYY-MM-DD):", currentDate);
+    if (!new_date) return;
+    const new_time = prompt("Enter new Time Slot (e.g. 09:30 or 14:00):", "09:30");
+    if (!new_time) return;
+
+    try {
+      const res = await fetch("/api/organiser/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "move", booking_id: bookingId, new_date, new_time })
+      });
+      if (res.ok) {
+        alert("Booking rescheduled successfully.");
+        loadBookings();
+      } else {
+        alert("Action failed.");
+      }
+    } catch {
+      alert("Network error.");
+    }
+  }
+  window.moveBooking = moveBooking;
 
   // Draw 6-axis Radar Chart
   function drawRadarChart() {

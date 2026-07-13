@@ -126,35 +126,7 @@
 </header>
 
 <div class="org-layout">
-      <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
-  </button>
-    <!-- Sidebar toggle button - always visible -->
+  <!-- Sidebar toggle button - always visible -->
   <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
     <span class="toggle-icon">☰</span>
   </button>
@@ -562,7 +534,9 @@
           const isCancelled = b.status === "cancelled";
           const statusBadge = isCancelled 
             ? '<span style="color:#b91c1c; font-weight:600; font-size:0.75rem; background:#fee2e2; padding:2px 6px; border-radius:4px;">Cancelled</span>' 
-            : '<span style="color:#15803d; font-weight:600; font-size:0.75rem; background:#dcfce7; padding:2px 6px; border-radius:4px;">Scheduled</span>';
+            : b.status === "requested"
+              ? '<span style="color:#b58900; font-weight:600; font-size:0.75rem; background:#fef3c7; padding:2px 6px; border-radius:4px;">Requested (Pending)</span>'
+              : '<span style="color:#15803d; font-weight:600; font-size:0.75rem; background:#dcfce7; padding:2px 6px; border-radius:4px;">Confirmed</span>';
           
           const cancelBtn = isCancelled 
             ? "" 

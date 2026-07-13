@@ -5,7 +5,7 @@ import { json, err } from "../../_shared/response.js";
 export async function onRequestPost({ request, env }) {
   try {
     const body = await request.json();
-    const { email, password, phone_confirm } = body;
+    const { email, password, phone, phone_confirm } = body;
     if (phone_confirm) {
       return json({ ok: true });
     }
@@ -16,13 +16,11 @@ export async function onRequestPost({ request, env }) {
     const existing = await env.DB.prepare("SELECT id FROM organiser_users WHERE email = ?").bind(emailLower).first();
     if (existing) return err("An account with that email already exists.");
 
-    // Check subscription status via Stripe customer lookup or invitation
-    // For now: open registration; Stripe webhook will update subscription_status
     const origin = new URL(request.url).hostname;
     const { hash, salt } = await hashPassword(password);
     const result = await env.DB.prepare(
-      "INSERT INTO organiser_users (email, password_hash, password_salt, subscription_status, trial_ends_at, origin_domain, created_at) VALUES (?, ?, ?, 'trial', datetime('now', '+7 days'), ?, datetime('now')) RETURNING id"
-    ).bind(emailLower, hash, salt, origin).first();
+      "INSERT INTO organiser_users (email, phone, password_hash, password_salt, subscription_status, trial_ends_at, origin_domain, created_at) VALUES (?, ?, ?, ?, 'trial', datetime('now', '+7 days'), ?, datetime('now')) RETURNING id"
+    ).bind(emailLower, phone || "", hash, salt, origin).first();
 
     const token = await signJWT({ uid: result.id, email: emailLower }, env.JWT_SECRET || "wca-dev-fallback-secret-set-jwt-secret-in-production");
     return json({ ok: true }, 200, { "Set-Cookie": sessionCookie(token) });
