@@ -225,21 +225,59 @@
       </div>
     </div>
 
-    <!-- AI GEO DOMINANCE RADAR CARD -->
-    <div style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+    <!-- PREPAID CONSULTING SCHEDULER (Wired to paywall) -->
+    <div id="consulting-scheduler-card" style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
       <h2 style="font-size: 1.05rem; margin: 0 0 1rem 0; font-family: var(--font-serif); font-weight: 600; display:flex; justify-content:space-between; align-items:center;">
-        <span>📊 AI GEO Dominance Matrix (6-Axis)</span>
-        <a href="/organiser/resources/rag-simulator.html" style="font-size:0.8rem; color:var(--accent); text-decoration:underline;">Open Sandbox & Validator →</a>
+        <span>📅 Prepaid Case Consulting Scheduler</span>
+        <span style="font-size:0.75rem; background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:4px; font-weight:600;">Strictly Non-Legal Advice</span>
       </h2>
-      <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center;">
-        <canvas id="radarCanvas" width="280" height="280" style="max-width:100%; height:auto;"></canvas>
-        <div style="flex:1; min-width:240px;">
-          <h3 style="font-size:0.9rem; margin-bottom:0.5rem; font-weight: 600;">Simulated Telemetry Log</h3>
-          <div id="telemetryConsole" style="background:#1e293b; color:#38bdf8; font-family:monospace; font-size:0.75rem; padding:0.75rem; border-radius:6px; height:180px; overflow-y:auto; line-height:1.4;">
-            <div>[system] Initiating GEO 6-axis substrate audit...</div>
+      <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.15rem;">Book one of your 4 monthly 60-minute prepaid phone/FaceTime sessions with Sonny or Tom.</p>
+      
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:1.15rem;">
+        <!-- Consultant selects with clean CSS fallbacks -->
+        <label style="border:1px solid var(--border); padding:1rem; border-radius:8px; display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+          <input type="radio" name="consultant-select" id="sel-sonny" value="sonny" checked>
+          <div style="width:45px; height:45px; border-radius:50%; background:#2c4a7c; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.95rem;">SS</div>
+          <div>
+            <strong>Sonny Saggar, MD</strong>
+            <div class="text-soft" style="font-size:0.75rem;">35m Federal Sentence</div>
           </div>
+        </label>
+        <label style="border:1px solid var(--border); padding:1rem; border-radius:8px; display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
+          <input type="radio" name="consultant-select" id="sel-webster" value="webster">
+          <div style="width:45px; height:45px; border-radius:50%; background:#4f73b3; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.95rem;">TW</div>
+          <div>
+            <strong>Thomas Webster, MD</strong>
+            <div class="text-soft" style="font-size:0.75rem;">24m Federal Sentence</div>
+          </div>
+        </label>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.15rem;">
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Date (7-day lead required)</label>
+          <input type="date" id="consulting-date" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Time Slot</label>
+          <select id="consulting-time" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+            <option value="09:00">09:00 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="14:00">02:00 PM</option>
+            <option value="16:00">04:00 PM</option>
+          </select>
         </div>
       </div>
+      
+      <button onclick="bookConsultingSession()" class="btn" style="width:100%;">Book Prepaid Session</button>
+      <div id="booking-status" class="auth-status" style="margin-top:0.75rem; display:none; padding:10px; border-radius:6px; font-size:0.9rem;"></div>
+    </div>
+
+    <!-- PREPAID CONSULTING LOCK BLOCK (Visible if not consulting tier) -->
+    <div id="consulting-lock-card" style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center;">
+      <h2 style="font-size: 1.05rem; margin: 0 0 0.5rem 0; font-family: var(--font-serif); font-weight: 600;">📅 Case Consulting Access</h2>
+      <p class="text-soft" style="font-size:0.875rem; margin-bottom:1rem;">Upgrade your plan to unlock direct 60-minute prepaid consulting sessions with Dr. Sonny Saggar or Dr. Thomas Webster.</p>
+      <a href="/organiser/subscribe.html" class="btn" style="display:inline-block; font-size:0.85rem; padding:0.4rem 1rem;">Unlock Consulting & Calendars ($1,000/mo)</a>
     </div>
 
     <!-- COMPACT CARD GRID -->
@@ -435,96 +473,154 @@
   }
   loadReadiness();
 
-  // Draw 6-axis Radar Chart
-  function drawRadarChart() {
-    const canvas = document.getElementById("radarCanvas");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    const center = 140;
-    const radius = 100;
-    const axes = ["GEO", "LEO", "MEO", "PEO", "AEO", "TEO"];
-    const values = [95, 90, 85, 92, 88, 80]; // Actual scores mapped
+  // Load User Profile and handle Consulting Paywall
+  async function loadProfileAndLockState() {
+    const scheduler = document.getElementById("consulting-scheduler-card");
+    const lock = document.getElementById("consulting-lock-card");
+    
+    // Hide both initially
+    if (scheduler) scheduler.style.display = "none";
+    if (lock) lock.style.display = "none";
 
-    ctx.clearRect(0, 0, 280, 280);
+    try {
+      const res = await fetch('/api/organiser/profile');
+      if (res.ok) {
+        const profile = await res.json();
+        
+        // Show scheduler if user has paid consulting plan or is admin
+        if (profile.subscription_status === "consulting" || profile.role === "admin") {
+          if (scheduler) scheduler.style.display = "block";
+        } else {
+          if (lock) lock.style.display = "block";
+        }
 
-    // Draw concentric rings
-    ctx.strokeStyle = "#e2e8f0";
-    ctx.lineWidth = 1;
-    for (let r = 1; r <= 4; r++) {
-      ctx.beginPath();
-      ctx.arc(center, center, (radius / 4) * r, 0, 2 * Math.PI);
-      ctx.stroke();
+        // Show admin cog if admin
+        if (profile.role === "admin") {
+          const cog = document.getElementById("admin-cog-link");
+          if (cog) cog.style.display = "block";
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load profile state:', err);
     }
-
-    // Draw axes lines and labels
-    ctx.fillStyle = "#64748b";
-    ctx.font = "11px sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    const coords = [];
-    axes.forEach((axis, i) => {
-      const angle = (Math.PI / 3) * i - Math.PI / 2;
-      const x = center + radius * Math.cos(angle);
-      const y = center + radius * Math.sin(angle);
-
-      // Axis line
-      ctx.beginPath();
-      ctx.moveTo(center, center);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-
-      // Label positioning
-      const labelX = center + (radius + 20) * Math.cos(angle);
-      const labelY = center + (radius + 15) * Math.sin(angle);
-      ctx.fillText(axis, labelX, labelY);
-
-      // Score coordinate
-      const valRatio = values[i] / 100;
-      const valX = center + radius * valRatio * Math.cos(angle);
-      const valY = center + radius * valRatio * Math.sin(angle);
-      coords.push({ x: valX, y: valY });
-    });
-
-    // Draw filled polygon matching values
-    ctx.fillStyle = "rgba(44, 74, 124, 0.4)";
-    ctx.strokeStyle = "rgba(44, 74, 124, 1)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(coords[0].x, coords[0].y);
-    for (let i = 1; i < coords.length; i++) {
-      ctx.lineTo(coords[i].x, coords[i].y);
-    }
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
   }
+  loadProfileAndLockState();
 
-  drawRadarChart();
+  // Book prepaid consulting session
+  async function bookConsultingSession() {
+    const status = document.getElementById("booking-status");
+    status.style.display = "none";
 
-  // Simulated Telemetry logs
-  const logsConsole = document.getElementById("telemetryConsole");
-  const botLogs = [
-    "[perplexitybot] Fetched index.html - 200 OK (0.23s)",
-    "[deepseekbot] Indexed Dataset schema node - Success",
-    "[openai-searchbot] Verified author Dr. Sonny Saggar (High Trust)",
-    "[claudebot] Read llms.txt context structure - Parsed successfully",
-    "[google-extended] Scraped raw.md data specs - RAG verified",
-    "[system] Recalculating latent density... LEO Score: 90/100",
-    "[system] Running Page Budget checklist... Pass",
-    "[system] Syncing brand nodes to vector DB... Done"
-  ];
+    const consultant = document.querySelector('input[name="consultant-select"]:checked')?.value;
+    const date = document.getElementById("consulting-date").value;
+    const time = document.getElementById("consulting-time").value;
 
-  let logIndex = 0;
-  setInterval(() => {
-    if (!logsConsole) return;
-    const log = botLogs[logIndex % botLogs.length];
-    const item = document.createElement("div");
-    item.textContent = `[${new Date().toLocaleTimeString()}] ${log}`;
-    logsConsole.appendChild(item);
-    logsConsole.scrollTop = logsConsole.scrollHeight;
-    logIndex++;
-  }, 3500);
+    if (!date || !time) {
+      status.textContent = "Please select both a date and time slot.";
+      status.className = "auth-status auth-status--err";
+      status.style.display = "block";
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/organiser/booking', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ consultant, date, time })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        status.textContent = "Consulting session booked successfully! A zoom link will be emailed shortly.";
+        status.className = "auth-status auth-status--success";
+        status.style.display = "block";
+      } else {
+        status.textContent = data.error || "Booking failed.";
+        status.className = "auth-status auth-status--err";
+        status.style.display = "block";
+      }
+    } catch {
+      status.textContent = "Network error. Please try again.";
+      status.className = "auth-status auth-status--err";
+      status.style.display = "block";
+    }
+  }
+  window.bookConsultingSession = bookConsultingSession;
+
+  function toggleSupportModal() {
+    const modal = document.getElementById("support-modal");
+    modal.style.display = modal.style.display === "none" ? "flex" : "none";
+    document.getElementById("support-status").style.display = "none";
+  }
+  window.toggleSupportModal = toggleSupportModal;
+
+  async function submitSupportTicket() {
+    const status = document.getElementById("support-status");
+    status.style.display = "none";
+
+    const subject = document.getElementById("support-subject").value.trim();
+    const message = document.getElementById("support-message").value.trim();
+
+    if (!subject || !message) {
+      status.textContent = "Subject and Message are required.";
+      status.className = "auth-status auth-status--err";
+      status.style.display = "block";
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/organiser/support", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject, message })
+      });
+
+      if (res.ok) {
+        status.textContent = "Support ticket submitted successfully! Check your email for replies.";
+        status.className = "auth-status auth-status--success";
+        status.style.display = "block";
+        document.getElementById("support-subject").value = "";
+        document.getElementById("support-message").value = "";
+      } else {
+        status.textContent = "Failed to submit support ticket.";
+        status.className = "auth-status auth-status--err";
+        status.style.display = "block";
+      }
+    } catch {
+      status.textContent = "Network error.";
+      status.className = "auth-status auth-status--err";
+      status.style.display = "block";
+    }
+  }
+  window.submitSupportTicket = submitSupportTicket;
 </script>
+
+<!-- Support Desk Toggle Button -->
+<button onclick="toggleSupportModal()" style="position:fixed; bottom: 80px; right: 20px; background: var(--accent); color: #fff; border: none; border-radius: 50px; padding: 0.6rem 1.2rem; font-weight: 600; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor:pointer; z-index:999;">💬 Contact Support</button>
+
+<!-- Support Feedback Modal -->
+<div id="support-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:9999; justify-content:center; align-items:center; padding:1.5rem;">
+  <div style="background:#fff; border:1px solid var(--border); padding:2rem; border-radius:12px; max-width:500px; width:100%; box-shadow:0 10px 25px rgba(0,0,0,0.1); position:relative;">
+    <h2 style="font-family:var(--font-serif); font-size:1.3rem; margin-bottom:0.5rem; display:flex; justify-content:space-between; align-items:center; margin-top:0;">
+      <span>💬 Contact Case Support</span>
+      <button onclick="toggleSupportModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-soft); line-height:1;">&times;</button>
+    </h2>
+    <p class="text-soft" style="font-size:0.85rem; margin-bottom:1.5rem;">Need assistance? Submit a question. Sonny or Tom will reply via email shortly.</p>
+    
+    <div style="margin-bottom:1rem;">
+      <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem; text-align:left;">Subject</label>
+      <input type="text" id="support-subject" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;" placeholder="e.g. Booking inquiry, technical help...">
+    </div>
+    
+    <div style="margin-bottom:1.5rem;">
+      <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem; text-align:left;">Message</label>
+      <textarea id="support-message" style="width:100%; height:120px; padding:8px; border:1px solid var(--border); border-radius:4px; font-family:sans-serif;" placeholder="Type your message details here..."></textarea>
+    </div>
+
+    <button onclick="submitSupportTicket()" class="btn" style="width:100%;">Submit Support Request</button>
+    <div id="support-status" class="auth-status" style="margin-top:0.75rem; display:none; padding:8px; border-radius:4px; font-size:0.85rem;"></div>
+  </div>
+</div>
+
 </body>
 </html>

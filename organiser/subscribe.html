@@ -86,6 +86,20 @@
           <button class="btn btn--outline" style="width:100%;" data-plan="attorney" id="btn-attorney">Get Attorney Plan</button>
         </div>
 
+        <div class="price-card">
+          <div class="price-card__name">Prepaid Consulting</div>
+          <div class="price-card__amount">$1,000</div>
+          <div class="price-card__period">per month, 4 calls (60m)</div>
+          <ul class="price-card__features">
+            <li>4 sessions of 60 minutes (once a week) with Sonny or Tom</li>
+            <li>Select consultant and slot directly from calendar</li>
+            <li>Secured prepay with 7-day booking lead time</li>
+            <li>Full access to WCA Case Organizer tools</li>
+            <li style="font-weight:600; color:#b91c1c;">Strictly non-legal case consulting only</li>
+          </ul>
+          <button class="btn btn--outline" style="width:100%;" data-plan="consulting" id="btn-consulting">Get Consulting Plan</button>
+        </div>
+
       </div>
 
       <p class="text-soft" style="margin-top:1.5rem; font-size:0.85rem;">
@@ -183,6 +197,7 @@
   document.getElementById("btn-monthly").addEventListener("click", () => startCheckout("monthly"));
   document.getElementById("btn-lifetime").addEventListener("click", () => startCheckout("lifetime"));
   document.getElementById("btn-attorney").addEventListener("click", () => startCheckout("attorney"));
+  document.getElementById("btn-consulting").addEventListener("click", () => startCheckout("consulting"));
 
   // Apply Attorney Firm Code
   const btnApplyCode = document.getElementById("btn-apply-code");

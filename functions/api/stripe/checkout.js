@@ -11,6 +11,8 @@ export async function onRequestPost({ request, env }) {
       priceId = env.STRIPE_PRICE_ID_LIFETIME;
     } else if (plan === "attorney") {
       priceId = env.STRIPE_PRICE_ID_ATTORNEY || "price_1TnrW3PIZtoQZOG13qoIxrSt"; // Fallback placeholder
+    } else if (plan === "consulting") {
+      priceId = env.STRIPE_PRICE_ID_CONSULTING || "price_1TnrW3PIZtoQZOG13qoIxrSt"; // Use consulting secret or fallback
     } else {
       priceId = env.STRIPE_PRICE_ID_MONTHLY;
     }

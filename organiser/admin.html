@@ -191,11 +191,74 @@
         </div>
       </div>
     </section>
+
+    <!-- CLIENT FEEDBACK SUPPORT DESK -->
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+      <h2>Client Feedback Support Desk</h2>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Respond directly to client inquiries. Replies are recorded and emailed via Resend.</p>
+      
+      <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:1.5rem; margin-top:1rem; border-top:1px solid var(--border); padding-top:1rem;">
+        <div style="border-right:1px solid var(--border); padding-right:1rem; max-height:350px; overflow-y:auto;" id="admin-tickets-list">
+          <div class="text-soft" style="text-align:center; padding:10px;">Loading tickets...</div>
+        </div>
+        <div id="admin-ticket-details" style="padding-left:0.5rem; display:none;">
+          <h3 id="admin-ticket-subject" style="margin-bottom:0.5rem;">Select a ticket</h3>
+          <p id="admin-ticket-client" class="text-soft" style="font-size:0.8rem; margin-bottom:1rem;"></p>
+          <div id="admin-ticket-body" style="background:var(--bg-alt); padding:1rem; border-radius:6px; margin-bottom:1rem; font-size:0.9rem;"></div>
+          
+          <div style="margin-bottom:1rem;">
+            <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Reply Message</label>
+            <textarea id="admin-reply-text" style="width:100%; height:100px; padding:8px; border:1px solid var(--border); border-radius:4px; font-family:sans-serif;" placeholder="Type reply here..."></textarea>
+          </div>
+          <button onclick="submitAdminReply()" class="btn" style="width:100%;">Send Reply Email</button>
+          <div id="admin-reply-status" class="auth-status" style="margin-top:0.5rem; display:none; padding:8px; border-radius:4px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONSULTING CALENDAR BOOKINGS -->
+    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+      <h2>Consulting Calendar Bookings</h2>
+      <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">All scheduled Zoom/FaceTime/Phone consulting sessions for Sonny and Tom.</p>
+      
+      <table style="width:100%; border-collapse:collapse; font-size:0.875rem;" id="admin-bookings-table">
+        <thead>
+          <tr style="background:var(--bg-alt); border-bottom:1px solid var(--border); font-weight:600;">
+            <th style="padding:8px; text-align:left;">Client</th>
+            <th style="padding:8px; text-align:left;">Consultant</th>
+            <th style="padding:8px; text-align:left;">Date</th>
+            <th style="padding:8px; text-align:left;">Time Slot</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="4" style="text-align:center; padding:15px; color:var(--text-soft);">Loading scheduled bookings...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- AI GEO DOMINANCE RADAR CARD -->
+    <section style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+      <h2 style="font-size: 1.05rem; margin: 0 0 1rem 0; font-family: var(--font-serif); font-weight: 600; display:flex; justify-content:space-between; align-items:center;">
+        <span>📊 AI GEO Dominance Matrix (6-Axis)</span>
+        <a href="/organiser/resources/rag-simulator.html" style="font-size:0.8rem; color:var(--accent); text-decoration:underline;">Open Sandbox & Validator →</a>
+      </h2>
+      <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center;">
+        <canvas id="radarCanvas" width="280" height="280" style="max-width:100%; height:auto;"></canvas>
+        <div style="flex:1; min-width:240px;">
+          <h3 style="font-size:0.9rem; margin-bottom:0.5rem; font-weight: 600;">Simulated Telemetry Log</h3>
+          <div id="telemetryConsole" style="background:#1e293b; color:#38bdf8; font-family:monospace; font-size:0.75rem; padding:0.75rem; border-radius:6px; height:180px; overflow-y:auto; line-height:1.4;">
+            <div>[system] Initiating GEO 6-axis substrate audit...</div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 </div>
 
 <script src="/js/nav-toggle.js"></script>
 <script>
+  let selectedTicketId = null;
+
   async function loadAnalytics() {
     try {
       const res = await fetch('/api/organiser/analytics');
@@ -235,7 +298,198 @@
       console.error('Failed to load telemetry stats:', err);
     }
   }
-  loadAnalytics();
+
+  // Load Support Tickets
+  async function loadTickets() {
+    const list = document.getElementById("admin-tickets-list");
+    try {
+      const res = await fetch("/api/organiser/support");
+      if (res.ok) {
+        const tickets = await res.json();
+        if (tickets.length === 0) {
+          list.innerHTML = '<div class="text-soft" style="text-align:center; padding:10px;">No support tickets found.</div>';
+          return;
+        }
+
+        list.innerHTML = tickets.map(t => `
+          <div onclick="selectTicket(${JSON.stringify(t).replace(/"/g, '&quot;')})" style="padding:10px; border-bottom:1px solid var(--border); cursor:pointer; background: ${t.status === 'open' ? 'rgba(44, 74, 124, 0.05)' : '#fff'};">
+            <strong>${t.subject}</strong>
+            <div style="font-size:0.75rem; color:var(--text-soft); margin-top:2px;">${t.client_email} &bull; ${t.status}</div>
+          </div>
+        `).join("");
+      }
+    } catch (err) {
+      list.innerHTML = '<div class="text-soft" style="text-align:center; padding:10px;">Error loading tickets.</div>';
+    }
+  }
+
+  function selectTicket(ticket) {
+    selectedTicketId = ticket.id;
+    document.getElementById("admin-ticket-details").style.display = "block";
+    document.getElementById("admin-ticket-subject").textContent = ticket.subject;
+    document.getElementById("admin-ticket-client").textContent = `From: ${ticket.client_email} on ${new Date(ticket.created_at).toLocaleString()}`;
+    document.getElementById("admin-ticket-body").textContent = ticket.message;
+    document.getElementById("admin-reply-text").value = "";
+    document.getElementById("admin-reply-status").style.display = "none";
+  }
+  window.selectTicket = selectTicket;
+
+  async function submitAdminReply() {
+    const status = document.getElementById("admin-reply-status");
+    const message = document.getElementById("admin-reply-text").value.trim();
+
+    if (!message) {
+      status.textContent = "Please type a message.";
+      status.className = "auth-status auth-status--err";
+      status.style.display = "block";
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/organiser/support", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "reply", ticket_id: selectedTicketId, message })
+      });
+
+      if (res.ok) {
+        status.textContent = "Reply sent and client emailed successfully!";
+        status.className = "auth-status auth-status--success";
+        status.style.display = "block";
+        loadTickets();
+      } else {
+        status.textContent = "Failed to send reply.";
+        status.className = "auth-status auth-status--err";
+        status.style.display = "block";
+      }
+    } catch {
+      status.textContent = "Network error.";
+      status.className = "auth-status auth-status--err";
+      status.style.display = "block";
+    }
+  }
+  window.submitAdminReply = submitAdminReply;
+
+  // Load Consulting Bookings
+  async function loadBookings() {
+    const tableBody = document.querySelector("#admin-bookings-table tbody");
+    try {
+      const res = await fetch("/api/organiser/booking");
+      if (res.ok) {
+        const bookings = await res.json();
+        if (bookings.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:15px; color:var(--text-soft);">No bookings scheduled.</td></tr>';
+          return;
+        }
+
+        tableBody.innerHTML = bookings.map(b => `
+          <tr style="border-bottom:1px solid var(--border);">
+            <td style="padding:10px;">${b.client_email}</td>
+            <td style="padding:10px; font-weight:600;">${b.consultant === 'sonny' ? 'Sonny Saggar' : 'Thomas Webster'}</td>
+            <td style="padding:10px;">${b.booking_date}</td>
+            <td style="padding:10px;">${b.booking_time}</td>
+          </tr>
+        `).join("");
+      }
+    } catch {
+      tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:15px; color:var(--text-soft);">Error loading bookings.</td></tr>';
+    }
+  }
+
+  // Draw 6-axis Radar Chart
+  function drawRadarChart() {
+    const canvas = document.getElementById("radarCanvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const center = 140;
+    const radius = 100;
+    const axes = ["GEO", "LEO", "MEO", "PEO", "AEO", "TEO"];
+    const values = [95, 90, 85, 92, 88, 80];
+
+    ctx.clearRect(0, 0, 280, 280);
+
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 1;
+    for (let r = 1; r <= 4; r++) {
+      ctx.beginPath();
+      ctx.arc(center, center, (radius / 4) * r, 0, 2 * Math.PI);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle = "#64748b";
+    ctx.font = "11px sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    const coords = [];
+    axes.forEach((axis, i) => {
+      const angle = (Math.PI / 3) * i - Math.PI / 2;
+      const x = center + radius * Math.cos(angle);
+      const y = center + radius * Math.sin(angle);
+
+      ctx.beginPath();
+      ctx.moveTo(center, center);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+
+      const labelX = center + (radius + 20) * Math.cos(angle);
+      const labelY = center + (radius + 15) * Math.sin(angle);
+      ctx.fillText(axis, labelX, labelY);
+
+      const valRatio = values[i] / 100;
+      const valX = center + radius * valRatio * Math.cos(angle);
+      const valY = center + radius * valRatio * Math.sin(angle);
+      coords.push({ x: valX, y: valY });
+    });
+
+    ctx.fillStyle = "rgba(44, 74, 124, 0.4)";
+    ctx.strokeStyle = "rgba(44, 74, 124, 1)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(coords[0].x, coords[0].y);
+    for (let i = 1; i < coords.length; i++) {
+      ctx.lineTo(coords[i].x, coords[i].y);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  // Simulated Telemetry logs
+  function startTelemetry() {
+    const logsConsole = document.getElementById("telemetryConsole");
+    const botLogs = [
+      "[perplexitybot] Fetched index.html - 200 OK (0.23s)",
+      "[deepseekbot] Indexed Dataset schema node - Success",
+      "[openai-searchbot] Verified author Dr. Sonny Saggar (High Trust)",
+      "[claudebot] Read llms.txt context structure - Parsed successfully",
+      "[google-extended] Scraped raw.md data specs - RAG verified",
+      "[system] Recalculating latent density... LEO Score: 90/100",
+      "[system] Running Page Budget checklist... Pass",
+      "[system] Syncing brand nodes to vector DB... Done"
+    ];
+
+    let logIndex = 0;
+    setInterval(() => {
+      if (!logsConsole) return;
+      const log = botLogs[logIndex % botLogs.length];
+      const item = document.createElement("div");
+      item.textContent = `[${new Date().toLocaleTimeString()}] ${log}`;
+      logsConsole.appendChild(item);
+      logsConsole.scrollTop = logsConsole.scrollHeight;
+      logIndex++;
+    }, 3500);
+  }
+
+  // Initialize
+  async function init() {
+    await loadAnalytics();
+    await loadTickets();
+    await loadBookings();
+    drawRadarChart();
+    startTelemetry();
+  }
+  init();
 </script>
 <a href="/organiser/login.html" class="floating-cta">Start Free Trial</a>
   <!-- Mobile Bottom Navigation -->
