@@ -228,13 +228,14 @@
     <!-- PREPAID CONSULTING SCHEDULER (Wired to paywall) -->
     <div id="consulting-scheduler-card" style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
       <h2 style="font-size: 1.05rem; margin: 0 0 1rem 0; font-family: var(--font-serif); font-weight: 600; display:flex; justify-content:space-between; align-items:center;">
-        <span>📅 Prepaid Case Consulting Scheduler</span>
+        <span>📅 Case Consulting Calendar</span>
         <span style="font-size:0.75rem; background:#fee2e2; color:#b91c1c; padding:2px 6px; border-radius:4px; font-weight:600;">Strictly Non-Legal Advice</span>
       </h2>
-      <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.15rem;">Book one of your 4 monthly 60-minute prepaid phone/FaceTime sessions with Sonny or Tom.</p>
+      <p class="text-soft" style="font-size:0.875rem; margin-bottom:1rem;">
+        Sessions Remaining: <strong id="remaining-sessions-count" style="color:var(--accent);">8</strong> / 8
+      </p>
       
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:1.15rem;">
-        <!-- Consultant selects with clean CSS fallbacks -->
         <label style="border:1px solid var(--border); padding:1rem; border-radius:8px; display:flex; align-items:center; gap:0.75rem; cursor:pointer;">
           <input type="radio" name="consultant-select" id="sel-sonny" value="sonny" checked>
           <div style="width:45px; height:45px; border-radius:50%; background:#2c4a7c; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.95rem;">SS</div>
@@ -253,31 +254,50 @@
         </label>
       </div>
 
+      <div style="display:grid; grid-template-columns:1fr; gap:1rem; margin-bottom:1.15rem;">
+        <div>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Direct Phone/FaceTime Number</label>
+          <input type="tel" id="consulting-phone" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;" placeholder="e.g. +1 (555) 019-9023">
+        </div>
+      </div>
+
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.15rem;">
         <div>
           <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Date (7-day lead required)</label>
           <input type="date" id="consulting-date" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
         </div>
         <div>
-          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Time Slot</label>
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Time Slot (30m sessions)</label>
           <select id="consulting-time" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
             <option value="09:00">09:00 AM</option>
+            <option value="09:30">09:30 AM</option>
             <option value="11:00">11:00 AM</option>
+            <option value="11:30">11:30 AM</option>
             <option value="14:00">02:00 PM</option>
+            <option value="14:30">02:30 PM</option>
             <option value="16:00">04:00 PM</option>
+            <option value="16:30">04:30 PM</option>
           </select>
         </div>
       </div>
       
-      <button onclick="bookConsultingSession()" class="btn" style="width:100%;">Book Prepaid Session</button>
+      <button onclick="bookConsultingSession()" class="btn" style="width:100%;">Book Prepaid 30m Session</button>
       <div id="booking-status" class="auth-status" style="margin-top:0.75rem; display:none; padding:10px; border-radius:6px; font-size:0.9rem;"></div>
+
+      <div id="my-bookings-section" style="margin-top:2rem; border-top:1px solid var(--border); padding-top:1.5rem;">
+        <h3 style="font-size:0.95rem; margin-bottom:0.75rem;">Your Scheduled Sessions</h3>
+        <div id="my-bookings-list" class="text-soft" style="font-size:0.85rem;">Loading scheduled sessions...</div>
+      </div>
     </div>
 
     <!-- PREPAID CONSULTING LOCK BLOCK (Visible if not consulting tier) -->
-    <div id="consulting-lock-card" style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center;">
-      <h2 style="font-size: 1.05rem; margin: 0 0 0.5rem 0; font-family: var(--font-serif); font-weight: 600;">📅 Case Consulting Access</h2>
-      <p class="text-soft" style="font-size:0.875rem; margin-bottom:1rem;">Upgrade your plan to unlock direct 60-minute prepaid consulting sessions with Dr. Sonny Saggar or Dr. Thomas Webster.</p>
-      <a href="/organiser/subscribe.html" class="btn" style="display:inline-block; font-size:0.85rem; padding:0.4rem 1rem;">Unlock Consulting & Calendars ($1,000/mo)</a>
+    <div id="consulting-lock-card" style="background: #fff; border: 1px solid var(--border); padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.02); text-align: center;">
+      <h2 style="font-size: 1.15rem; margin: 0 0 0.5rem 0; font-family: var(--font-serif); font-weight: 600;">📅 Case Consulting Calendars</h2>
+      <p class="text-soft" style="font-size:0.9rem; margin-bottom:1.5rem; line-height:1.5;">
+        Unlock direct 30-minute prepaid consulting sessions with Dr. Sonny Saggar or Dr. Thomas Webster.<br>
+        <span style="font-weight:600; color:var(--accent);">WCA Member Discount: $900/month for 8 sessions (down from $1,000/mo public rate).</span>
+      </p>
+      <a href="/organiser/subscribe.html" class="btn" style="display:inline-block; font-size:0.9rem; padding:0.5rem 1.5rem;">Unlock Consulting & Calendars ($900/mo)</a>
     </div>
 
     <!-- COMPACT CARD GRID -->
@@ -473,6 +493,20 @@
   }
   loadReadiness();
 
+  // Setup Consulting calendar lead restrictions dynamically
+  function setupBookingDateLimit() {
+    const input = document.getElementById("consulting-date");
+    if (!input) return;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const minDate = new Date(today);
+    minDate.setDate(today.getDate() + 7);
+    const yyyy = minDate.getFullYear();
+    const mm = String(minDate.getMonth() + 1).padStart(2, '0');
+    const dd = String(minDate.getDate()).padStart(2, '0');
+    input.min = `${yyyy}-${mm}-${dd}`;
+  }
+
   // Load User Profile and handle Consulting Paywall
   async function loadProfileAndLockState() {
     const scheduler = document.getElementById("consulting-scheduler-card");
@@ -490,6 +524,12 @@
         // Show scheduler if user has paid consulting plan or is admin
         if (profile.subscription_status === "consulting" || profile.role === "admin") {
           if (scheduler) scheduler.style.display = "block";
+          document.getElementById("remaining-sessions-count").textContent = profile.consulting_sessions_remaining;
+          if (profile.phone) {
+            document.getElementById("consulting-phone").value = profile.phone;
+          }
+          setupBookingDateLimit();
+          loadClientBookings();
         } else {
           if (lock) lock.style.display = "block";
         }
@@ -506,17 +546,88 @@
   }
   loadProfileAndLockState();
 
+  // Load user's booked sessions
+  async function loadClientBookings() {
+    const container = document.getElementById("my-bookings-list");
+    try {
+      const res = await fetch("/api/organiser/booking");
+      if (res.ok) {
+        const bookings = await res.json();
+        if (bookings.length === 0) {
+          container.innerHTML = '<div style="color:var(--text-soft); font-style:italic;">No sessions booked yet.</div>';
+          return;
+        }
+
+        container.innerHTML = bookings.map(b => {
+          const isCancelled = b.status === "cancelled";
+          const statusBadge = isCancelled 
+            ? '<span style="color:#b91c1c; font-weight:600; font-size:0.75rem; background:#fee2e2; padding:2px 6px; border-radius:4px;">Cancelled</span>' 
+            : '<span style="color:#15803d; font-weight:600; font-size:0.75rem; background:#dcfce7; padding:2px 6px; border-radius:4px;">Scheduled</span>';
+          
+          const cancelBtn = isCancelled 
+            ? "" 
+            : `<button onclick="cancelBooking(${b.id}, '${b.booking_date}T${b.booking_time}:00')" class="btn btn--outline" style="font-size:0.7rem; padding:2px 6px; border-color:#fca5a5; color:#b91c1c; margin-left:1rem;">Cancel / Postpone</button>`;
+
+          return `
+            <div style="padding:10px 0; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <strong>${b.consultant === "sonny" ? "Dr. Sonny Saggar" : "Dr. Thomas Webster"}</strong>
+                <div style="font-size:0.75rem; color:var(--text-soft); margin-top:2px;">${b.booking_date} at ${b.booking_time} (30m) &bull; ${statusBadge}</div>
+              </div>
+              <div>${cancelBtn}</div>
+            </div>
+          `;
+        }).join("");
+      }
+    } catch {
+      container.innerHTML = '<div>Error loading bookings.</div>';
+    }
+  }
+
+  // Cancel / Postpone Booking
+  async function cancelBooking(bookingId, dateTimeStr) {
+    const bookingDateTime = new Date(dateTimeStr);
+    const now = new Date();
+    const diffHours = (bookingDateTime - now) / (1000 * 60 * 60);
+
+    let confirmMsg = "Are you sure you want to cancel this consulting session?";
+    if (diffHours < 24) {
+      confirmMsg = "⚠️ WARNING: Cancellations require at least 24 hours notice. Cancelling now will count as a consumed session (no refund). Proceed?";
+    }
+
+    if (!confirm(confirmMsg)) return;
+
+    try {
+      const res = await fetch("/api/organiser/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "cancel", booking_id: bookingId })
+      });
+
+      if (res.ok) {
+        alert("Session cancelled successfully.");
+        loadProfileAndLockState();
+      } else {
+        alert("Failed to cancel session.");
+      }
+    } catch {
+      alert("Network error.");
+    }
+  }
+  window.cancelBooking = cancelBooking;
+
   // Book prepaid consulting session
   async function bookConsultingSession() {
     const status = document.getElementById("booking-status");
     status.style.display = "none";
 
     const consultant = document.querySelector('input[name="consultant-select"]:checked')?.value;
+    const phone = document.getElementById("consulting-phone").value.trim();
     const date = document.getElementById("consulting-date").value;
     const time = document.getElementById("consulting-time").value;
 
-    if (!date || !time) {
-      status.textContent = "Please select both a date and time slot.";
+    if (!phone || !date || !time) {
+      status.textContent = "Phone number, Date, and Time slot are required.";
       status.className = "auth-status auth-status--err";
       status.style.display = "block";
       return;
@@ -526,14 +637,15 @@
       const res = await fetch('/api/organiser/booking', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ consultant, date, time })
+        body: JSON.stringify({ consultant, phone, date, time })
       });
 
       const data = await res.json();
       if (res.ok) {
-        status.textContent = "Consulting session booked successfully! A zoom link will be emailed shortly.";
+        status.textContent = "Consulting session booked successfully! Sonny and Tom have been notified. A Zoom link will be emailed shortly.";
         status.className = "auth-status auth-status--success";
         status.style.display = "block";
+        loadProfileAndLockState();
       } else {
         status.textContent = data.error || "Booking failed.";
         status.className = "auth-status auth-status--err";

@@ -44,13 +44,15 @@ export async function onRequestPost({ request, env }) {
       const userId = session.metadata?.user_id;
       const customerId = session.customer;
       const mode = session.mode;
+      const plan = session.metadata?.plan || "active";
 
       if (!userId) return json({ received: true });
 
       if (mode === "subscription") {
+        const sessionsRemaining = plan === "consulting" ? 8 : 0;
         await env.DB.prepare(
-          "UPDATE organiser_users SET subscription_status = 'active', stripe_customer_id = ?, updated_at = datetime('now') WHERE id = ?"
-        ).bind(customerId, userId).run();
+          "UPDATE organiser_users SET subscription_status = ?, consulting_sessions_remaining = ?, stripe_customer_id = ?, updated_at = datetime('now') WHERE id = ?"
+        ).bind(plan, sessionsRemaining, customerId, userId).run();
       } else if (mode === "payment") {
         await env.DB.prepare(
           "UPDATE organiser_users SET subscription_status = 'lifetime', stripe_customer_id = ?, updated_at = datetime('now') WHERE id = ?"

@@ -30,6 +30,7 @@ export async function onRequestPost({ request, env }) {
       cancel_url: `${origin}/organiser/subscribe.html`,
       "metadata[user_id]": String(user.uid),
       "metadata[origin_domain]": originHost,
+      "metadata[plan]": plan,
       "customer_email": user.email,
     });
 
