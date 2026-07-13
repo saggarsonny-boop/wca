@@ -12,6 +12,24 @@ export async function onRequestGet({ request, env }) {
 
     // Generate dynamic XML url blocks
     let dynamicUrls = "";
+    
+    // Add FAQ
+    dynamicUrls += `  <url>
+    <loc>https://whitecollaracademy.com/faq</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>\n`;
+
+    // Add States
+    const states = ["illinois", "texas", "california", "florida", "newyork"];
+    states.forEach(st => {
+      dynamicUrls += `  <url>
+    <loc>https://whitecollaracademy.com/sentencing/${st}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>\n`;
+    });
+
     if (articles.results && articles.results.length > 0) {
       articles.results.forEach(art => {
         const dateStr = art.published_at ? art.published_at.split(" ")[0] : new Date().toISOString().split("T")[0];

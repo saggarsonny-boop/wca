@@ -1,33 +1,52 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "WCA AI-Native Query Feed API",
-    "description": "Structured AI query feed matching Case Organizer profiles and telemetry logs.",
+    "title": "White Collar Academy AI Query API",
+    "description": "Secure retrieval endpoint for federal sentencing guidelines, custody point tables, and public mitigation guides.",
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "https://whitecollaracademy.com"
+    }
+  ],
   "paths": {
     "/api/ai/query": {
-      "post": {
-        "summary": "AI Model Query Feed",
-        "description": "Query Case Organizer metrics using JSON filters and score thresholds.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "keywords": { "type": "string" },
-                  "filters": { "type": "object" },
-                  "score_threshold": { "type": "number" }
+      "get": {
+        "summary": "Query the RAG database",
+        "description": "Returns structured JSON summaries of federal guidelines matching search keywords.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Keywords or search phrases",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of relevant mitigation topics and answers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "question": {
+                        "type": "string"
+                      },
+                      "answer": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "JSON summaries of Case Organizer records"
           }
         }
       }
