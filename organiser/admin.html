@@ -63,8 +63,8 @@
 
 <div class="org-layout">
   <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
+  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar" style="display:flex; align-items:center; gap:5px; padding:6px 10px; border-radius:20px; background:#fff; border:1px solid var(--border); box-shadow:0 2px 5px rgba(0,0,0,0.1); font-weight:600; font-size:0.85rem; color:var(--text); cursor:pointer;">
+    <span class="toggle-icon">☰</span> <span>Menu</span>
   </button>
   <aside class="org-sidebar">
     <nav aria-label="Organiser navigation">
@@ -100,11 +100,11 @@
   </aside>
 
   <main id="main-content" class="org-main">
-    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">Moderation Review Queue</h1>
-    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Review flagged messages, delete content, and manage user suspensions.</p>
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;" id="admin-console-title">Dr. Sonny Saggar's Admin Console</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Vetted administrative management panel.</p>
 
     <!-- FLAGGED MESSAGES TABLE -->
-    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+    <section id="admin-moderation-section" style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
       <h2>Flagged Message Queue</h2>
       <table style="width:100%; border-collapse:collapse; margin-top:1rem; font-size:0.9rem;">
         <thead>
@@ -130,7 +130,7 @@
     </section>
 
     <!-- ANALYTICS REPORTING CARD -->
-    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+    <section id="admin-analytics-section" style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
       <h2>Usage & Telemetry Analytics</h2>
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1rem;">
         <div>
@@ -165,7 +165,7 @@
     </section>
 
     <!-- CLIENT FEEDBACK SUPPORT DESK -->
-    <section style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
+    <section id="admin-feedback-section" style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px; margin-bottom:2rem;">
       <h2>Client Feedback Support Desk</h2>
       <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">Respond directly to client inquiries. Replies are recorded and emailed via Resend.</p>
       
@@ -279,7 +279,7 @@
     </section>
 
     <!-- AI GEO DOMINANCE RADAR CARD -->
-    <section style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+    <section id="admin-radar-section" style="background: #fff; border: 1px solid var(--border); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
       <h2 style="font-size: 1.05rem; margin: 0 0 1rem 0; font-family: var(--font-serif); font-weight: 600; display:flex; justify-content:space-between; align-items:center;">
         <span>📊 AI GEO Dominance Matrix (6-Axis)</span>
         <a href="/organiser/resources/rag-simulator.html" style="font-size:0.8rem; color:var(--accent); text-decoration:underline;">Open Sandbox & Validator →</a>
@@ -422,6 +422,22 @@
         const data = await res.json();
         const bookings = data.bookings || [];
         const blocked = data.blocked || [];
+        const consultant = data.consultant;
+
+        // Customise visibility for Sonny vs Tom
+        if (consultant === 'webster') {
+          document.getElementById('admin-moderation-section').style.display = 'none';
+          document.getElementById('admin-analytics-section').style.display = 'none';
+          document.getElementById('admin-feedback-section').style.display = 'none';
+          document.getElementById('admin-radar-section').style.display = 'none';
+          document.getElementById('admin-console-title').textContent = "Dr. Thomas Webster's Admin Console";
+        } else {
+          document.getElementById('admin-moderation-section').style.display = 'block';
+          document.getElementById('admin-analytics-section').style.display = 'block';
+          document.getElementById('admin-feedback-section').style.display = 'block';
+          document.getElementById('admin-radar-section').style.display = 'block';
+          document.getElementById('admin-console-title').textContent = "Dr. Sonny Saggar's Admin Console";
+        }
 
         // 1. Render bookings table
         if (bookings.length === 0) {

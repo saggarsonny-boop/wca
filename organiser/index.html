@@ -127,8 +127,8 @@
 
 <div class="org-layout">
   <!-- Sidebar toggle button - always visible -->
-  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar">
-    <span class="toggle-icon">☰</span>
+  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar" style="display:flex; align-items:center; gap:5px; padding:6px 10px; border-radius:20px; background:#fff; border:1px solid var(--border); box-shadow:0 2px 5px rgba(0,0,0,0.1); font-weight:600; font-size:0.85rem; color:var(--text); cursor:pointer;">
+    <span class="toggle-icon">☰</span> <span>Menu</span>
   </button>
   <aside class="org-sidebar">
     <nav aria-label="Organiser navigation">
@@ -254,6 +254,9 @@
       </div>
       
       <button onclick="bookConsultingSession()" class="btn" style="width:100%;">Book Prepaid 30m Session</button>
+      <p class="text-soft" style="font-size:0.75rem; margin-top:0.75rem; line-height:1.4; color:#b91c1c; font-weight:600; text-align:center;">
+        ⚠️ Dr. Saggar and Dr. Webster do not offer legal advice. We can only consult with clients who are not yet officially convicted (i.e. pre-sentencing). Post-sentencing, consulting requires written permission from our own POs and the client's supervising authority in writing.
+      </p>
       <div id="booking-status" class="auth-status" style="margin-top:0.75rem; display:none; padding:10px; border-radius:6px; font-size:0.9rem;"></div>
 
       <div id="my-bookings-section" style="margin-top:2rem; border-top:1px solid var(--border); padding-top:1.5rem;">
@@ -267,7 +270,8 @@
       <h2 style="font-size: 1.15rem; margin: 0 0 0.5rem 0; font-family: var(--font-serif); font-weight: 600;">📅 Case Consulting Calendars</h2>
       <p class="text-soft" style="font-size:0.9rem; margin-bottom:1.5rem; line-height:1.5;">
         Unlock direct 30-minute prepaid consulting sessions with Dr. Sonny Saggar or Dr. Thomas Webster.<br>
-        <span style="font-weight:600; color:var(--accent);">WCA Member Discount: $900/month for 8 sessions (down from $1,000/mo public rate).</span>
+        <span style="font-weight:600; color:var(--accent);">WCA Member Discount: $900/month for 8 sessions (down from $1,000/mo public rate).</span><br>
+        <span style="font-size:0.75rem; color:#b91c1c; font-weight:600; display:block; margin-top:0.5rem;">⚠️ Note: We only consult pre-sentencing. Post-sentencing requires prior written probation officer clearances.</span>
       </p>
       <a href="/organiser/subscribe.html" class="btn" style="display:inline-block; font-size:0.9rem; padding:0.5rem 1.5rem;">Unlock Consulting & Calendars ($900/mo)</a>
     </div>
@@ -521,16 +525,18 @@
   // Load user's booked sessions
   async function loadClientBookings() {
     const container = document.getElementById("my-bookings-list");
+    if (!container) return;
     try {
       const res = await fetch("/api/organiser/booking");
       if (res.ok) {
-        const bookings = await res.json();
-        if (bookings.length === 0) {
+        const data = await res.json();
+        const bookingsList = data.bookings || [];
+        if (bookingsList.length === 0) {
           container.innerHTML = '<div style="color:var(--text-soft); font-style:italic;">No sessions booked yet.</div>';
           return;
         }
 
-        container.innerHTML = bookings.map(b => {
+        container.innerHTML = bookingsList.map(b => {
           const isCancelled = b.status === "cancelled";
           const statusBadge = isCancelled 
             ? '<span style="color:#b91c1c; font-weight:600; font-size:0.75rem; background:#fee2e2; padding:2px 6px; border-radius:4px;">Cancelled</span>' 
