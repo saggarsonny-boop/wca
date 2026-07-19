@@ -12,7 +12,7 @@ export async function onRequestPost({ request, env }) {
     } else if (plan === "attorney") {
       priceId = env.STRIPE_PRICE_ID_ATTORNEY || "price_1TnrW3PIZtoQZOG13qoIxrSt"; // Fallback placeholder
     } else if (plan === "consulting") {
-      priceId = env.STRIPE_PRICE_ID_CONSULTING || "price_1TnrW3PIZtoQZOG13qoIxrSt"; // Use consulting secret or fallback
+      priceId = env.STRIPE_PRICE_ID_CONSULTING || "price_1Tum6SPIZtoQZOG1I2dhwrdi";
     } else {
       priceId = env.STRIPE_PRICE_ID_MONTHLY;
     }
