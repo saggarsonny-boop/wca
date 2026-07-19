@@ -1,0 +1,50 @@
+{
+  "2255-motion": {
+    "term": "2255 motion",
+    "definition": "A federal prisoner's petition under 28 U.S.C. 2255 to challenge a conviction or sentence, most often for ineffective assistance of counsel. It is the collateral track that usually survives an appeal waiver, and it has strict deadlines."
+  },
+  "allocution": {
+    "term": "Allocution",
+    "definition": "The defendant's chance to speak directly to the court, in their own words, just before the sentence is pronounced."
+  },
+  "arraignment": {
+    "term": "Arraignment",
+    "definition": "The court hearing where the charges are formally read and you enter a plea, usually not guilty at this stage. Often brief, often bewildering, over in minutes."
+  },
+  "bond": {
+    "term": "Bond",
+    "definition": "Release from custody while a case is pending, sometimes with conditions, as an alternative to being held in jail."
+  },
+  "bop": {
+    "term": "BOP",
+    "definition": "The Federal Bureau of Prisons, the agency that runs the federal prison system."
+  },
+  "caqh": {
+    "term": "CAQH",
+    "definition": "A database widely used in healthcare credentialing that can carry records of sanctions and actions."
+  },
+  "case-manager": {
+    "term": "Case manager",
+    "definition": "The prison staff member responsible for an incarcerated person's file, programming, and release planning."
+  },
+  "commissary": {
+    "term": "Commissary",
+    "definition": "The prison store where you buy everything from soap to stamps, funded by money your people send in."
+  },
+  "first-step-act": {
+    "term": "First Step Act (FSA)",
+    "definition": "A federal law allowing eligible people to earn time credits through programs and activities, which can affect release timing and placement."
+  },
+  "good-conduct-time": {
+    "term": "Good conduct time (GCT)",
+    "definition": "A reduction in time actually served, earned by following the rules and staying out of trouble while incarcerated."
+  },
+  "guidelines": {
+    "term": "Guidelines",
+    "definition": "The advisory federal sentencing guidelines, which produce a starting range based on the offense and criminal history."
+  },
+  "pledocent": {
+    "term": "Pledocent",
+    "definition": "A word coined by the author for a person who pleaded guilty while believing themselves innocent. Pleaded guilty, but innocent."
+  }
+}

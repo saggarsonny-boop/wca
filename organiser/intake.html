@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Intake Workbook — White Collar Academy</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .intake-container {
+      max-width: 720px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-family: 'Playfair Display', serif;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text);
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+    }
+  </style>
+</head>
+<body class="theme-dark">
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo">White Collar Academy</a>
+    <nav class="site-nav">
+      <a href="/organiser/">Dashboard</a>
+      <button id="logout-btn" class="btn btn--outline">Logout</button>
+    </nav>
+  </div>
+</header>
+
+<main class="intake-container">
+  <h1 style="font-family:'Playfair Display', serif; margin-bottom: 1rem;">Case Intake Workbook</h1>
+  <p style="color:var(--text-muted); margin-bottom: 2rem;">Please fill out your case details. This workbook prepares all background parameters automatically for your case file.</p>
+
+  <form id="intakeForm">
+    <div class="form-group">
+      <label for="fullName">Full Legal Name</label>
+      <input type="text" id="fullName" required>
+    </div>
+
+    <div class="form-group">
+      <label for="jurisdiction">Federal District / Jurisdiction</label>
+      <input type="text" id="jurisdiction" placeholder="e.g. Eastern District of New York" required>
+    </div>
+
+    <div class="form-group">
+      <label for="charges">Primary Charges / Statutes</label>
+      <textarea id="charges" rows="3" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="sentenceStage">Current Stage</label>
+      <select id="sentenceStage">
+        <option value="investigation">Under Investigation</option>
+        <option value="indicted">Indicted / Pre-Plea</option>
+        <option value="plea">Guilty Plea Entered</option>
+        <option value="sentenced">Sentenced / Awaiting Designation</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="notes">Additional Background / Key Deadlines</label>
+      <textarea id="notes" rows="4"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn--primary" style="width: 100%; padding: 1rem;">Save Workbook & Finish Intake</button>
+  </form>
+</main>
+
+<script>
+  document.getElementById("intakeForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = {
+      fullName: document.getElementById("fullName").value,
+      jurisdiction: document.getElementById("jurisdiction").value,
+      charges: document.getElementById("charges").value,
+      sentenceStage: document.getElementById("sentenceStage").value,
+      notes: document.getElementById("notes").value
+    };
+
+    try {
+      const resp = await fetch("/api/organiser/case-file", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      if (resp.ok) {
+        alert("Case Intake complete! Redirecting to Dashboard...");
+        window.location.href = "/organiser/";
+      } else {
+        alert("Error saving intake workbook.");
+      }
+    } catch (err) {
+      alert("Failed to submit intake.");
+    }
+  });
+
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    document.cookie = "wca_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+    window.location.href = "/organiser/login.html";
+  });
+</script>
+
+</body>
+</html>

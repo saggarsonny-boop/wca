@@ -12,6 +12,14 @@
     document.head.appendChild(analyticsScript);
   }
 
+  // Dynamically load automated SEO linking substrate
+  const seoScript = document.createElement("script");
+  seoScript.src = "/js/seo-linker.js";
+  seoScript.async = true;
+  if (document.head) {
+    document.head.appendChild(seoScript);
+  }
+
   const isBlueCollar = window.location.hostname.includes("bluecollardiner") || window.location.search.includes("theme=bluecollar");
   
   document.addEventListener("DOMContentLoaded", () => {

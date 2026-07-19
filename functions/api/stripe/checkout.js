@@ -26,7 +26,7 @@ export async function onRequestPost({ request, env }) {
       "line_items[0][price]": priceId,
       "line_items[0][quantity]": "1",
       mode: plan === "lifetime" ? "payment" : "subscription",
-      success_url: `${origin}/organiser/`,
+      success_url: plan === "consulting" ? `${origin}/organiser/intake.html` : `${origin}/organiser/`,
       cancel_url: `${origin}/organiser/subscribe.html`,
       "metadata[user_id]": String(user.uid),
       "metadata[origin_domain]": originHost,
