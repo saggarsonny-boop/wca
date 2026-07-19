@@ -39,6 +39,42 @@
         headerContainer.appendChild(toggleBtn);
       }
     }
+
+    // Swap header logo SVG with new premium gold crest
+    const logoSvg = document.querySelector(".site-logo svg");
+    if (logoSvg) {
+      const fillVal = isBlueCollar ? "#8b0000" : "#0A0A0A";
+      const strokeVal = isBlueCollar ? "#e2e8f0" : "url(#gold-grad-header)";
+      const isDiner = isBlueCollar;
+      
+      logoSvg.outerHTML = `<svg width="28" height="28" viewBox="0 0 120 120" style="vertical-align:middle;margin-right:0.5rem;border-radius:6px;" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="gold-grad-header" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#BF953F" />
+            <stop offset="25%" stop-color="#FCF6BA" />
+            <stop offset="50%" stop-color="#B38728" />
+            <stop offset="75%" stop-color="#FBF5B7" />
+            <stop offset="100%" stop-color="#AA771C" />
+          </linearGradient>
+        </defs>
+        <rect width="120" height="120" rx="20" fill="${fillVal}" />
+        <circle cx="60" cy="60" r="42" fill="none" stroke="${strokeVal}" stroke-width="3" />
+        ${isDiner ? `
+          <!-- Stylized Fork and Knife for BCD Diner theme -->
+          <path d="M 45,35 L 45,65 M 40,35 L 40,55 M 50,35 L 50,55 M 45,65 L 45,85" stroke="#e2e8f0" stroke-width="3" stroke-linecap="round" />
+          <path d="M 75,35 L 75,85 M 70,35 L 80,35 L 78,55 L 72,55 Z" fill="#e2e8f0" stroke="#e2e8f0" stroke-width="1" />
+        ` : `
+          <!-- Stylized Classical Column for WCA Academy theme -->
+          <g transform="translate(42, 36)">
+            <path d="M 4,6 L 32,6 L 28,12 L 8,12 Z" fill="url(#gold-grad-header)" />
+            <rect x="9" y="14" width="3" height="24" rx="1" fill="url(#gold-grad-header)" />
+            <rect x="16.5" y="14" width="3" height="24" rx="1" fill="url(#gold-grad-header)" />
+            <rect x="24" y="14" width="3" height="24" rx="1" fill="url(#gold-grad-header)" />
+            <rect x="6" y="40" width="24" height="4" rx="1" fill="url(#gold-grad-header)" />
+          </g>
+        `}
+      </svg>`;
+    }
   });
 
   if (isBlueCollar) {
