@@ -1,4 +1,4 @@
-import { json, err } from "../../../_shared/response.js";
+import { json, err } from "../../_shared/response.js";
 
 export async function onRequestGet({ env }) {
   if (!env.DB) {

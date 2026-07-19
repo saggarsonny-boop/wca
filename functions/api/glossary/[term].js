@@ -1,5 +1,5 @@
 import glossary from "../../../data/glossary.json";
-import { json, err } from "../../../_shared/response.js";
+import { json, err } from "../../_shared/response.js";
 
 export async function onRequestGet({ params }) {
   const termKey = (params.term || "").toLowerCase();
