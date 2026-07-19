@@ -1,6 +1,6 @@
 # White Collar Academy
 
-A private, secure platform and resource guide for defendants, families, and attorneys navigating the federal criminal justice system.
+> A private, secure platform and resource guide for defendants, families, and attorneys navigating the federal criminal justice system.
 
 ## Navigation Map
 
