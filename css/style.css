@@ -297,17 +297,17 @@ strong { font-weight: 600; }
 .ask-anything-input-wrapper {
   display: flex;
   gap: 0.5rem;
-  max-width: 560px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
 .ask-anything-input {
   flex: 1;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
+  padding: 1rem 1.25rem;
+  font-size: 1.15rem;
   font-family: var(--font-sans);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--bg);
   color: var(--text);
 }
@@ -318,12 +318,12 @@ strong { font-weight: 600; }
 }
 
 .ask-anything-btn {
-  padding: 0 1.25rem;
-  font-size: 1.1rem;
+  padding: 0 1.75rem;
+  font-size: 1.3rem;
   background: var(--accent);
   color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
@@ -332,7 +332,7 @@ strong { font-weight: 600; }
 }
 
 .ask-anything-results {
-  max-width: 560px;
+  max-width: 720px;
   margin: 1rem auto 0;
   text-align: left;
 }
