@@ -193,6 +193,11 @@
       <h2>Consulting Calendar Bookings</h2>
       <p class="text-soft" style="font-size:0.85rem; margin-bottom:1rem;">All scheduled Zoom/FaceTime/Phone consulting sessions for Sonny and Tom.</p>
       
+      <!-- Search Input Filter -->
+      <div style="margin-bottom:1rem; max-width:320px;">
+        <input type="text" id="bookings-search" placeholder="🔍 Search clients by email or phone..." onkeyup="filterBookingsTable()" style="width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:0.85rem; background:transparent; color:var(--text);">
+      </div>
+
       <table style="width:100%; border-collapse:collapse; font-size:0.875rem;" id="admin-bookings-table">
         <thead>
           <tr style="background:var(--bg-alt); border-bottom:1px solid var(--border); font-weight:600;">
@@ -703,6 +708,21 @@
       logIndex++;
     }, 3500);
   }
+
+  function filterBookingsTable() {
+    const query = document.getElementById("bookings-search").value.toLowerCase();
+    const rows = document.querySelectorAll("#admin-bookings-table tbody tr");
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      // Keep loading placeholder visible if table is empty/loading
+      if (row.cells.length === 1 && row.cells[0].colSpan === 6) {
+        row.style.display = "";
+        return;
+      }
+      row.style.display = text.includes(query) ? "" : "none";
+    });
+  }
+  window.filterBookingsTable = filterBookingsTable;
 
   // Initialize
   async function init() {

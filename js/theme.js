@@ -1,4 +1,9 @@
 (function() {
+  // Restore theme immediately before DOM is rendered
+  if (localStorage.getItem('wca_theme') === 'dark') {
+    document.documentElement.classList.add('theme-dark');
+  }
+
   // Dynamically load analytics tracker
   const analyticsScript = document.createElement("script");
   analyticsScript.src = "/js/analytics.js";
@@ -8,6 +13,34 @@
   }
 
   const isBlueCollar = window.location.hostname.includes("bluecollardiner") || window.location.search.includes("theme=bluecollar");
+  
+  document.addEventListener("DOMContentLoaded", () => {
+    // Mount theme toggle button
+    const headerContainer = document.querySelector(".site-header .container");
+    if (headerContainer) {
+      const toggleBtn = document.createElement("button");
+      toggleBtn.id = "theme-toggle-btn";
+      toggleBtn.className = "btn btn--outline no-print";
+      toggleBtn.style.cssText = "font-size:0.85rem; padding:0.4rem 0.8rem; margin-right:0.6rem; border-color:var(--border); cursor:pointer; background:transparent; display:inline-flex; align-items:center; justify-content:center;";
+      
+      const isDark = document.documentElement.classList.contains("theme-dark");
+      toggleBtn.textContent = isDark ? "☀" : "🌙";
+      
+      toggleBtn.addEventListener("click", () => {
+        const nowDark = document.documentElement.classList.toggle("theme-dark");
+        localStorage.setItem("wca_theme", nowDark ? "dark" : "light");
+        toggleBtn.textContent = nowDark ? "☀" : "🌙";
+      });
+      
+      const logoutBtn = headerContainer.querySelector("#logout-btn") || headerContainer.querySelector(".btn");
+      if (logoutBtn) {
+        headerContainer.insertBefore(toggleBtn, logoutBtn);
+      } else {
+        headerContainer.appendChild(toggleBtn);
+      }
+    }
+  });
+
   if (isBlueCollar) {
     document.documentElement.classList.add("theme-bluecollar");
     

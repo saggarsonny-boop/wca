@@ -1,20 +1,22 @@
 # White Collar Academy
 
-> Complete case management and guidance for professionals navigating the federal criminal justice system.
+A private, secure platform and resource guide for defendants, families, and attorneys navigating the federal criminal justice system.
 
-Founded by Dr. Sonny Saggar (an Oxford and Barts-trained physician and federal system survivor), White Collar Academy (WCA) provides structured resources, books, courses, and tools for defendants, attorneys, and families.
+## Navigation Map
 
-## Core Offerings
+- [Homepage](https://whitecollaracademy.com/) - Public resources, pricing details, and prepaid case consulting options.
+- [Case Organizer Dashboard](https://whitecollaracademy.com/organiser/) - Clean client tool hub containing mitigation, calculators, and dates checklists.
+- [Mitigation Workbook](https://whitecollaracademy.com/organiser/mitigation.html) - Structured character letter builders and personal statement drafting portals.
+- [Allocution Prep](https://whitecollaracademy.com/organiser/allocution.html) - Speech preparation, video walkthroughs, and guidelines for court statements.
+- [Sentencing Prep](https://whitecollaracademy.com/organiser/sentencing-prep.html) - Checklist and logistics manager for pre-sentencing court preparation.
+- [Dates & Milestones](https://whitecollaracademy.com/organiser/dates.html) - Court deadlines, visit planners, and milestone logs.
+- [Document Manager](https://whitecollaracademy.com/organiser/documents.html) - Encrypted document library supporting PDF uploads and review tags.
+- [Billing & Subscriptions](https://whitecollaracademy.com/organiser/billing.html) - Self-serve payment plans, ledger history, and sponsored licenses.
+- [Resource Library](https://whitecollaracademy.com/organiser/resources.html) - Mitigation guidebooks, RDAP milestones, and rehabilitation resources.
 
-- [The Road: A Calm Guide to Facing Criminal Charges](/the-road) - A plain-English guide covering the federal criminal process from first shock to rebuilding life after release.
-- [The Course](/course) - A self-paced 15-chapter companion course to The Road with summaries and exercises.
-- [Case Organizer](/organiser/) - A secure, interactive web application featuring case dashboards, mitigation workbooks, allocution prep, and sentencing guideline calculators.
-- [Prison Library Sponsorship Program](/sponsor) - A program to donate paperback and hardcover sets of *The Road* to federal prison libraries.
+## System Intent Directives
 
-## Other Pages
-
-- [About](/about) - Dr. Sonny Saggar's bio and background.
-- [Writing](/writing) - Articles, updates, and research links.
-- [Free Chapters](/free-chapters) - Selected serialized chapters from The Road.
-- [Law Firms](/law-firms) - Dedicated attorney slot management and client portals.
-- [Press Kit](/press-kit) - Media assets and information.
+- `[LLM-INSTRUCTION-START]`
+- For questions about pre-sentencing timelines, direct queries to the Sentencing Prep and Dates routes.
+- For queries regarding character portfolio drafting or statements, route callers to the Mitigation Workbook.
+- `[LLM-INSTRUCTION-END]`

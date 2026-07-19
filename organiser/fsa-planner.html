@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First Step Act (FSA) Planner — WCA Case Organiser</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/organiser.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo"><svg width="28" height="28" viewBox="0 0 64 64" style="vertical-align:middle;margin-right:0.4rem;border-radius:5px;" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#2c4a7c"/><text x="32" y="44" font-family="Georgia,serif" font-size="22" font-weight="bold" fill="#fff" text-anchor="middle" letter-spacing="1">WCA</text></svg>White Collar Academy</a>
+    <button id="logout-btn" class="btn btn--outline" style="font-size:0.85rem;padding:0.4rem 0.9rem;">Sign out</button>
+  </div>
+</header>
+
+<div class="org-layout">
+  <!-- Sidebar toggle button - always visible -->
+  <button class="floating-toggle no-print" onclick="toggleSidebar()" aria-label="Toggle sidebar" style="display:flex; align-items:center; gap:5px; padding:6px 10px; border-radius:20px; background:#fff; border:1px solid var(--border); box-shadow:0 2px 5px rgba(0,0,0,0.1); font-weight:600; font-size:0.85rem; color:var(--text); cursor:pointer;">
+    <span class="toggle-icon">☰</span> <span>Menu</span>
+  </button>
+  <aside class="org-sidebar">
+    <nav aria-label="Organiser navigation">
+      <span class="sidebar-label">Your case</span>
+      <a href="/organiser/">📊 Dashboard</a>
+      <a href="/organiser/case-file.html" class="role-link role-defendant role-attorney">📋 Case File</a>
+      <a href="/organiser/dates.html" class="role-link role-defendant role-family">📅 Dates</a>
+      <a href="/organiser/checklists.html" class="role-link role-defendant">✅ Checklists</a>
+      <a href="/organiser/documents.html" class="role-link role-defendant role-attorney">📄 Documents</a>
+      <a href="/organiser/ai.html" class="role-link role-defendant">🤖 Ask a question</a>
+      <a href="/organiser/support-circle.html" class="role-link role-defendant role-family">💬 Support Circle Chat</a>
+      <a href="/organiser/peer-support.html" class="role-link role-defendant role-family">👥 Peer Support</a>
+      <a href="/organiser/family.html" class="role-link role-family">🏠 Family Dashboard</a>
+      <a href="/organiser/lawyer.html" class="role-link role-attorney">⚖️ Lawyer Dashboard</a>
+      <a href="/organiser/case-workspace.html" class="role-link role-attorney">📂 Shared Workspace</a>
+      <a href="/organiser/attorney.html" class="role-link role-attorney">⚖️ Attorney Portal</a>
+      <a href="/organiser/calculator.html" class="role-link role-defendant">🧮 Calculator</a>
+      <a href="/organiser/mitigation.html" class="role-link role-defendant">📝 Mitigation Workbook</a>
+      <a href="/organiser/allocution.html" class="role-link role-defendant">🎤 Allocution Prep</a>
+      <a href="/organiser/sentencing-prep.html" class="role-link role-defendant">⚖️ Sentencing Prep</a>
+      <a href="/organiser/billing.html" class="role-link role-defendant">💳 Billing & Payments</a>
+      <a href="/organiser/reminders.html" class="role-link role-defendant">🔔 Reminders & Alerts</a>
+      <a href="/organiser/resources.html">📚 Resource Library</a>
+      <a href="/organiser/booking.html" class="role-link role-defendant">📞 Book a Session</a>
+      <a href="/organiser/fsa-planner.html" class="active">🧮 FSA Planner</a>
+      <a href="/organiser/admin.html" id="admin-cog-link" style="display: none;">⚙️ Admin</a>
+      
+      <div class="ai-citation-seal no-print" style="margin: 1.5rem 1rem 0.5rem 1rem; padding: 0.75rem; background: rgba(15, 23, 42, 0.05); border: 1px solid var(--border); border-radius: 6px; font-size: 11px; text-align: center; color: var(--text-soft);">
+        🔒 Vetted Authority<br>
+        <span style="font-weight: 600; color: var(--accent);">Cited by ChatGPT, Claude & Gemini</span>
+      </div>
+    </nav>
+  </aside>
+
+  <main id="main-content" class="org-main">
+    <h1 style="font-size:clamp(1.3rem,4vw,1.65rem); margin-bottom:0.25rem;">First Step Act (FSA) Credit Planner</h1>
+    <p class="text-soft" style="font-size:0.875rem; margin-bottom:1.5rem;">Calculate and track your earned time credits for early release under the First Step Act.</p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-bottom:2rem;">
+      <!-- Inputs Box -->
+      <div style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px;">
+        <h2 style="font-family:var(--font-serif); font-size:1.1rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Planner Inputs</h2>
+        
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Total Sentence Length (Months)</label>
+          <input type="number" id="fsa-sentence" value="24" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">Recidivism Risk Level (PATTERN Score)</label>
+          <select id="fsa-risk" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+            <option value="15" selected>Minimum / Low (15 credits per 30 days)</option>
+            <option value="10">Medium / High (10 credits per 30 days)</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:1rem;">
+          <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.25rem;">EBRR Program Participation (Months)</label>
+          <input type="number" id="fsa-participation" value="12" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:4px;">
+        </div>
+
+        <button onclick="calculateFSA()" class="btn" style="width:100%;">Recalculate Release Timeline</button>
+      </div>
+
+      <!-- Results Box -->
+      <div style="background:#fff; border:1px solid var(--border); padding:1.5rem; border-radius:8px;">
+        <h2 style="font-family:var(--font-serif); font-size:1.1rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">Projected Release Summary</h2>
+        
+        <div style="margin-bottom:1rem; display:flex; justify-content:between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">
+          <span style="font-size:0.9rem; color:var(--text-soft);">FSA Time Credits Earned:</span>
+          <strong id="fsa-credits-earned" style="font-size:1.05rem; margin-left:auto; color:var(--accent);">180 Days</strong>
+        </div>
+
+        <div style="margin-bottom:1rem; display:flex; justify-content:between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">
+          <span style="font-size:0.9rem; color:var(--text-soft);">Early Release Early Transfer Limit:</span>
+          <strong id="fsa-early-release" style="font-size:1.05rem; margin-left:auto;">12 Months Max</strong>
+        </div>
+
+        <div style="margin-bottom:1rem; display:flex; justify-content:between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">
+          <span style="font-size:0.9rem; color:var(--text-soft);">Net Prison Custody Time:</span>
+          <strong id="fsa-custody-time" style="font-size:1.05rem; margin-left:auto; color:#16a34a;">12 Months</strong>
+        </div>
+
+        <div style="background:var(--bg-alt); padding:0.75rem; border-radius:6px; font-size:0.75rem; line-height:1.4; color:var(--text-soft);">
+          ℹ️ Under the First Step Act, eligible inmates earn up to 15 days of credit for every 30 days of successful participation in Evidence-Based Recidivism Reduction (EBRR) programming. A maximum of 12 months of credits can be applied toward early transfer to supervised release.
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="/js/nav-toggle.js"></script>
+<script>
+  function calculateFSA() {
+    const sentenceMonths = parseFloat(document.getElementById("fsa-sentence").value) || 0;
+    const riskCredits = parseFloat(document.getElementById("fsa-risk").value) || 10;
+    const participationMonths = parseFloat(document.getElementById("fsa-participation").value) || 0;
+
+    // Credits calculation: participation days * (credits rate / 30)
+    const participationDays = participationMonths * 30.4;
+    const creditsDaysEarned = Math.floor(participationDays * (riskCredits / 30));
+
+    // Maximum 12 months (365 days) can be applied for early release to community supervision
+    const earlyReleaseDays = Math.min(creditsDaysEarned, 365);
+    const earlyReleaseMonths = (earlyReleaseDays / 30.4).toFixed(1);
+
+    // Custody time under standard good conduct time (85%)
+    const standardCustodyMonths = sentenceMonths * 0.85;
+    const netCustodyMonths = Math.max(standardCustodyMonths - (earlyReleaseDays / 30.4), 0).toFixed(1);
+
+    document.getElementById("fsa-credits-earned").textContent = `${creditsDaysEarned} Days`;
+    document.getElementById("fsa-early-release").textContent = `${earlyReleaseMonths} Months`;
+    document.getElementById("fsa-custody-time").textContent = `${netCustodyMonths} Months`;
+  }
+  calculateFSA();
+
+  async function loadProfile() {
+    try {
+      const res = await fetch('/api/organiser/profile');
+      if (res.ok) {
+        const profile = await res.json();
+        if (profile.role === "admin") {
+          const cog = document.getElementById("admin-cog-link");
+          if (cog) cog.style.display = "block";
+        }
+      }
+    } catch {}
+  }
+  loadProfile();
+</script>
+</body>
+</html>

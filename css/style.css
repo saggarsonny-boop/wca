@@ -3,7 +3,7 @@
    Mobile-first. Calm, credible, generous spacing.
    ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -12,18 +12,45 @@
 }
 
 :root {
-  --bg:        #f4f1ea; /* Warm premium parchment cream */
-  --bg-alt:    #eae6dd; /* Deeper card-stock block bg */
+  --bg:        #f4f1ea; /* Warm parchment */
+  --bg-alt:    #eae6dd;
   --text:      #1a1a18;
   --text-soft: #555550;
   --accent:    #2c4a7c;
-  --accent-lt: #e2e8f0; /* Soft accent blue */
-  --border:    #ded9cf; /* Soft warm border */
+  --accent-lt: #e2e8f0;
+  --border:    #ded9cf;
   --max-w:     720px;
   --max-w-wide: 960px;
 
-  --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
-  --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans:  'Outfit', sans-serif;
+}
+
+.theme-dark {
+  --bg:        #0A0A0A;
+  --bg-alt:    rgba(22, 26, 33, 0.75);
+  --text:      #F3F4F6;
+  --text-soft: #A3A3A3;
+  --accent:    #D4AF37;
+  --accent-lt: rgba(212, 175, 55, 0.12);
+  --border:    rgba(255, 255, 255, 0.08);
+}
+
+::selection {
+  background-color: #D4AF37;
+  color: #000000;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #D4AF37, transparent);
+  z-index: 10000;
+  opacity: 0.8;
 }
 
 html {
