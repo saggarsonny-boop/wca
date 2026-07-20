@@ -13,15 +13,39 @@ export async function onRequestGet({ params, env }) {
 
     const config = stateData[stateName] || { basePoints: 4, multiplier: 1.2, note: "Standard Federal sentencing guidelines parameters apply." };
 
-    const schema = {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": `${stateName} Sentencing Guidelines Tool`,
-      "description": `State-specific sentencing guidelines and custody points calculator for ${stateName}.`,
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "All",
-      "url": `https://whitecollaracademy.com/sentencing/${rawState}`
-    };
+    const schema = [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": `${stateName} Sentencing Guidelines Tool`,
+        "description": `State-specific sentencing guidelines and custody points calculator for ${stateName}.`,
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "All",
+        "url": `https://whitecollaracademy.com/sentencing/${rawState}`
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": `How do I calculate custody points in ${stateName}?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `To calculate custody points in ${stateName}, use the interactive offense score guidelines tool. Input your base offense level and dynamic state adjustments to estimate your total sentencing ranges.`
+            }
+          },
+          {
+            "@type": "Question",
+            "name": `What services are active in ${stateName} for case mitigation?`,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": `White Collar Academy provides self-guided case organizers, PSR interview preparation tools, and attorney resources active across ${stateName} and national federal jurisdictions.`
+            }
+          }
+        ]
+      }
+    ];
 
     const html = `<!DOCTYPE html>
 <html lang="en">
