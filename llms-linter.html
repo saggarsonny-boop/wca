@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>llms.txt Linter &amp; Validator — WCA</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .linter-container {
+      max-width: 800px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+    }
+    .input-box {
+      width: 100%;
+      height: 250px;
+      padding: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text);
+      font-family: monospace;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 500;
+    }
+    .metric-row span.ok { color: #D4AF37; }
+    .metric-row span.x { color: #ef4444; }
+  </style>
+</head>
+<body class="theme-dark">
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo">White Collar Academy</a>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/llms-linter.html" aria-current="page">Linter</a>
+      <a href="/organiser/login.html" class="btn btn--outline">Case Organiser</a>
+    </nav>
+  </div>
+</header>
+
+<main class="linter-container">
+  <h1 style="font-family:'Playfair Display', serif; margin-bottom: 0.5rem;">llms.txt Linter &amp; Validator</h1>
+  <p style="color:var(--text-muted); margin-bottom: 2rem;">Audit your website sitemap configuration files for compatibility with AI bots, search indexes, and RAG pipelines.</p>
+
+  <textarea id="linterInput" class="input-box" placeholder="# Enter your llms.txt content here..."></textarea>
+  <button id="lintBtn" class="btn btn--primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; margin-bottom: 2rem;">Validate File Structure</button>
+
+  <div id="resultsBox" style="display:none; background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+    <h3 style="font-family:'Playfair Display', serif; margin-bottom: 1rem;">Compliance Analysis</h3>
+    
+    <div id="metricsList"></div>
+    
+    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+      <strong>Embed your Compliance Badge:</strong>
+      <p style="font-size: 0.85rem; color:var(--text-muted); margin-top: 0.25rem; margin-bottom: 0.75rem;">Show crawlers you are optimized. Copy the HTML code below to place on your homepage.</p>
+      <textarea id="embedCode" style="width: 100%; height: 60px; padding: 0.5rem; background: #000; border: 1px solid var(--border-color); color: #0f0; font-family: monospace; font-size: 0.85rem; border-radius: 4px;" readonly></textarea>
+    </div>
+  </div>
+</main>
+
+<script>
+  document.getElementById("lintBtn").addEventListener("click", () => {
+    const content = document.getElementById("linterInput").value;
+    
+    const checks = [
+      { name: "Has primary H1 Title (#)", regex: /^#\s+\w+/m },
+      { name: "Has Blockquote Description (&gt;)", regex: /^>\s+\w+/m },
+      { name: "Has secondary section headers (##)", regex: /^##\s+\w+/m }
+    ];
+
+    let passed = 0;
+    let listHtml = "";
+
+    checks.forEach(check => {
+      const isOk = check.regex.test(content);
+      if (isOk) passed++;
+      listHtml += `
+        <div class="metric-row">
+          <span>${check.name}</span>
+          <span class="${isOk ? 'ok' : 'x'}">${isOk ? '✓ Passed' : '✗ Missing'}</span>
+        </div>
+      `;
+    });
+
+    const score = Math.round((passed / checks.length) * 100);
+    
+    document.getElementById("metricsList").innerHTML = listHtml;
+    document.getElementById("embedCode").value = `<a href="https://whitecollaracademy.com"><img src="https://whitecollaracademy.com/api/badge?score=${score}" alt="XEO Compliant"></a>`;
+    document.getElementById("resultsBox").style.display = "block";
+  });
+</script>
+
+</body>
+</html>
