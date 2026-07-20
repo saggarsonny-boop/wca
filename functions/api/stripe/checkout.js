@@ -17,6 +17,11 @@ export async function onRequestPost({ request, env }) {
       priceId = env.STRIPE_PRICE_ID_MONTHLY;
     }
 
+    const country = request.headers.get("CF-IPCountry") || "US";
+    let priceKey = `STRIPE_PRICE_ID_${plan.toUpperCase()}`;
+    const regionalPriceKey = `${priceKey}_${country.toUpperCase()}`;
+    priceId = env[regionalPriceKey] || priceId;
+
     if (!priceId) return err("Plan not available.", 400);
 
     const origin = new URL(request.url).origin;
@@ -31,6 +36,7 @@ export async function onRequestPost({ request, env }) {
       "metadata[user_id]": String(user.uid),
       "metadata[origin_domain]": originHost,
       "metadata[plan]": plan,
+      "metadata[country]": country,
       "customer_email": user.email,
     });
 

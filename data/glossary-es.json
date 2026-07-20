@@ -1,0 +1,50 @@
+{
+  "2255-motion": {
+    "term": "Petición 2255",
+    "definition": "Una petición de un prisionero federal bajo 28 U.S.C. 2255 para impugnar una condena o sentencia, la mayoría de las veces por asistencia ineficaz de un abogado."
+  },
+  "allocution": {
+    "term": "Alocución",
+    "definition": "La oportunidad del acusado de hablar directamente ante el tribunal, con sus propias palabras, justo antes de que se pronuncie la sentencia."
+  },
+  "arraignment": {
+    "term": "Lectura de cargos",
+    "definition": "La audiencia judicial donde se leen formalmente los cargos y usted se declara culpable o no culpable. Suele ser breve."
+  },
+  "bond": {
+    "term": "Fianza",
+    "definition": "Liberación de la custodia mientras un caso está pendiente, a veces con condiciones, como alternativa a estar detenido en la cárcel."
+  },
+  "bop": {
+    "term": "BOP",
+    "definition": "La Oficina Federal de Prisiones, la agencia que administra el sistema penitenciario federal de los Estados Unidos."
+  },
+  "caqh": {
+    "term": "CAQH",
+    "definition": "Una base de datos ampliamente utilizada en la acreditación de la atención médica que puede contener registros de sanciones y acciones."
+  },
+  "case-manager": {
+    "term": "Gestor de caso",
+    "definition": "El miembro del personal de la prisión responsable del expediente, la programación y la planificación de la liberación de una persona encarcelada."
+  },
+  "commissary": {
+    "term": "Comisaría",
+    "definition": "La tienda de la prisión donde se compra de todo, desde jabón hasta sellos, financiada con el dinero que envía la familia."
+  },
+  "first-step-act": {
+    "term": "Ley del Primer Paso (FSA)",
+    "definition": "Una ley federal que permite a las personas elegibles obtener créditos de tiempo a través de programas y actividades para reducir su tiempo de condena."
+  },
+  "good-conduct-time": {
+    "term": "Tiempo por buena conducta (GCT)",
+    "definition": "Una reducción del tiempo de condena real, obtenida por seguir las reglas y mantenerse fuera de problemas mientras está encarcelado."
+  },
+  "guidelines": {
+    "term": "Pautas de sentencia",
+    "definition": "Las pautas federales de sentencia de carácter consultivo, que producen un rango inicial basado en el delito y el historial criminal."
+  },
+  "pledocent": {
+    "term": "Pledocent",
+    "definition": "Palabra acuñada por el autor para referirse a una persona que se declaró culpable creyéndose inocente. Declarado culpable, pero inocente."
+  }
+}

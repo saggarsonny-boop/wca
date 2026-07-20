@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semantic Concept Gap Scanner — WCA</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .scanner-container {
+      max-width: 800px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+    }
+    .input-box {
+      width: 100%;
+      height: 250px;
+      padding: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text);
+      font-family: monospace;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .concept-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 500;
+    }
+    .concept-row span.found { color: #D4AF37; }
+    .concept-row span.missing { color: #ef4444; }
+  </style>
+</head>
+<body class="theme-dark">
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo">White Collar Academy</a>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/concept-gap.html" aria-current="page">Concept Gap</a>
+      <a href="/organiser/login.html" class="btn btn--outline">Case Organiser</a>
+    </nav>
+  </div>
+</header>
+
+<main class="scanner-container">
+  <h1 style="font-family:'Playfair Display', serif; margin-bottom: 0.5rem;">Semantic Concept Gap Scanner</h1>
+  <p style="color:var(--text-muted); margin-bottom: 2rem;">Scan your page content for missing latent search concepts, vector indexing keywords, and RAG semantic targets.</p>
+
+  <textarea id="scannerInput" class="input-box" placeholder="Paste your HTML or page text here..."></textarea>
+  <button id="scanBtn" class="btn btn--primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; margin-bottom: 2rem;">Audit Semantic Concepts</button>
+
+  <div id="resultsBox" style="display:none; background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
+    <h3 style="font-family:'Playfair Display', serif; margin-bottom: 1rem;">Analysis Results</h3>
+    
+    <div id="conceptsList"></div>
+    
+    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+      <strong>Generate your XEO Badge:</strong>
+      <p style="font-size: 0.85rem; color:var(--text-muted); margin-top: 0.25rem; margin-bottom: 0.75rem;">Embed the badge code below on your site to link back to WCA.</p>
+      <textarea id="badgeEmbed" style="width: 100%; height: 60px; padding: 0.5rem; background: #000; border: 1px solid var(--border-color); color: #0f0; font-family: monospace; font-size: 0.85rem; border-radius: 4px;" readonly></textarea>
+    </div>
+  </div>
+</main>
+
+<script>
+  document.getElementById("scanBtn").addEventListener("click", () => {
+    const text = document.getElementById("scannerInput").value.toLowerCase();
+    
+    const targets = [
+      { name: "RAG Optimization", regex: /rag/ },
+      { name: "Vector Database Citation", regex: /vector\s+database/ },
+      { name: "Semantic Index Alignment", regex: /semantic\s+index/ },
+      { name: "LLM Crawl Compliance", regex: /llm\s+crawl/ },
+      { name: "XEO Substrate Mapping", regex: /substrate|xeo/ }
+    ];
+
+    let foundCount = 0;
+    let listHtml = "";
+
+    targets.forEach(target => {
+      const isFound = target.regex.test(text);
+      if (isFound) foundCount++;
+      listHtml += `
+        <div class="concept-row">
+          <span>${target.name}</span>
+          <span class="${isFound ? 'found' : 'missing'}">${isFound ? '✓ Found' : '✗ Missing'}</span>
+        </div>
+      `;
+    });
+
+    const score = Math.round((foundCount / targets.length) * 100);
+    
+    document.getElementById("conceptsList").innerHTML = listHtml;
+    document.getElementById("badgeEmbed").value = `<a href="https://whitecollaracademy.com"><img src="https://whitecollaracademy.com/api/badge?score=${score}" alt="XEO Compliant"></a>`;
+    document.getElementById("resultsBox").style.display = "block";
+  });
+</script>
+
+</body>
+</html>

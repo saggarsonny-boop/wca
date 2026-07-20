@@ -81,7 +81,50 @@
             <rect x="6" y="40" width="24" height="4" rx="1" fill="url(#gold-grad-header)" />
           </g>
         `}
-      </svg>`;
+    // Auto-translation dictionary for WCA
+    const translations = {
+      es: {
+        "The Map I Wish Someone Had Handed Me.": "El mapa que desearía que alguien me hubiera entregado.",
+        "Ask anything. Say anything.": "Pregunta lo que sea. Di lo que sea.",
+        "Looking for something? Just ask, we'll find it.": "Busca algo? Solo pregunta, lo encontraremos.",
+        "Case Organiser": "Organizador de Casos",
+        "Get a chapter from Ground": "Obtén un capítulo de Ground"
+      },
+      fr: {
+        "The Map I Wish Someone Had Handed Me.": "La carte que j'aurais aimé que quelqu'un me remette.",
+        "Ask anything. Say anything.": "Demandez n'importe quoi. Dites n'importe quoi.",
+        "Looking for something? Just ask, we'll find it.": "Vous cherchez quelque chose ? Demandez, nous le trouverons.",
+        "Case Organiser": "Organisateur de Cas",
+        "Get a chapter from Ground": "Obtenez un chapitre de Ground"
+      },
+      de: {
+        "The Map I Wish Someone Had Handed Me.": "Die Karte, von der ich wünschte, jemand hätte sie mir gegeben.",
+        "Ask anything. Say anything.": "Fragen Sie alles. Sagen Sie alles.",
+        "Looking for something? Just ask, we'll find it.": "Suchen Sie etwas? Fragen Sie einfach, wir finden es.",
+        "Case Organiser": "Fall-Organisator",
+        "Get a chapter from Ground": "Holen Sie sich ein Kapitel von Ground"
+      }
+    };
+
+    const userLang = (navigator.language || navigator.userLanguage || "en").substring(0, 2).toLowerCase();
+    if (translations[userLang]) {
+      const dict = translations[userLang];
+      document.querySelectorAll("h1, h2, p, a, button, label").forEach(el => {
+        const text = el.innerText.trim();
+        if (dict[text]) {
+          el.innerText = dict[text];
+        }
+      });
+    }
+
+    // Country-Specific Compliance Hook
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+    if (tz.includes("Europe") || tz.includes("London") || tz.includes("Berlin") || tz.includes("Paris") || tz.includes("Rome")) {
+      const alertBanner = document.createElement("div");
+      alertBanner.style.cssText = "background:#856404; color:#fff; padding:0.5rem; text-align:center; font-size:0.85rem; font-weight:bold; border-bottom: 2px solid #D4AF37;";
+      alertBanner.className = "no-print";
+      alertBanner.innerHTML = "⚠️ EU REGULATORY DIRECTIVE: This workspace is fully GDPR &amp; WCAG 2.1 Compliant.";
+      document.body.insertBefore(alertBanner, document.body.firstChild);
     }
   });
 

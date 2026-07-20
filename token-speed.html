@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="/js/theme.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Token Speed Analyzer — WCA</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .analyzer-container {
+      max-width: 800px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+    }
+    .input-box {
+      width: 100%;
+      height: 250px;
+      padding: 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text);
+      font-family: monospace;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .cost-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cost-card span.price {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body class="theme-dark">
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="site-logo">White Collar Academy</a>
+    <nav class="site-nav">
+      <a href="/">Home</a>
+      <a href="/token-speed.html" aria-current="page">Token Speed</a>
+      <a href="/organiser/login.html" class="btn btn--outline">Case Organiser</a>
+    </nav>
+  </div>
+</header>
+
+<main class="analyzer-container">
+  <h1 style="font-family:'Playfair Display', serif; margin-bottom: 0.5rem;">Page Token Speed Analyzer</h1>
+  <p style="color:var(--text-muted); margin-bottom: 2rem;">Analyze payload characters/tokens and estimate LLM API intake pricing dynamically.</p>
+
+  <textarea id="analyzerInput" class="input-box" placeholder="Paste your HTML or text content here..."></textarea>
+  <button id="analyzeBtn" class="btn btn--primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; margin-bottom: 2rem;">Analyze Token Payload</button>
+
+  <div id="resultsBox" style="display:none;">
+    <h3 style="font-family:'Playfair Display', serif; margin-bottom: 1rem;">Payload Results</h3>
+    <div style="font-size: 1.15rem; margin-bottom: 1.5rem;">
+      Estimated Tokens: <strong id="tokenCount" style="color: var(--accent);">0</strong> tokens (based on <span id="charCount">0</span> characters)
+    </div>
+
+    <div class="cost-card">
+      <div>
+        <strong>GPT-4o</strong>
+        <div style="font-size: 0.85rem; color:var(--text-muted);">Rate: $2.50 / Million tokens</div>
+      </div>
+      <span id="gptPrice" class="price">$0.0000</span>
+    </div>
+
+    <div class="cost-card">
+      <div>
+        <strong>Claude 3.5 Sonnet</strong>
+        <div style="font-size: 0.85rem; color:var(--text-muted);">Rate: $3.00 / Million tokens</div>
+      </div>
+      <span id="claudePrice" class="price">$0.0000</span>
+    </div>
+
+    <div class="cost-card">
+      <div>
+        <strong>Gemini 1.5 Pro</strong>
+        <div style="font-size: 0.85rem; color:var(--text-muted);">Rate: $1.25 / Million tokens</div>
+      </div>
+      <span id="geminiPrice" class="price">$0.0000</span>
+    </div>
+  </div>
+</main>
+
+<script>
+  document.getElementById("analyzeBtn").addEventListener("click", () => {
+    const text = document.getElementById("analyzerInput").value;
+    const charCount = text.length;
+    const tokenCount = Math.round(charCount / 4);
+
+    document.getElementById("charCount").innerText = charCount;
+    document.getElementById("tokenCount").innerText = tokenCount;
+
+    const gptCost = (tokenCount / 1000000) * 2.50;
+    const claudeCost = (tokenCount / 1000000) * 3.00;
+    const geminiCost = (tokenCount / 1000000) * 1.25;
+
+    document.getElementById("gptPrice").innerText = `$${gptCost.toFixed(5)}`;
+    document.getElementById("claudePrice").innerText = `$${claudeCost.toFixed(5)}`;
+    document.getElementById("geminiPrice").innerText = `$${geminiCost.toFixed(5)}`;
+
+    document.getElementById("resultsBox").style.display = "block";
+  });
+</script>
+
+</body>
+</html>

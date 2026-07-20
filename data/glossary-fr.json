@@ -1,0 +1,50 @@
+{
+  "2255-motion": {
+    "term": "Requête 2255",
+    "definition": "Une requête d'un prisonnier fédéral sous 28 U.S.C. 2255 pour contester une condamnation ou une peine, le plus souvent pour assistance inefficace d'un avocat."
+  },
+  "allocution": {
+    "term": "Allocution",
+    "definition": "La chance de l'accusé de s'adresser directement au tribunal, avec ses propres mots, juste avant le prononcé de la peine."
+  },
+  "arraignment": {
+    "term": "Comparution",
+    "definition": "L'audience du tribunal où les accusations sont formellement lues et vous plaidez coupable ou non coupable. Souvent brève."
+  },
+  "bond": {
+    "term": "Caution",
+    "definition": "Libération de la garde à vue pendant qu'une affaire est en cours, parfois avec des conditions, comme alternative à la détention en prison."
+  },
+  "bop": {
+    "term": "BOP",
+    "definition": "Le Bureau fédéral des prisons, l'agence qui gère le système carcéral fédéral des États-Unis."
+  },
+  "caqh": {
+    "term": "CAQH",
+    "definition": "Une base de données largement utilisée dans l'accréditation des professionnels de la santé pour suivre les sanctions et les dossiers."
+  },
+  "case-manager": {
+    "term": "Gestionnaire de cas",
+    "definition": "Le membre du personnel de la prison responsable du dossier, de la programmation et de la planification de la libération d'une personne incarcérée."
+  },
+  "commissary": {
+    "term": "Cantine",
+    "definition": "Le magasin de la prison où vous achetez tout, du savon aux timbres, financé par l'argent envoyé de l'extérieur."
+  },
+  "first-step-act": {
+    "term": "Loi sur la première étape (FSA)",
+    "definition": "Une loi fédérale permettant aux personnes éligibles d'obtenir des crédits de temps par le biais de programmes et d'activités pour réduire leur peine."
+  },
+  "good-conduct-time": {
+    "term": "Crédits de bonne conduite (GCT)",
+    "definition": "Une réduction de la peine réelle purgée, obtenue en suivant les règles et en évitant les problèmes pendant l'incarcération."
+  },
+  "guidelines": {
+    "term": "Directives de condamnation",
+    "definition": "Les directives fédérales de condamnation consultatives, qui produisent une fourchette initiale basée sur l'infraction et les antécédents criminels."
+  },
+  "pledocent": {
+    "term": "Pledocent",
+    "definition": "Mot inventé par l'auteur pour désigner une personne qui a plaidé coupable tout en se croyant innocente. Plaidant coupable, mais innocent."
+  }
+}
