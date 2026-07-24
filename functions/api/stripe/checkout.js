@@ -6,21 +6,34 @@ export async function onRequestPost({ request, env }) {
     const user = await requireAuth(request, env);
     const { plan } = await request.json(); // "monthly" or "lifetime"
 
+    const host = new URL(request.url).hostname;
+    const isBCD = host.includes("bluecollardiner");
+
     let priceId = "";
-    if (plan === "lifetime") {
-      priceId = env.STRIPE_PRICE_ID_LIFETIME;
-    } else if (plan === "attorney") {
-      priceId = env.STRIPE_PRICE_ID_ATTORNEY || "price_1TnrW3PIZtoQZOG13qoIxrSt"; // Fallback placeholder
-    } else if (plan === "consulting") {
-      priceId = env.STRIPE_PRICE_ID_CONSULTING || "price_1Tum6SPIZtoQZOG1I2dhwrdi";
+    if (isBCD) {
+      if (plan === "lifetime") {
+        priceId = "yearly80usd";
+      } else {
+        priceId = "monthly8usd";
+      }
     } else {
-      priceId = env.STRIPE_PRICE_ID_MONTHLY;
+      if (plan === "lifetime") {
+        priceId = env.STRIPE_PRICE_ID_LIFETIME;
+      } else if (plan === "attorney") {
+        priceId = env.STRIPE_PRICE_ID_ATTORNEY || "price_1TnrW3PIZtoQZOG13qoIxrSt";
+      } else if (plan === "consulting") {
+        priceId = env.STRIPE_PRICE_ID_CONSULTING || "price_1Tum6SPIZtoQZOG1I2dhwrdi";
+      } else {
+        priceId = env.STRIPE_PRICE_ID_MONTHLY;
+      }
     }
 
     const country = request.headers.get("CF-IPCountry") || "US";
-    let priceKey = `STRIPE_PRICE_ID_${plan.toUpperCase()}`;
-    const regionalPriceKey = `${priceKey}_${country.toUpperCase()}`;
-    priceId = env[regionalPriceKey] || priceId;
+    if (!isBCD) {
+      let priceKey = `STRIPE_PRICE_ID_${plan.toUpperCase()}`;
+      const regionalPriceKey = `${priceKey}_${country.toUpperCase()}`;
+      priceId = env[regionalPriceKey] || priceId;
+    }
 
     if (!priceId) return err("Plan not available.", 400);
 
@@ -30,7 +43,7 @@ export async function onRequestPost({ request, env }) {
     const params = new URLSearchParams({
       "line_items[0][price]": priceId,
       "line_items[0][quantity]": "1",
-      mode: plan === "lifetime" ? "payment" : "subscription",
+      mode: isBCD ? "subscription" : (plan === "lifetime" ? "payment" : "subscription"),
       success_url: plan === "consulting" ? `${origin}/organiser/intake.html` : `${origin}/organiser/`,
       cancel_url: `${origin}/organiser/subscribe.html`,
       "metadata[user_id]": String(user.uid),
